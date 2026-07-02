@@ -20,7 +20,7 @@
 Guidance for Claude Code (and other agents) working in this repository.
 **These instructions override default behavior — follow them exactly.**
 
-## Role & Context  [Day-0]
+## Role & Context [Day-0]
 
 {{ONE-LINE DESCRIPTION OF THE PROJECT}}
 
@@ -34,6 +34,7 @@ Guidance for Claude Code (and other agents) working in this repository.
 Non-negotiable. Breaking one invalidates the task.
 
 ### 1. Verification Gate
+
 - Run `{{CHECK CMD — e.g. npm run check}}` (format + lint + typecheck + fast
   tests) **before claiming completion or committing**. It must exit clean:
   **0 errors, 0 warnings**. The Stop hook (`.claude/hooks/verify_on_stop.py`)
@@ -44,17 +45,20 @@ Non-negotiable. Breaking one invalidates the task.
   claiming "done" on release-bound work.
 
 ### 2. Test Integrity
+
 - **NEVER** weaken, skip, delete, or `.only` a test to make the suite pass.
   A failing test is a finding, not an obstacle.
 - Changing a test's assertions requires explicit user approval.
 
 ### 3. Source of Truth (anti-rot)
+
 - **One fact lives in one place.** Link to it; never duplicate it. Duplicated
   facts drift out of sync and start contradicting each other.
 - **Never document deleted or merely-planned code as if it exists.** Remove a
   section the moment the thing it describes is removed.
 
 ### 4. Cite Symbols, Not Counts or Line Numbers
+
 - Reference **stable symbol names** (a class, function, constant, directory) —
   things a rename would break loudly.
 - **Do NOT embed volatile statistics in prose** (file counts, "N modules",
@@ -63,6 +67,7 @@ Non-negotiable. Breaking one invalidates the task.
   in `src/api/`", "the `MAX_*` constant in `config.rs`").
 
 ### 5. {{PROJECT-SPECIFIC INVARIANT}}
+
 <!-- ADAPT: the rules unique to YOUR domain that an agent could plausibly
 violate. Examples:
   - Security/CLI: never pass unsanitized input to a shell/subprocess.
@@ -88,17 +93,18 @@ UltraThink review — see Deep-Analysis Protocol below.)
   `[step] → verify: [check]`. A step without a verify is not a step.
 - **Calibration**: bias toward caution; for trivial tasks, use judgment.
 
-## Tech Stack  [Day-0]
+## Tech Stack [Day-0]
 
-| Component | Version | Why this / why pinned |
-|-----------|---------|-----------------------|
-| {{LANGUAGE}} | {{VER}} | {{constraint, or "latest stable"}} |
-| {{FRAMEWORK}} | {{VER}} | {{version-pin reason, if any}} |
-| {{KEY LIB}} | {{VER}} | {{why this one}} |
+| Component     | Version | Why this / why pinned              |
+| ------------- | ------- | ---------------------------------- |
+| {{LANGUAGE}}  | {{VER}} | {{constraint, or "latest stable"}} |
+| {{FRAMEWORK}} | {{VER}} | {{version-pin reason, if any}}     |
+| {{KEY LIB}}   | {{VER}} | {{why this one}}                   |
+
 <!-- ADAPT: list only versions that constrain decisions. Record WHY a version
 is pinned — that reasoning stops a future agent from "helpfully" upgrading. -->
 
-## Commands  [Day-0]
+## Commands [Day-0]
 
 The six-script contract lives in `package.json` (single source of truth):
 `check` (THE gate), `test`, `test:one`, `fix`, `dev`, `build`.
@@ -107,35 +113,39 @@ names to your real commands, e.g. check = `cargo clippy -- -D warnings;
 cargo test --lib`. The six semantics stay; the tool changes. Update
 CHECK_COMMAND in .claude/hooks/verify_on_stop.py to match. -->
 
-## Architecture  [Grows]
+## Architecture [Grows]
 
 ### Layout
+
 {{TOP-LEVEL DIRECTORY MAP — one line per major dir, what lives there}}
 
 ### Data / Control Flow
+
 {{HOW A REQUEST OR INPUT MOVES THROUGH THE SYSTEM, END TO END}}
 
 ### Key Components
+
 - **{{ComponentName}}** (`{{path}}`): {{responsibility, one line}}
+
 <!-- ADAPT: fill as the code grows. Describe the seams an agent must respect
 (layer boundaries, the one service that owns X). Name symbols, never counts.
 Non-obvious patterns belong here; obvious things don't. -->
 
-## Project Gotchas  [Grows]
+## Project Gotchas [Grows]
 
 <!-- Start empty. Fill from real incidents, not speculation — via /log-gotcha.
 One-liners only; narratives longer than ~3 lines live in docs/wiki/ with a
 pointer here. Format:
 
-### {{Short title of the trap}}
-**Problem**: {{what goes wrong, concretely}} → **Rule**: {{the pattern that
-avoids it, with the symbol name involved}}
+### <Short title of the trap>
+**Problem**: <what goes wrong, concretely> → **Rule**: <the pattern that
+avoids it, with the symbol name involved>
 -->
 
 ## Standing Rules
 
 - **Git**: atomic commits, only at a green `check`. Conventional-commit
-  subject; the *why* in the body. Never commit secrets or `.env`.
+  subject; the _why_ in the body. Never commit secrets or `.env`.
 - **Dependencies**: stdlib first → existing deps → a NEW dependency needs
   explicit approval plus a stated alternative you considered. Lockfile always
   committed.
@@ -152,12 +162,12 @@ avoids it, with the symbol name involved}}
 
 **Fact-placement law** — one fact, one home:
 
-| Kind of fact | Home |
-|---|---|
-| What the code does | The code (+ Architecture section for the seams) |
-| Agent behavior + facts needed every session | This file |
-| Decisions and their why | `docs/adr/` (append-only; supersede, never edit) |
-| Narratives: incidents, investigations, domain notes | `docs/wiki/` |
+| Kind of fact                                        | Home                                             |
+| --------------------------------------------------- | ------------------------------------------------ |
+| What the code does                                  | The code (+ Architecture section for the seams)  |
+| Agent behavior + facts needed every session         | This file                                        |
+| Decisions and their why                             | `docs/adr/` (append-only; supersede, never edit) |
+| Narratives: incidents, investigations, domain notes | `docs/wiki/`                                     |
 
 - **Gotcha migration**: gotchas start as one-liners above; past ~3 lines they
   move to a wiki page, leaving a one-line pointer.
@@ -181,6 +191,6 @@ irreversible consequences also get a one-page spec first (copy
 
 ---
 
-*These guidelines are working if: sessions start without re-explaining the
+_These guidelines are working if: sessions start without re-explaining the
 project; agents cite ADRs when questioning decisions; the verification gate
-never needs mentioning in chat.*
+never needs mentioning in chat._

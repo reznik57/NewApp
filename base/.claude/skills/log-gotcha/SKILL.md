@@ -12,8 +12,8 @@ expensive to re-derive**. If it fails the filter, stop here — noise in the
 knowledge base is rot.
 
 1. **Write the lesson** in problem/rule form:
-   `Problem: {{what goes wrong, concretely}} → Rule: {{the pattern that
-   avoids it, naming the symbol involved}}`
+   `Problem: <what goes wrong, concretely> → Rule: <the pattern that
+avoids it, naming the symbol involved>`
 2. **Choose the home** (graduation rule):
    - First occurrence, fits in ≤3 lines → one-liner in CLAUDE.md → Project
      Gotchas.
