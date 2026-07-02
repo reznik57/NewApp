@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "check": "prettier --check . && eslint . --max-warnings 0 && tsc --noEmit && vitest run",
+    "test": "vitest run",
+    "test:one": "vitest run -t",
+    "fix": "prettier --write . && eslint . --fix",
+    "dev": "next dev",
+    "build": "next build"
+  }
+}

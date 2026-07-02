@@ -1,0 +1,28 @@
+# template-version: 2026-07
+# Filled TS/Next.js variant of base/.github/workflows/ci.template.yml
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Check (format + lint w/ zero warnings + typecheck + fast tests)
+        run: npm run check
+      - name: Test (full suite)
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Dependency audit
+        run: npm audit --audit-level=high

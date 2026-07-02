@@ -1,0 +1,6 @@
+# Session scratch for subagent-driven development (recoverable from git log)
+.superpowers/
+
+# Python bytecode
+__pycache__/
+*.pyc

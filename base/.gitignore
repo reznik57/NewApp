@@ -1,0 +1,23 @@
+# template-version: 2026-07
+# Dependencies
+node_modules/
+
+# Env & secrets — .env.example IS committed
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Logs & caches
+*.log
+.cache/
+coverage/
+
+# OS noise
+.DS_Store
+Thumbs.db
