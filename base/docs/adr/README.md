@@ -1,4 +1,5 @@
 <!-- template-version: 2026-07 -->
+
 # Architecture Decision Records
 
 Write one for any decision you would otherwise re-derive or relitigate:
@@ -7,6 +8,7 @@ UltraThink Phase 3 output. ADR-0001 is always the stack choice, written at
 setup.
 
 Rules:
+
 - Copy `0000-template.md` to `NNNN-<slug>.md` (next free number).
 - Append-only: never edit an accepted ADR. Write a superseding one and link
   both directions ("superseded by NNNN" / "supersedes NNNN").

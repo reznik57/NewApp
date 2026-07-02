@@ -1,4 +1,5 @@
 <!-- template-version: 2026-07 -->
+
 # Project Wiki — Index
 
 Entry point for on-demand knowledge. Every page in `docs/wiki/` MUST be

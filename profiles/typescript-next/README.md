@@ -1,4 +1,5 @@
 <!-- template-version: 2026-07 -->
+
 # Profile: TypeScript / Next.js
 
 Overlay for the stack-agnostic `base/`. Apply AFTER copying `base/*` into

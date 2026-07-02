@@ -1,4 +1,5 @@
 <!-- template-version: 2026-07 -->
+
 # Spec: {{Feature name}} ({{YYYY-MM-DD}})
 
 Use for changes touching more than 2 modules or with irreversible

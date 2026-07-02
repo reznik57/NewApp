@@ -1,4 +1,5 @@
 <!-- template-version: 2026-07 -->
+
 # {{NNNN}}. {{Decision title}}
 
 - **Date**: {{YYYY-MM-DD}}
