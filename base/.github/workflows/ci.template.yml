@@ -13,7 +13,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Setup toolchain
         run: {{TOOLCHAIN SETUP — or replace with a setup action, e.g. actions/setup-node@v4}}
       - name: Install
