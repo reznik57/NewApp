@@ -42,11 +42,27 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       not on GitHub.
 - [ ] 11. **First commit at green** — `npm run check` exits clean, then
       commit everything.
-- [ ] 12. **EXIT GATE** — both commands print nothing:
+- [ ] 12. **EXIT GATE** — both commands print nothing. Excludes
+      `docs/adr/0000-template.md` and `docs/specs/SPEC.template.md` (reusable
+      templates that ship with placeholders forever — copy them, never fill
+      them in place) and the hooks/skills that document the `{{`/`ADAPT:`
+      syntax itself (`.claude/hooks/protect_files.py`,
+      `.claude/hooks/verify_on_stop.py`, `.claude/skills/wiki-lint/SKILL.md`,
+      `.claude/skills/log-gotcha/SKILL.md`):
 
-      Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github | Select-String -Pattern '\{\{'
-      Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github | Select-String -Pattern 'ADAPT:'
+  ```powershell
+  $exempt = 'docs[\\/]adr[\\/]0000-template\.md$|docs[\\/]specs[\\/]SPEC\.template\.md$|\.claude[\\/]skills[\\/]wiki-lint[\\/]SKILL\.md$|\.claude[\\/]skills[\\/]log-gotcha[\\/]SKILL\.md$|\.claude[\\/]hooks[\\/](protect_files|verify_on_stop)\.py$'
+  Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github |
+    Where-Object { ($_.FullName.Substring((Get-Location).Path.Length + 1)) -notmatch $exempt } |
+    Select-String -Pattern '\{\{'
+  Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github |
+    Where-Object { ($_.FullName.Substring((Get-Location).Path.Length + 1)) -notmatch $exempt } |
+    Select-String -Pattern 'ADAPT:'
+  ```
 
-      (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/` and the same
-      for `ADAPT:`.) A live CLAUDE.md containing unfilled placeholders
-      actively misleads agents — do not finish with leftovers.
+  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/
+--exclude=0000-template.md --exclude=SPEC.template.md
+--exclude=protect_files.py --exclude=verify_on_stop.py
+--exclude=wiki-lint/SKILL.md --exclude=log-gotcha/SKILL.md` and the same
+  for `ADAPT:`.) A live CLAUDE.md containing unfilled placeholders
+  actively misleads agents — do not finish with leftovers.
