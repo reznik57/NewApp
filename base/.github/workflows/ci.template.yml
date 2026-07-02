@@ -1,0 +1,28 @@
+# template-version: 2026-07
+# ADAPT: fill every {{}} slot for your stack, or overlay profiles/<stack>/ci.yml
+# from the seed. Rename to ci.yml. Delete this file if not hosted on GitHub.
+# Policy: lint treats warnings as errors — any new warning fails the build.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup toolchain
+        run: {{TOOLCHAIN SETUP — or replace with a setup action, e.g. actions/setup-node@v4}}
+      - name: Install
+        run: {{INSTALL CMD — e.g. npm ci}}
+      - name: Check (format + lint w/ zero warnings + typecheck + fast tests)
+        run: {{CHECK CMD — same gate as CLAUDE.md Invariant 1}}
+      - name: Test (full suite)
+        run: {{TEST CMD}}
+      - name: Build
+        run: {{BUILD CMD}}
+      - name: Dependency audit
+        run: {{AUDIT CMD — e.g. npm audit --audit-level=high}}
