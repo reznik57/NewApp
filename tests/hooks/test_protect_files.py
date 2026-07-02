@@ -41,6 +41,10 @@ class ProtectFilesTests(unittest.TestCase):
         result = run_hook({"file_path": "C:/proj/.git/config"})
         self.assertEqual(result.returncode, 2)
 
+    def test_blocks_env_example_inside_git_dir(self):
+        result = run_hook({"file_path": "C:/proj/.git/.env.example"})
+        self.assertEqual(result.returncode, 2)
+
     def test_allows_normal_source_file(self):
         result = run_hook({"file_path": "C:/proj/src/app.ts"})
         self.assertEqual(result.returncode, 0)

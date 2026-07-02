@@ -21,15 +21,15 @@ def is_protected(file_path):
     """Return a human-readable reason if the path is protected, else None."""
     path = PurePath(file_path.replace("\\", "/"))
     name = path.name.lower()
+    for segment in path.parts[:-1]:
+        if segment.lower() in PROTECTED_SEGMENTS:
+            return "%s/ internals must not be edited directly" % segment
     if name in ALLOWED_ENV_FILES:
         return None
     if name == ".env" or name.startswith(".env."):
         return "%s may contain secrets; the user edits it manually" % path.name
     if name in PROTECTED_BASENAMES:
         return "%s is a lockfile; change deps via the package manager" % path.name
-    for segment in path.parts[:-1]:
-        if segment.lower() in PROTECTED_SEGMENTS:
-            return "%s/ internals must not be edited directly" % segment
     return None
 
 
