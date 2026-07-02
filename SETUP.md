@@ -60,9 +60,8 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
     Select-String -Pattern 'ADAPT:'
   ```
 
-  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/
---exclude=0000-template.md --exclude=SPEC.template.md
---exclude=protect_files.py --exclude=verify_on_stop.py
---exclude=wiki-lint/SKILL.md --exclude=log-gotcha/SKILL.md` and the same
-  for `ADAPT:`.) A live CLAUDE.md containing unfilled placeholders
-  actively misleads agents — do not finish with leftovers.
+  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/ --exclude=0000-template.md --exclude=SPEC.template.md --exclude=protect_files.py --exclude=verify_on_stop.py --exclude-dir=wiki-lint --exclude-dir=log-gotcha` and the
+  same for `ADAPT:`. grep's `--exclude` matches basenames only, hence
+  `--exclude-dir` for the two skill directories.) A live CLAUDE.md containing
+  unfilled placeholders actively misleads agents — do not finish with
+  leftovers.
