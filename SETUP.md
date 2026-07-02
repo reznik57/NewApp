@@ -25,13 +25,16 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       if this app handles untrusted input or you run walk-away sessions.
       If you copied the profile's `settings.json`, delete the leftover
       `.claude/settings.template.json` — two settings files invite drift.
+      Claude Code ignores project settings until the workspace trust dialog
+      is accepted — open the app interactively once before relying on the
+      harness.
 - [ ] 6. **Self-test the hooks** —
       `python .claude/hooks/verify_on_stop.py --self-test` prints
       `self-test OK` (Windows: use `py` if `python` resolves to the
-      Microsoft Store alias). If you needed `py` or `python3`, update both
-      hook `command` lines in `.claude/settings.json` to the same
-      interpreter. On the app's first live session, confirm enforcement
-      end-to-end: ask the agent to edit `.env` — the hook must block it.
+      Microsoft Store alias — the registered hook commands probe
+      python3/python/py by execution and fail closed if none works). On the
+      app's first live session, confirm enforcement end-to-end: ask the
+      agent to edit `.env` — the hook must block it.
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply, keep `[Grows]` sections

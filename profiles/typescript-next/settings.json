@@ -52,7 +52,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect_files.py\""
+            "command": "sh -c 'for i in python3 python py; do \"$i\" -c \"import sys\" >/dev/null 2>&1 && exec \"$i\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect_files.py\"; done; echo \"protect_files hook: no Python interpreter found - failing closed\" >&2; exit 2'"
           }
         ]
       }
@@ -62,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify_on_stop.py\""
+            "command": "sh -c 'for i in python3 python py; do \"$i\" -c \"import sys\" >/dev/null 2>&1 && exec \"$i\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify_on_stop.py\"; done; echo \"verify_on_stop hook: no Python interpreter found - failing closed\" >&2; exit 2'"
           }
         ]
       }

@@ -18,6 +18,14 @@ carry comment stamps — their version is tracked only here.
 - ultrathink converted from a copy-in command template to a skill; Phase 3
   output now saved as an ADR.
 - TypeScript/Next.js profile added.
+- Verified live (2026-07-02, headless Claude Code session against a seeded
+  scratch app): all three skills load; hook enforcement initially FAILED
+  SILENTLY on Windows (`python` resolved to the Microsoft Store alias stub,
+  exit 49 — any non-0/2 hook exit is non-blocking). Hook commands now probe
+  python3/python/py by execution and fail closed if none works; re-probe
+  confirmed both protected operations blocked. Also learned: Claude Code
+  ignores project settings until the workspace trust dialog is accepted
+  (noted in SETUP step 5).
 
 ## (pre-2026-07) — v1
 
