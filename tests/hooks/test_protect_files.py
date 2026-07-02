@@ -60,6 +60,11 @@ class ProtectFilesTests(unittest.TestCase):
         result = run_hook({"file_path": link})
         self.assertEqual(result.returncode, 2)
 
+    def test_blocks_protected_notebook_path(self):
+        # NotebookEdit sends notebook_path, not file_path (matcher covers it).
+        result = run_hook({"notebook_path": "C:/proj/.git/notes.ipynb"})
+        self.assertEqual(result.returncode, 2)
+
     def test_allows_normal_source_file(self):
         result = run_hook({"file_path": "C:/proj/src/app.ts"})
         self.assertEqual(result.returncode, 0)

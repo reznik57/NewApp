@@ -23,10 +23,15 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       copied). Review the permission posture; it encodes moderate autonomy —
       an accident guard, not a security boundary. Tighten toward ask-heavy
       if this app handles untrusted input or you run walk-away sessions.
+      If you copied the profile's `settings.json`, delete the leftover
+      `.claude/settings.template.json` — two settings files invite drift.
 - [ ] 6. **Self-test the hooks** —
       `python .claude/hooks/verify_on_stop.py --self-test` prints
       `self-test OK` (Windows: use `py` if `python` resolves to the
-      Microsoft Store alias).
+      Microsoft Store alias). If you needed `py` or `python3`, update both
+      hook `command` lines in `.claude/settings.json` to the same
+      interpreter. On the app's first live session, confirm enforcement
+      end-to-end: ask the agent to edit `.env` — the hook must block it.
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply, keep `[Grows]` sections
@@ -40,13 +45,15 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
 - [ ] 10. **CI** — fill and rename `.github/workflows/ci.template.yml` →
       `ci.yml`, or use the profile's `ci.yml`, or delete it if the app is
       not on GitHub.
-- [ ] 11. **First commit at green** — `npm run check` exits clean, then
-      commit everything.
-- [ ] 12. **EXIT GATE** — both commands print nothing. Excludes
+- [ ] 11. **First commit at green** — `npm run check` (or your check
+      equivalent) exits clean, then commit everything.
+- [ ] 12. **EXIT GATE** — both commands print nothing. (Drop `.github` from
+      the path lists if you deleted it in step 10.) Excludes
       `docs/adr/0000-template.md` and `docs/specs/SPEC.template.md` (reusable
       templates that ship with placeholders forever — copy them, never fill
-      them in place) and the hooks/skills that document the `{{`/`ADAPT:`
-      syntax itself (`.claude/hooks/protect_files.py`,
+      them in place) and the hooks/skills that legitimately keep `ADAPT:`
+      tailoring markers or quote the `{{` syntax
+      (`.claude/hooks/protect_files.py`,
       `.claude/hooks/verify_on_stop.py`, `.claude/skills/wiki-lint/SKILL.md`,
       `.claude/skills/log-gotcha/SKILL.md`):
 

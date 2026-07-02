@@ -9,6 +9,7 @@ the new repo (SETUP.md step 2):
    `package.json` (created by `create-next-app` or `npm init`).
 2. Copy `settings.json` → `.claude/settings.json` (replaces renaming the
    base template; already filled for npm/next/vitest/eslint/tsc).
+   Delete `.claude/settings.template.json` afterwards.
 3. Copy `ci.yml` → `.github/workflows/ci.yml` (replaces ci.template.yml).
 4. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md with the
    contents of `CLAUDE.stack-sections.md`.

@@ -5,7 +5,7 @@ Exit 0 lets the agent stop; exit 2 blocks the stop and feeds stderr back so
 the agent fixes the failure first. Stdlib only; Windows-safe.
 Registered in .claude/settings.json under Stop.
 
---self-test verifies the wiring (used by SETUP.md step 4).
+--self-test verifies the wiring (run it during app setup).
 """
 import json
 import os

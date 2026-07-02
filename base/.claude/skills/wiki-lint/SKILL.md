@@ -22,10 +22,9 @@ user (docs may encode intent the code lost).
    page? Propose which single home keeps it (fact-placement law in
    CLAUDE.md → Docs & Knowledge Schema).
 5. **Leftovers**: grep `CLAUDE.md`, `.claude/`, `docs/`, `.github/` for
-   `{{` and `ADAPT:` (see SETUP.md step 12 for the exact command) — both must
-   return nothing, excluding the reusable templates
-   (`docs/adr/0000-template.md`, `docs/specs/SPEC.template.md`) and the
-   files that document this syntax rather than use it
+   `{{` and `ADAPT:` — both must return nothing, excluding the reusable
+   templates (`docs/adr/0000-template.md`, `docs/specs/SPEC.template.md`)
+   and the files that legitimately keep ADAPT: markers or quote this syntax
    (`.claude/hooks/protect_files.py`, `.claude/hooks/verify_on_stop.py`,
    this file, `.claude/skills/log-gotcha/SKILL.md`).
 6. **Report**: a fix-list grouped by file — finding + suggested action.

@@ -54,7 +54,8 @@ def main():
         payload = json.loads(sys.stdin.buffer.read())
     except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
         return 0  # malformed input: never block on our own bug
-    file_path = (payload.get("tool_input") or {}).get("file_path", "")
+    tool_input = payload.get("tool_input") or {}
+    file_path = tool_input.get("file_path") or tool_input.get("notebook_path") or ""
     if not file_path:
         return 0
     reason = is_protected(file_path)
