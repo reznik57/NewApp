@@ -47,8 +47,12 @@ def is_protected(file_path):
 
 def main():
     try:
-        payload = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError):
+        # Read as bytes: json.loads() strips a leading UTF-8 BOM per spec,
+        # but json.load() on a text stream does not (Windows PowerShell's
+        # pipe to a native process prepends a BOM, which would otherwise
+        # be misread as malformed input and fail this hook OPEN).
+        payload = json.loads(sys.stdin.buffer.read())
+    except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
         return 0  # malformed input: never block on our own bug
     file_path = (payload.get("tool_input") or {}).get("file_path", "")
     if not file_path:

@@ -47,6 +47,21 @@ class VerifyOnStopTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0)
 
+    def test_skips_check_when_already_looping_with_utf8_bom(self):
+        # Windows PowerShell's `|` pipe to a native process prepends a UTF-8
+        # BOM. json.load() on a text stream does not strip it, which used to
+        # make this hook mistake stop_hook_active=True for malformed input
+        # (payload => {}) and re-run the (failing) check instead of exiting
+        # 0. Regression guard.
+        env = dict(os.environ, HARNESS_CHECK_CMD=FAIL_CMD)
+        payload = json.dumps({"stop_hook_active": True})
+        result = subprocess.run(
+            [sys.executable, str(HOOK)],
+            input=b"\xef\xbb\xbf" + payload.encode("utf-8"),
+            capture_output=True, timeout=60, env=env,
+        )
+        self.assertEqual(result.returncode, 0)
+
     def test_self_test_passes_for_non_npm_command(self):
         result = run_hook({}, PASS_CMD, extra_args=["--self-test"])
         self.assertEqual(result.returncode, 0)

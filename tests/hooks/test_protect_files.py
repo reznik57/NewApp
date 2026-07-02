@@ -71,6 +71,20 @@ class ProtectFilesTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0)
 
+    def test_blocks_env_file_with_utf8_bom(self):
+        # Windows PowerShell's `|` pipe to a native process prepends a UTF-8
+        # BOM. json.load() on a text stream does not strip it, which used to
+        # make this hook mistake the payload for malformed input and fail
+        # OPEN (allow the edit) instead of blocking it. Regression guard.
+        payload = json.dumps({"tool_name": "Edit", "tool_input": {"file_path": "C:/proj/.env"}})
+        result = subprocess.run(
+            [sys.executable, str(HOOK)],
+            input=b"\xef\xbb\xbf" + payload.encode("utf-8"),
+            capture_output=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn(b"secrets", result.stderr)
+
     def test_allows_on_missing_file_path(self):
         result = run_hook({})
         self.assertEqual(result.returncode, 0)

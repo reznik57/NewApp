@@ -63,8 +63,12 @@ def main():
     if "--self-test" in sys.argv:
         return self_test()
     try:
-        payload = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError):
+        # Read as bytes: json.loads() strips a leading UTF-8 BOM per spec,
+        # but json.load() on a text stream does not (Windows PowerShell's
+        # pipe to a native process prepends a BOM, which would otherwise be
+        # misread as malformed input and silently drop stop_hook_active).
+        payload = json.loads(sys.stdin.buffer.read())
+    except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
         payload = {}
     if payload.get("stop_hook_active"):
         return 0  # this stop was already triggered by us once; let it through
