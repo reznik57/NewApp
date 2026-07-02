@@ -2,8 +2,10 @@
 python -m unittest discover -s tests -v
 """
 import json
+import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -43,6 +45,19 @@ class ProtectFilesTests(unittest.TestCase):
 
     def test_blocks_env_example_inside_git_dir(self):
         result = run_hook({"file_path": "C:/proj/.git/.env.example"})
+        self.assertEqual(result.returncode, 2)
+
+    def test_blocks_symlink_to_env(self):
+        tmp = tempfile.mkdtemp()
+        target = os.path.join(tmp, ".env")
+        link = os.path.join(tmp, "harmless.txt")
+        with open(target, "w", encoding="utf-8") as f:
+            f.write("SECRET=1")
+        try:
+            os.symlink(target, link)
+        except (OSError, NotImplementedError):
+            self.skipTest("symlinks unavailable on this system")
+        result = run_hook({"file_path": link})
         self.assertEqual(result.returncode, 2)
 
     def test_allows_normal_source_file(self):

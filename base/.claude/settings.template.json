@@ -24,16 +24,28 @@
       "Read(.env.local)",
       "Read(.env.development)",
       "Read(.env.production)",
+      "Read(.env.test)",
+      "Read(.env.staging)",
+      "Read(.env.development.local)",
+      "Read(.env.production.local)",
+      "Read(.env.test.local)",
       "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -Rf:*)",
+      "Bash(git diff --no-index:*)",
+      "Bash(git add -f:*)",
+      "Bash(git add --force:*)",
       "Bash(curl:*)",
       "Bash(wget:*)",
-      "Bash(Invoke-WebRequest:*)"
+      "Bash(Invoke-WebRequest:*)",
+      "Bash(Invoke-RestMethod:*)",
+      "Bash(Start-BitsTransfer:*)"
     ]
   },
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|NotebookEdit",
         "hooks": [
           {
             "type": "command",

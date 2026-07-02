@@ -3,9 +3,10 @@
 
 Reads the tool-call JSON from stdin. Exit 2 blocks the call and feeds the
 stderr message back to the agent; exit 0 allows it. Stdlib only; Windows-safe.
-Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write".
+Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|NotebookEdit".
 """
 import json
+import os
 import sys
 from pathlib import PurePath
 
@@ -17,8 +18,8 @@ PROTECTED_SEGMENTS = {".git"}
 ALLOWED_ENV_FILES = {".env.example"}
 
 
-def is_protected(file_path):
-    """Return a human-readable reason if the path is protected, else None."""
+def check_path(file_path):
+    """Return a human-readable reason if this path string is protected."""
     path = PurePath(file_path.replace("\\", "/"))
     name = path.name.lower()
     for segment in path.parts[:-1]:
@@ -30,6 +31,17 @@ def is_protected(file_path):
         return "%s may contain secrets; the user edits it manually" % path.name
     if name in PROTECTED_BASENAMES:
         return "%s is a lockfile; change deps via the package manager" % path.name
+    return None
+
+
+def is_protected(file_path):
+    """Check the raw path, then its symlink-resolved target."""
+    reason = check_path(file_path)
+    if reason:
+        return reason
+    real = os.path.realpath(file_path)
+    if real and real != file_path:
+        return check_path(real)
     return None
 
 
