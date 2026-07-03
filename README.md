@@ -23,6 +23,7 @@ compounds instead of evaporating in chat transcripts.
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SETUP.md`                                                     | The per-app instantiation checklist (fresh repos). Start here.                                                                                  |
 | `ADOPTION.md`                                                  | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live.                                  |
+| `copyfolder/`                                                  | The one-command copy set for existing apps (ADOPTION step 2): collision-free by design, inert templates, no .gitignore/CI. Parity-tested against `base/`. |
 | `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                                               |
 | `base/CLAUDE.template.md`                                      | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                                              |
 | `base/.claude/settings.template.json`                          | Permission posture + hook registrations.                                                                                                        |
@@ -37,7 +38,7 @@ compounds instead of evaporating in chat transcripts.
 | `base/.github/workflows/`                                      | CI template: the same gate, warnings-as-errors, full tests, audit.                                                                              |
 | base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                                          |
 | `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                                         |
-| `tests/`                                                       | Seed-only tests: hook scripts + base↔profile settings parity (`python -m unittest discover -s tests`).                                          |
+| `tests/`                                                       | Seed-only tests: hook scripts + parity guards (settings, copyfolder) (`python -m unittest discover -s tests`).                                  |
 | `docs/superpowers/`                                            | Specs/plans for the seed itself (not copied).                                                                                                   |
 
 ## Instantiation
@@ -60,7 +61,9 @@ Fresh, empty repo:
 Existing app:
 
 > Read `<seed>/ADOPTION.md` and work through the checklist top to bottom
-> in this repo — it merges the harness into existing code. Never
+> in this repo — it merges the harness into existing code. Step 2's
+> copy set is `<seed>/copyfolder` (already copied if you see
+> `CLAUDE.template.md` here — then continue at step 3). Never
 > overwrite an existing file without asking; ask me at every merge
 > conflict and decision point.
 

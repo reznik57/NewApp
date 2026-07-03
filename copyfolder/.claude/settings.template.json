@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm run check:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run fix:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(npx:*)",
+      "Bash(gh:*)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.local)",
+      "Read(.env.development)",
+      "Read(.env.production)",
+      "Read(.env.test)",
+      "Read(.env.staging)",
+      "Read(.env.development.local)",
+      "Read(.env.production.local)",
+      "Read(.env.test.local)",
+      "Read(.env.staging.local)",
+      "Bash(rm -rf:*)",
+      "Bash(rm -fr:*)",
+      "Bash(rm -Rf:*)",
+      "Bash(Remove-Item -Recurse:*)",
+      "Bash(git diff --no-index:*)",
+      "Bash(git add -f:*)",
+      "Bash(git add --force:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(Invoke-WebRequest:*)",
+      "Bash(Invoke-RestMethod:*)",
+      "Bash(Start-BitsTransfer:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'for i in python3 python py; do \"$i\" -c \"import sys\" >/dev/null 2>&1 && exec \"$i\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/protect_files.py\"; done; echo \"protect_files hook: no Python interpreter found - failing closed\" >&2; exit 2'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'for i in python3 python py; do \"$i\" -c \"import sys\" >/dev/null 2>&1 && exec \"$i\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify_on_stop.py\"; done; echo \"verify_on_stop hook: no Python interpreter found - failing closed\" >&2; exit 2'"
+          }
+        ]
+      }
+    ]
+  }
+}
