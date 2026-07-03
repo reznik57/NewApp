@@ -20,9 +20,9 @@ again at step 10. Fresh empty repo? Use SETUP.md instead.)
       (the three /X flags skip every file the app already has; in a
       GUI copy, choose "skip" for existing files). The set: `docs/`
       (adr, wiki, specs), `.claude/` (hooks, scripts, skills),
-      `.env.example`/`.editorconfig` where missing, these two
-      checklists (deleted again at step 10), and the two INERT
-      templates — `CLAUDE.template.md` and
+      `.env.example`/`.editorconfig` where missing, the kit docs
+      (`START-HERE.md` + both checklists — deleted again at step 10),
+      and the two INERT templates — `CLAUDE.template.md` and
       `.claude/settings.template.json` collide with nothing and stay
       inactive until steps 5–6 activate them. Deliberately NOT in the
       set: `.gitignore` (merge-only, step 3), CI (step 8), and the
@@ -68,6 +68,6 @@ again at step 10. Fresh empty repo? Use SETUP.md instead.)
 - [ ] 9. **Adapt the ultrathink skill** — as SETUP step 8.
 - [ ] 10. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
-      `marker check OK` (Windows: `py`). Then delete `ADOPTION.md`
-      and `SETUP.md` from the app (setup scaffolding, not app docs)
-      and commit at a green `check`.
+      `marker check OK` (Windows: `py`). Then delete `START-HERE.md`,
+      `ADOPTION.md`, and `SETUP.md` from the app (setup scaffolding,
+      not app docs) and commit at a green `check`.

@@ -29,6 +29,9 @@ MANIFEST = {
     "ADOPTION.md": ROOT,  # both checklists travel with the kit;
     "SETUP.md": ROOT,     # ADOPTION step 10 deletes them from the app
 }
+# Authored directly in the kit, no source twin (the kickoff prompt's
+# single home — the seed README points here).
+KIT_ONLY = {"START-HERE.md"}
 
 
 def files_under(root, tops):
@@ -47,8 +50,8 @@ class CopyfolderParityTests(unittest.TestCase):
         for f in COPY.rglob("*"):
             if f.is_file() and "__pycache__" not in f.parts:
                 rel = f.relative_to(COPY)
-                self.assertIn(
-                    rel.parts[0], MANIFEST,
+                self.assertTrue(
+                    rel.parts[0] in MANIFEST or rel.parts[0] in KIT_ONLY,
                     "unexpected file in copyfolder: %s" % rel,
                 )
 
