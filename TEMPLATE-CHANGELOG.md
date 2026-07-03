@@ -5,6 +5,51 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.6 — v2.4
+
+Universality round: brownfield path, portability documented, audit
+fixes (touched templates stamped 2026-07.6):
+
+- ADOPTION.md: the existing-app checklist — inventory collisions, merge
+  instead of overwrite, define `check` on the CURRENT state (narrow
+  scope, never weaken rules; freeze a lint baseline and ratchet), and
+  the load-bearing inversion: green `check` BEFORE the Stop hook goes
+  live. Architecture [Grows] is filled at adoption (the code already
+  has seams); ADR-0001 recorded retroactively. Size variants (S/M/L)
+  deliberately rejected: [Grows] sections, threshold triggers, and
+  delete-what-you-won't-use already scale the harness by use, and every
+  variant is a drift vector (the v2.2.1 settings drift is the
+  empirical case).
+- README: Portability section — three layers (tool-agnostic /
+  concept-portable / Claude-Code-bound). Antigravity 2.0 reads
+  AGENTS.md + .agents/skills/; Gemini CLI hooks share the
+  exit-2-blocks semantics under renamed events (BeforeTool/AfterAgent);
+  Claude Code does not read AGENTS.md natively (mid-2026), so the
+  AGENTS.md-plus-CLAUDE.md-shim pattern is named but not built (YAGNI).
+  Models are not the axis: hooks/settings/skills are model-independent
+  within Claude Code.
+- base/.gitignore: restores the scaffold patterns lost by replacement
+  (*.pem, *.tsbuildinfo, next-env.d.ts, .vercel/) and adds
+  __pycache__/ (the harness ships Python hooks); SETUP step 1's
+  robocopy now excludes __pycache__ (seed-test bytecode was copied
+  into new apps).
+- check_markers.py: ADAPT note for stacks whose template syntax is {{
+  (Handlebars/Jinja/Angular/Vue/Liquid) — otherwise docs code samples
+  turn wiki-lint step 5 permanently red.
+- settings (base + profile): deny gains the PowerShell recursive-delete
+  form (Remove-Item -Recurse) — symmetric with the PS network denies;
+  parameter-order variants still slip prefix matching (accident guard,
+  not a boundary).
+- One-home and rot cleanups: SETUP step 5 defers the leftover-template
+  deletion to profile README step 2; profile ci.yml documents why the
+  full-suite step duplicates check's vitest run until check narrows;
+  the v2 design spec's status was stale ("pending implementation" →
+  implemented, historical record).
+- Seed test suite: settings parity guard — deny lists and hook
+  registrations must be identical between base and profile; the
+  allow/ask delta must be exactly the documented npx quartet. The
+  v2.2.1 drift class, mechanized (4 new tests; suite: 45, 1 skipped).
+
 ## 2026-07.5 — v2.3.1
 
 Remaining audit polish (medium/small priorities; touched templates

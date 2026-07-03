@@ -1,4 +1,4 @@
-# template-version: 2026-07
+# template-version: 2026-07.6
 # Dependencies
 node_modules/
 
@@ -6,17 +6,25 @@ node_modules/
 .env
 .env.*
 !.env.example
+*.pem
 
 # Build output
 dist/
 build/
 .next/
 out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
 
 # Logs & caches
 *.log
 .cache/
 coverage/
+
+# Python bytecode (the harness hooks are Python)
+__pycache__/
+*.pyc
 
 # OS noise
 .DS_Store

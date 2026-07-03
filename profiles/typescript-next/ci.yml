@@ -1,4 +1,4 @@
-# template-version: 2026-07
+# template-version: 2026-07.6
 # Filled TS/Next.js variant of base/.github/workflows/ci.template.yml
 name: CI
 
@@ -21,6 +21,9 @@ jobs:
       - name: Check (format + lint w/ zero warnings + typecheck + fast tests)
         run: npm run check
       - name: Test (full suite)
+        # Duplicates check's `vitest run` until `check` is narrowed to
+        # changed tests (profile README) — kept so the full suite
+        # survives that narrowing.
         run: npm test
       - name: Build
         run: npm run build
