@@ -33,6 +33,7 @@
       "Bash(rm -rf:*)",
       "Bash(rm -fr:*)",
       "Bash(rm -Rf:*)",
+      "Bash(Remove-Item -Recurse:*)",
       "Bash(git diff --no-index:*)",
       "Bash(git add -f:*)",
       "Bash(git add --force:*)",

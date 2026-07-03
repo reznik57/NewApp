@@ -7,13 +7,17 @@ grep incantations. Exit 0: clean; exit 1: leftovers listed on stdout, or
 CLAUDE.md missing (wrong cwd / step-7 rename skipped — fail loud, never
 false-green). Run from the app root. Stdlib only; Windows-safe.
 """
-# template-version: 2026-07.4
+# template-version: 2026-07.6
 import re
 import sys
 from pathlib import Path
 
 SCAN_TOPS = ["CLAUDE.md", ".claude", "docs", ".github"]
 MARKERS = ("{{", "ADAPT:")
+# ADAPT: if the app's stack uses {{ legitimately (Handlebars, Jinja,
+# Angular, Vue, Liquid), code samples in docs/ would turn this check —
+# and wiki-lint step 5 — permanently red: narrow MARKERS or extend
+# EXEMPT for those paths.
 # Exempt: reusable templates that ship with placeholders forever (copy
 # them, never fill them in place) and files that legitimately keep ADAPT:
 # tailoring markers or quote the marker syntax (including this script).

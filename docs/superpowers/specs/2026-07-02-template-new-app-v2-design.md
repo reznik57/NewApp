@@ -1,7 +1,7 @@
 # Template New App v2 — Design Spec
 
 **Date**: 2026-07-02
-**Status**: Approved design, pending implementation
+**Status**: Implemented (v2.0, 2026-07-02) — kept as the historical design record
 **Owner**: Sven
 
 ## 1. Context & Goal

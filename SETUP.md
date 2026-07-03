@@ -2,17 +2,21 @@
 
 Work top to bottom inside the NEW app's repo. Do not skip the exit gate.
 (This file lives in the seed and is never copied. If you copied the seed
-folder wholesale, delete SETUP.md, README.md, TEMPLATE-CHANGELOG.md,
-docs/superpowers/, tests/, and profiles/ from the app now.)
+folder wholesale, delete SETUP.md, ADOPTION.md, README.md,
+TEMPLATE-CHANGELOG.md, docs/superpowers/, tests/, and profiles/ from the
+app now. Bringing the harness into an app that already has code? Use
+ADOPTION.md instead — the step order differs on purpose.)
 
-- [ ] 1. **Copy the base** — from the seed: `robocopy "<seed>\base" . /E`
+- [ ] 1. **Copy the base** — from the seed:
+      `robocopy "<seed>\base" . /E /XD __pycache__`
       run at the new repo root (robocopy exit codes 0–3 are success), or any
       copy that includes dotfiles (`.gitignore`, `.env.example`,
-      `.editorconfig`, `.claude/`, `.github/`). If the stack has a
-      scaffolder (create-next-app, cargo new, ...), run it FIRST in the
-      empty repo, then copy the base over it — scaffolders refuse non-empty
-      directories, and the base `.gitignore` intentionally replaces the
-      scaffold's (it already covers node_modules/.next/out).
+      `.editorconfig`, `.claude/`, `.github/`) and skips `__pycache__/`
+      (seed-test bytecode). If the stack has a scaffolder (create-next-app,
+      cargo new, ...), run it FIRST in the empty repo, then copy the base
+      over it — scaffolders refuse non-empty directories, and the base
+      `.gitignore` intentionally replaces the scaffold's (it covers the
+      scaffold's ignore patterns).
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
       `profiles/typescript-next/README.md` steps 1–5.
 - [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
@@ -24,11 +28,11 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       `CHECK_COMMAND` update, which step 6's self-test verifies.
 - [ ] 5. **Activate settings** — rename `.claude/settings.template.json` →
       `.claude/settings.json` (skip if the profile's `settings.json` was
-      copied). Review the permission posture; it encodes moderate autonomy —
-      an accident guard, not a security boundary. Tighten toward ask-heavy
-      if this app handles untrusted input or you run walk-away sessions.
-      If you copied the profile's `settings.json`, delete the leftover
-      `.claude/settings.template.json` — two settings files invite drift.
+      copied — profile README step 2 includes deleting the leftover
+      template; two settings files invite drift). Review the permission
+      posture; it encodes moderate autonomy — an accident guard, not a
+      security boundary. Tighten toward ask-heavy if this app handles
+      untrusted input or you run walk-away sessions.
       Claude Code ignores project settings until the workspace trust dialog
       is accepted — open the app interactively once before relying on the
       harness.
