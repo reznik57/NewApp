@@ -57,10 +57,11 @@ Fresh, empty repo (replace `<seed>` with this folder's path):
 > Read `<seed>/SETUP.md` and work through the checklist top to bottom in
 > this repo. Do not skip the exit gate. Ask me at every decision point.
 
-Existing app — the kit is self-contained: copy the CONTENTS of
-`copyfolder/` into the app root (skip anything that already exists)
-and follow `copyfolder/START-HERE.md`; the kickoff prompt to paste
-into your agent lives there (its single home).
+Existing app — the kit is self-contained: copy the `copyfolder/`
+FOLDER into the app root (one move, nothing can collide) and follow
+`copyfolder/START-HERE.md`; the kickoff prompt to paste into your
+agent lives there (its single home). The checklist distributes the
+files and deletes the folder again at the end.
 
 Agent or not, the two mechanical gates say when you are done:
 `verify_on_stop.py --self-test` and `check_markers.py`.
