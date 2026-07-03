@@ -6,7 +6,7 @@ purpose: an existing codebase is rarely green, and the Stop hook must
 not go live before `check` is — activated on a red `check`, it blocks
 every session stop from day one.
 (This checklist lives in `copyfolder/` inside the app while you work
-it; step 10 deletes that folder again. Fresh empty repo? Use SETUP.md
+it; step 11 deletes that folder again. Fresh empty repo? Use SETUP.md
 instead.)
 
 - [ ] 1. **Inventory collisions** — note what already exists: a
@@ -26,7 +26,7 @@ instead.)
       `.claude/settings.template.json` collide with nothing and stay
       inactive until steps 5–6 activate them. Everything else (this
       checklist, SETUP.md, START-HERE.md, `gitignore.template`,
-      `ci.template.yml`) STAYS in `copyfolder/` — step 10 deletes the
+      `ci.template.yml`) STAYS in `copyfolder/` — step 11 deletes the
       whole folder. Deliberately not shipped ready-to-land: a live
       `.gitignore` (merge-only, step 3) and a live CI file (step 8).
 - [ ] 3. **Merge .gitignore** — append the patterns from
@@ -71,8 +71,18 @@ instead.)
       workflow yet → copy `copyfolder/ci.template.yml` to
       `.github/workflows/ci.yml` and fill it (inside copyfolder/ the
       unfilled copy is never parsed by GitHub).
-- [ ] 9. **Adapt the ultrathink skill** — as SETUP step 8.
-- [ ] 10. **EXIT GATE** — as SETUP step 12:
+- [ ] 9. **Debt baseline — inventory, don't fix** — one timeboxed
+      pass over the codebase: obvious legacy files (`*_old`, `*.bak`,
+      commented-out blocks), unused dependencies (e.g. `npx
+      depcheck`), dead exports, known-fragile areas. Register each as
+      a `deferred` entry in `docs/wiki/log.md` (what, why it stays,
+      what triggers paying it down) — fix now ONLY what blocks the
+      green `check`. From here the harness holds the line: the gate
+      blocks new debt, `/log-gotcha` records deliberate shortcuts,
+      and registered debt is paid down surgically when a real task
+      touches that area — no big-bang refactors.
+- [ ] 10. **Adapt the ultrathink skill** — as SETUP step 8.
+- [ ] 11. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
       `marker check OK` (Windows: `py`). Then delete the whole
       `copyfolder/` from the app (all remaining scaffolding lives

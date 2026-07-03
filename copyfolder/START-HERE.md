@@ -22,6 +22,6 @@ gates say when you are done:
 `.claude/hooks/verify_on_stop.py --self-test` and
 `.claude/scripts/check_markers.py`.
 
-ADOPTION step 10 deletes this whole folder again — the harness stays,
+ADOPTION step 11 deletes this whole folder again — the harness stays,
 the scaffolding goes. Fresh empty repo instead? Don't use this kit;
 seed from the template's `base/` per its `SETUP.md`.
