@@ -33,6 +33,15 @@ MANIFEST = {
 # single home — the seed README points here).
 KIT_ONLY = {"START-HERE.md"}
 
+# Merge sources shipped under an INERT name: the original name would
+# either overwrite an app file on copy (.gitignore) or be parsed by
+# GitHub as a broken workflow (ci.template.yml under .github/).
+# Re-sync: copy the source over the kit file listed here.
+RENAMED = {
+    "gitignore.template": BASE / ".gitignore",
+    "ci.template.yml": BASE / ".github" / "workflows" / "ci.template.yml",
+}
+
 
 def files_under(root, tops):
     for top in tops:
@@ -51,7 +60,9 @@ class CopyfolderParityTests(unittest.TestCase):
             if f.is_file() and "__pycache__" not in f.parts:
                 rel = f.relative_to(COPY)
                 self.assertTrue(
-                    rel.parts[0] in MANIFEST or rel.parts[0] in KIT_ONLY,
+                    rel.parts[0] in MANIFEST
+                    or rel.parts[0] in KIT_ONLY
+                    or rel.parts[0] in RENAMED,
                     "unexpected file in copyfolder: %s" % rel,
                 )
 
@@ -75,6 +86,16 @@ class CopyfolderParityTests(unittest.TestCase):
                     (COPY / rel).is_file(),
                     "missing in copyfolder (re-sync): %s" % rel,
                 )
+
+    def test_renamed_merge_sources_match_byte_for_byte(self):
+        for kit_name, source in RENAMED.items():
+            kit_file = COPY / kit_name
+            self.assertTrue(kit_file.is_file(), "missing: %s" % kit_name)
+            self.assertTrue(source.is_file(), "source gone: %s" % source)
+            self.assertEqual(
+                kit_file.read_bytes(), source.read_bytes(),
+                "drift: %s" % kit_name,
+            )
 
 
 if __name__ == "__main__":

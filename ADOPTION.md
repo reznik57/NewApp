@@ -27,13 +27,15 @@ again at step 10. Fresh empty repo? Use SETUP.md instead.)
       inactive until steps 5–6 activate them. Deliberately NOT in the
       set: `.gitignore` (merge-only, step 3), CI (step 8), and the
       seed's own docs (README, TEMPLATE-CHANGELOG, profiles/, tests/).
-- [ ] 3. **Merge .gitignore** — append the seed patterns the app's file
-      lacks (secrets block with `!.env.example`, build output, caches,
-      `__pycache__/`); never replace a grown .gitignore. Verify:
-      `git check-ignore .env` prints `.env`.
+- [ ] 3. **Merge .gitignore** — append the patterns from the kit's
+      `gitignore.template` that the app's file lacks (secrets block
+      with `!.env.example`, build output, caches, `__pycache__/`);
+      never replace a grown .gitignore. Delete `gitignore.template`
+      afterwards. Verify: `git check-ignore .env` prints `.env`.
 - [ ] 4. **Define the six-script contract on the CURRENT state** — map
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
-      (reference: `profiles/typescript-next/package-scripts.json`).
+      (semantics: CLAUDE.md → Commands; optional reference if the
+      seed is at hand: `profiles/typescript-next/package-scripts.json`).
       `check` must exit clean on the codebase AS IT IS TODAY — narrow
       its scope rather than weaken any rule:
       - Warning backlog → start `check` without that linter step, or
@@ -64,10 +66,14 @@ again at step 10. Fresh empty repo? Use SETUP.md instead.)
       get ADRs the normal way.
 - [ ] 8. **CI** — merge the gate into the existing workflow (check →
       full tests → build → audit) instead of adding a second one; no
-      workflow yet → use the template/profile CI (SETUP step 10).
+      workflow yet → copy the kit's `ci.template.yml` to
+      `.github/workflows/ci.yml` and fill it (it sits at the kit root
+      so GitHub never parses the unfilled copy). Delete the kit copy
+      afterwards.
 - [ ] 9. **Adapt the ultrathink skill** — as SETUP step 8.
 - [ ] 10. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
-      `marker check OK` (Windows: `py`). Then delete `START-HERE.md`,
-      `ADOPTION.md`, and `SETUP.md` from the app (setup scaffolding,
-      not app docs) and commit at a green `check`.
+      `marker check OK` (Windows: `py`). Then delete the kit
+      scaffolding from the app root — `START-HERE.md`, `ADOPTION.md`,
+      `SETUP.md`, and any leftover `gitignore.template` /
+      `ci.template.yml` — and commit at a green `check`.
