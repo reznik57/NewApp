@@ -1,9 +1,9 @@
 ---
 name: log-gotcha
-description: Capture a hard-won lesson at the end of an incident, bug hunt, or debugging session. Files it in the right knowledge home (CLAUDE.md gotcha one-liner, wiki page, or a proposed hook/lint rule) and updates the wiki index and log.
+description: Capture a hard-won lesson at the end of an incident, bug hunt, or debugging session — or record a deliberate shortcut (deferred debt) that shipped. Files it in the right knowledge home (CLAUDE.md gotcha one-liner, wiki page, deferred-debt log entry, or a proposed hook/lint rule) and updates the wiki index and log.
 ---
 
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.1 -->
 
 # /log-gotcha — incident capture
 
@@ -23,6 +23,10 @@ avoids it, naming the symbol involved>`
      the CLAUDE.md one-liner exists and is sharp.
    - Recurring AND mechanically checkable → propose a hook, lint rule, or CI
      gate to the user; once adopted, DELETE the prose rule it replaces.
+   - Deliberate shortcut or workaround shipped → append a `deferred` entry
+     to `docs/wiki/log.md` (content spec: that file's verb list). The entry
+     IS the record — step 1's Problem→Rule form and step 3's `learned`
+     entry don't apply.
 3. **Update the registers**: add any new page to `docs/wiki/index.md`; append
    a `learned` entry to `docs/wiki/log.md` (format: CLAUDE.md → Docs &
    Knowledge Schema).

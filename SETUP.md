@@ -10,7 +10,7 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       copy that includes dotfiles (`.gitignore`, `.env.example`,
       `.editorconfig`, `.claude/`, `.github/`).
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
-      `profiles/typescript-next/README.md` steps 1–4.
+      `profiles/typescript-next/README.md` steps 1–5.
 - [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
       `.env.example`. Verify: `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
@@ -38,7 +38,7 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply, keep `[Grows]` sections
-      empty, delete the header comment block. Budget: ~150 lines.
+      empty, delete the header comment block. Budget: ~160 lines.
 - [ ] 8. **Adapt the ultrathink skill** — fill or delete the `{{}}` rows in
       `.claude/skills/ultrathink/SKILL.md` (Phase 2 stack/domain rows,
       Phase 5 project gate).

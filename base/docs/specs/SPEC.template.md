@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.1 -->
 
 # Spec: {{Feature name}} ({{YYYY-MM-DD}})
 
@@ -21,6 +21,11 @@ One page, then stop. UltraThink reviews this spec, not a finished diff.
 ## Acceptance criteria
 
 1. {{Verifiable statement.}}
+
+## Rollback
+
+{{How this change is undone if it goes wrong — git revert alone, or the
+explicit data/schema backout steps.}}
 
 ## Open questions
 
