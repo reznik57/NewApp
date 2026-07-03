@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.1 -->
+<!-- template-version: 2026-07.2 -->
 <!--
   ============================================================================
   CLAUDE.md TEMPLATE  (stack-agnostic project guidance for Claude Code / agents)
@@ -74,6 +74,8 @@ violate. Examples:
   - Data/streaming: never buffer the full dataset in memory; stream it.
   - Data/DB: schema changes ship only as reversible migrations; never mutate
     schema or data in place.
+  - LLM/agent features: no prompt or model change ships without its eval
+    set passing — tests verify the deterministic parts, evals the rest.
   - Money/ledger: never use floats for currency; never mutate a posted entry.
   - Frontend: never block the UI thread; keep render paths allocation-light.
 You almost certainly have at least one. -->
@@ -139,7 +141,9 @@ CHECK_COMMAND in .claude/hooks/verify_on_stop.py to match. -->
 
 <!-- ADAPT: fill as the code grows. Describe the seams an agent must respect
 (layer boundaries, the one service that owns X). Name symbols, never counts.
-Non-obvious patterns belong here; obvious things don't. -->
+Non-obvious patterns belong here; obvious things don't. Name one canonical
+example file per recurring pattern — agents copy patterns better than they
+follow prose. -->
 
 ## Project Gotchas [Grows]
 
@@ -197,10 +201,11 @@ avoids it, with the symbol name involved>
 
 For complex or high-risk changes, run the **ultrathink** skill BEFORE writing
 code. Triggers (sole home — restated only in the ultrathink skill's auto-invocation description): architecture decisions, new
-subsystems, security-sensitive or performance-critical paths, irreversible
-data/schema changes. Changes touching more than 2 modules or with
-irreversible consequences also get a one-page spec first (copy
-`docs/specs/SPEC.template.md`); ultrathink then reviews the spec.
+subsystems, security-sensitive or performance-critical paths, LLM-powered
+features, irreversible data/schema changes. Changes touching more than
+2 modules or with irreversible consequences also get a one-page spec
+first (copy `docs/specs/SPEC.template.md`); ultrathink then reviews the
+spec.
 
 ---
 
