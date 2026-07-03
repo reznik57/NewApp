@@ -5,21 +5,24 @@ import json
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 HOOK = Path(__file__).resolve().parents[2] / "base" / ".claude" / "hooks" / "verify_on_stop.py"
 
-PASS_CMD = '%s -c "raise SystemExit(0)"' % sys.executable
-FAIL_CMD = '%s -c "print(\'boom\'); raise SystemExit(1)"' % sys.executable
+# Executable path quoted: a Python under "C:\Program Files\..." must not
+# make the suite (or the self-test) environment-dependent.
+PASS_CMD = '"%s" -c "raise SystemExit(0)"' % sys.executable
+FAIL_CMD = '"%s" -c "print(\'boom\'); raise SystemExit(1)"' % sys.executable
 
 
-def run_hook(stdin_obj, check_cmd, extra_args=None):
+def run_hook(stdin_obj, check_cmd, extra_args=None, cwd=None):
     env = dict(os.environ, HARNESS_CHECK_CMD=check_cmd)
     return subprocess.run(
         [sys.executable, str(HOOK)] + (extra_args or []),
         input=json.dumps(stdin_obj), capture_output=True, text=True,
-        timeout=60, env=env,
+        timeout=60, env=env, cwd=cwd,
     )
 
 
@@ -72,6 +75,47 @@ class VerifyOnStopTests(unittest.TestCase):
         result = run_hook({}, "npm run check", extra_args=["--self-test"])
         self.assertEqual(result.returncode, 1)
         self.assertIn("self-test FAIL", result.stdout)
+
+    def test_self_test_fails_for_missing_tool(self):
+        # A typo'd non-npm binary must fail at setup, not block every stop.
+        result = run_hook({}, "definitely-missing-tool-xyz --check", extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("not found", result.stdout)
+
+    def test_self_test_checks_every_compound_segment(self):
+        cmd = PASS_CMD + " && definitely-missing-tool-xyz"
+        result = run_hook({}, cmd, extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("not found", result.stdout)
+
+    def test_self_test_accepts_quoted_tool_path(self):
+        # Windows tools often live under paths with spaces; the quoted
+        # form must not be split at the space (was a false FAIL).
+        result = run_hook({}, '"%s" -V' % sys.executable, extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("self-test OK", result.stdout)
+
+    def test_self_test_ignores_operators_inside_quotes(self):
+        # A | inside a quoted argument is not a pipe (was a false FAIL).
+        cmd = '"%s" -c "x = \'a|b\'"' % sys.executable
+        result = run_hook({}, cmd, extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 0)
+
+    def test_self_test_skips_shell_builtins(self):
+        # cd resolves via the shell at run time, never via PATH lookup.
+        cmd = 'cd . && "%s" -V' % sys.executable
+        result = run_hook({}, cmd, extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 0)
+
+    def test_self_test_checks_segments_after_npm_run(self):
+        # A compound starting with npm run must still validate the rest.
+        tmp = tempfile.mkdtemp()
+        with open(os.path.join(tmp, "package.json"), "w", encoding="utf-8") as f:
+            json.dump({"scripts": {"check": "true"}}, f)
+        cmd = "npm run check && definitely-missing-tool-xyz"
+        result = run_hook({}, cmd, extra_args=["--self-test"], cwd=tmp)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("not found", result.stdout)
 
 
 if __name__ == "__main__":

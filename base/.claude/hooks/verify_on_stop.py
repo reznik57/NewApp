@@ -7,9 +7,10 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
-# template-version: 2026-07.3
+# template-version: 2026-07.5
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -44,17 +45,66 @@ def run_check():
     return 2
 
 
+SHELL_BUILTINS = {"cd", "echo", "set", "exit", "true", "false"}
+
+
+def _split_segments(command):
+    """Split on ;, |, &&, || — but only OUTSIDE quotes."""
+    segments, buf, quote = [], [], None
+    i, n = 0, len(command)
+    while i < n:
+        ch = command[i]
+        if quote:
+            if ch == quote:
+                quote = None
+            buf.append(ch)
+        elif ch in "\"'":
+            quote = ch
+            buf.append(ch)
+        elif command.startswith(("&&", "||"), i):
+            segments.append("".join(buf))
+            buf = []
+            i += 1
+        elif ch in ";|":
+            segments.append("".join(buf))
+            buf = []
+        else:
+            buf.append(ch)
+        i += 1
+    segments.append("".join(buf))
+    return [s.strip() for s in segments if s.strip()]
+
+
+def _leading_tool(segment):
+    """First token, unwrapping a quoted tool path (spaces preserved)."""
+    if segment[:1] in "\"'":
+        end = segment.find(segment[0], 1)
+        return segment[1:end] if end > 0 else None
+    parts = segment.split(None, 1)
+    return parts[0] if parts else None
+
+
 def self_test():
-    if CHECK_COMMAND.startswith("npm run "):
-        script = CHECK_COMMAND[len("npm run "):].split()[0]
-        try:
-            with open("package.json", encoding="utf-8") as f:
-                scripts = json.load(f).get("scripts", {})
-        except (OSError, ValueError) as exc:
-            print("self-test FAIL: cannot read package.json (%s)" % exc)
-            return 1
-        if script not in scripts:
-            print("self-test FAIL: package.json has no '%s' script" % script)
+    # Verify each command segment's leading tool resolves, so a typo'd
+    # binary fails HERE instead of blocking every session stop.
+    for segment in _split_segments(CHECK_COMMAND):
+        if segment.startswith("npm run "):
+            script = segment[len("npm run "):].split()[0]
+            try:
+                with open("package.json", encoding="utf-8") as f:
+                    scripts = json.load(f).get("scripts", {})
+            except (OSError, ValueError) as exc:
+                print("self-test FAIL: cannot read package.json (%s)" % exc)
+                return 1
+            if script not in scripts:
+                print("self-test FAIL: package.json has no '%s' script" % script)
+                return 1
+            continue
+        tool = _leading_tool(segment)
+        if tool is None or tool.lower() in SHELL_BUILTINS:
+            continue
+        if shutil.which(tool) is None and not os.path.exists(tool):
+            print("self-test FAIL: '%s' not found on PATH" % tool)
             return 1
     print("self-test OK: check command is '%s'" % CHECK_COMMAND)
     return 0
