@@ -2,7 +2,7 @@
 
 Work top to bottom inside the NEW app's repo. Do not skip the exit gate.
 (This file reaches an app only inside `copyfolder/`, as the reference
-ADOPTION.md cites — its step 10 deletes that whole folder. If you
+ADOPTION.md cites — its step 11 deletes that whole folder. If you
 copied the seed folder wholesale, delete README.md,
 TEMPLATE-CHANGELOG.md, docs/superpowers/, tests/, profiles/, and
 copyfolder/ from the app now. Bringing the harness into an app that

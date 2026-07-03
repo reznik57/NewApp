@@ -27,7 +27,7 @@ MANIFEST = {
     ".claude": BASE,
     "docs": BASE,
     "ADOPTION.md": ROOT,  # both checklists travel with the kit;
-    "SETUP.md": ROOT,     # ADOPTION step 10 deletes them from the app
+    "SETUP.md": ROOT,     # ADOPTION step 11 deletes them from the app
 }
 # Authored directly in the kit, no source twin (the kickoff prompt's
 # single home — the seed README points here).
