@@ -3,7 +3,7 @@ name: ultrathink
 description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, LLM-powered features, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
 ---
 
-<!-- template-version: 2026-07.2 -->
+<!-- template-version: 2026-07.3 -->
 
 # UltraThink Protocol
 
@@ -12,9 +12,9 @@ Surfaces architecture, correctness, and edge-case risk while it's still
 cheap — on paper, not in a failed deploy.
 
 **When to run**: the trigger list lives in CLAUDE.md → Deep-Analysis Protocol
-(sole home — do not restate it here). **Skip for** single-file edits, typo
-fixes, trivial config changes. If a spec exists in `docs/specs/`, review THE
-SPEC, not a finished diff.
+(sole home — do not restate it here; the skip list lives in this skill's
+description). If a spec exists in `docs/specs/`, review THE SPEC, not a
+finished diff.
 
 ## Phase 0: Clarification Gate
 
@@ -68,18 +68,18 @@ Simulate the debate internally — reason, don't tick boxes.
 
 ### The Devil's Advocate — edge cases, failures, security, entropy
 
-| Question                                             | Why it matters                                            |
-| ---------------------------------------------------- | --------------------------------------------------------- |
-| Malformed / hostile / empty input?                   | Graceful degradation, not a crash                         |
-| Largest realistic input — still holds?               | Memory, timeouts, back-pressure                           |
-| Concurrency / race conditions?                       | Shared state, ordering, cancellation                      |
-| Retried, replayed, or double-fired — still correct?  | Idempotency; duplicated side effects                      |
-| Is failure observable, or silently swallowed?        | Errors must surface                                       |
-| Is cancellation / timeout honored throughout?        | No orphaned work                                          |
-| Does this add an abstraction the task doesn't need?  | Speculative structure is debt                             |
-| Any defensive boilerplate for impossible conditions? | Noise that buries real handling                           |
-| Does it pull in a NEW dependency?                    | Needs approval + alternative (CLAUDE.md → Standing Rules) |
-| Does it lean on a deprecated or legacy API?          | Agents reproduce stale idioms; check current docs         |
+| Question                                             | Why it matters                                    |
+| ---------------------------------------------------- | ------------------------------------------------- |
+| Malformed / hostile / empty input?                   | Graceful degradation, not a crash                 |
+| Largest realistic input — still holds?               | Memory, timeouts, back-pressure                   |
+| Concurrency / race conditions?                       | Shared state, ordering, cancellation              |
+| Retried, replayed, or double-fired — still correct?  | Idempotency; duplicated side effects              |
+| Is failure observable, or silently swallowed?        | Errors must surface                               |
+| Is cancellation / timeout honored throughout?        | No orphaned work                                  |
+| Does this add an abstraction the task doesn't need?  | Speculative structure is debt                     |
+| Any defensive boilerplate for impossible conditions? | Noise that buries real handling                   |
+| Does it pull in a NEW dependency?                    | Apply CLAUDE.md → Standing Rules                  |
+| Does it lean on a deprecated or legacy API?          | Agents reproduce stale idioms; check current docs |
 
 ## Phase 3: Debate Output
 
@@ -102,8 +102,7 @@ flips the ADR to accepted.
 
 Only after approval.
 
-- New external dependency? Apply CLAUDE.md → Standing Rules (approval +
-  alternative considered + license check).
+- New external dependency? Apply CLAUDE.md → Standing Rules.
 - Existing pattern to reuse? Search before creating.
 - Derive integration points fresh from CLAUDE.md → Architecture — do NOT
   maintain a copy of that map here.

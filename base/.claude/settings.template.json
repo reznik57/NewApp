@@ -29,6 +29,7 @@
       "Read(.env.development.local)",
       "Read(.env.production.local)",
       "Read(.env.test.local)",
+      "Read(.env.staging.local)",
       "Bash(rm -rf:*)",
       "Bash(rm -fr:*)",
       "Bash(rm -Rf:*)",

@@ -31,7 +31,7 @@ compounds instead of evaporating in chat transcripts.
 | `base/.claude/skills/wiki-lint/`                               | Docs health check — dead references, orphans, duplication, leftovers.                                                    |
 | `base/docs/adr/`                                               | Decision records (MADR-lite, append-only).                                                                               |
 | `base/docs/wiki/`                                              | Index + append-only log; pages grow lazily from incidents.                                                               |
-| `base/docs/specs/`                                             | One-page spec template for >2-module or irreversible changes.                                                            |
+| `base/docs/specs/`                                             | One-page spec template (threshold: CLAUDE.md → Deep-Analysis Protocol).                                                  |
 | `base/.github/workflows/`                                      | CI template: the same gate, warnings-as-errors, full tests, audit.                                                       |
 | base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                   |
 | `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                  |

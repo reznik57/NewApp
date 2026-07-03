@@ -1,10 +1,9 @@
-<!-- template-version: 2026-07.1 -->
+<!-- template-version: 2026-07.3 -->
 
 # Spec: {{Feature name}} ({{YYYY-MM-DD}})
 
-Use for changes touching more than 2 modules or with irreversible
-consequences (threshold defined in CLAUDE.md → Deep-Analysis Protocol).
-One page, then stop. UltraThink reviews this spec, not a finished diff.
+Use when CLAUDE.md → Deep-Analysis Protocol requires a spec. One page,
+then stop.
 
 ## Problem
 

@@ -43,6 +43,18 @@ class ProtectFilesTests(unittest.TestCase):
         result = run_hook({"file_path": "C:/proj/.git/config"})
         self.assertEqual(result.returncode, 2)
 
+    def test_blocks_file_named_git(self):
+        # In worktrees/submodules .git is a FILE (gitdir pointer), not a dir;
+        # it must be protected even with no .git parent segment.
+        result = run_hook({"file_path": "C:/proj/wt/.git"})
+        self.assertEqual(result.returncode, 2)
+
+    def test_blocks_modern_bun_lockfile(self):
+        # bun.lock (text) is Bun's default lockfile since 1.2; bun.lockb is legacy.
+        result = run_hook({"file_path": "C:/proj/bun.lock"})
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("lockfile", result.stderr)
+
     def test_blocks_env_example_inside_git_dir(self):
         result = run_hook({"file_path": "C:/proj/.git/.env.example"})
         self.assertEqual(result.returncode, 2)

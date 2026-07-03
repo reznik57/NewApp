@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.1 -->
+<!-- template-version: 2026-07.3 -->
 
 # Profile: TypeScript / Next.js
 
@@ -22,7 +22,10 @@ the new repo (SETUP.md step 2):
 Still manual afterwards: Role & Context, the project-specific invariant,
 Invariant 1's `{{CHECK CMD}}` (fill with `npm run check`) and
 `{{CI-EQUIVALENT CMD}}` (fill with `npm run check; npm test; npm run build`),
-`{{FORMATTER}}` (Prettier), and ADR-0001. Dev dependencies expected by the
+`{{FORMATTER}}` (Prettier), ADR-0001, and the app's first test —
+`vitest run` exits 1 when no test files exist, so `check` (and with it the
+Stop hook and CI) cannot go green until one is written. Do NOT add
+`--passWithNoTests`; that weakens the gate. Dev dependencies expected by the
 scripts: typescript, vitest, eslint (flat config), eslint-config-next
 (>= 16 — flat-native; needs `next` present at lint time),
 eslint-plugin-jsx-a11y, prettier.
