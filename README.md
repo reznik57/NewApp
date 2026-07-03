@@ -23,7 +23,7 @@ compounds instead of evaporating in chat transcripts.
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SETUP.md`                                                     | The per-app instantiation checklist (fresh repos). Start here.                                                                                  |
 | `ADOPTION.md`                                                  | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live.                                  |
-| `copyfolder/`                                                  | The one-command copy set for existing apps (ADOPTION step 2): collision-free by design, inert templates, no .gitignore/CI. Parity-tested against `base/`. |
+| `copyfolder/`                                                  | The self-contained adoption kit for existing apps: collision-free set + both checklists; no .gitignore/CI. Parity-tested against its sources.   |
 | `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                                               |
 | `base/CLAUDE.template.md`                                      | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                                              |
 | `base/.claude/settings.template.json`                          | Permission posture + hook registrations.                                                                                                        |
@@ -50,22 +50,21 @@ code, follow `ADOPTION.md` instead — same harness, inverted order.
 
 Both checklists are agent-optional: work them by hand, or paste ONE of
 these kickoff prompts into whatever agent sits in the app's repo (Claude
-Code, Antigravity, Gemini CLI, ...). Replace `<seed>` with this folder's
-path.
+Code, Antigravity, Gemini CLI, ...).
 
-Fresh, empty repo:
+Fresh, empty repo (replace `<seed>` with this folder's path):
 
 > Read `<seed>/SETUP.md` and work through the checklist top to bottom in
 > this repo. Do not skip the exit gate. Ask me at every decision point.
 
-Existing app:
+Existing app — two moves, no seed access needed afterwards: copy the
+CONTENTS of `copyfolder/` into the app root (skip anything that already
+exists), then paste:
 
-> Read `<seed>/ADOPTION.md` and work through the checklist top to bottom
-> in this repo — it merges the harness into existing code. Step 2's
-> copy set is `<seed>/copyfolder` (already copied if you see
-> `CLAUDE.template.md` here — then continue at step 3). Never
-> overwrite an existing file without asking; ask me at every merge
-> conflict and decision point.
+> Read `ADOPTION.md` in this repo's root and work through the checklist
+> top to bottom — it merges the just-copied harness files into this
+> existing codebase. Never overwrite an existing file without asking;
+> ask me at every merge conflict and decision point.
 
 Agent or not, the two mechanical gates say when you are done:
 `verify_on_stop.py --self-test` and `check_markers.py`.
