@@ -1,9 +1,9 @@
 ---
 name: ultrathink
-description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
+description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, LLM-powered features, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
 ---
 
-<!-- template-version: 2026-07.1 -->
+<!-- template-version: 2026-07.2 -->
 
 # UltraThink Protocol
 

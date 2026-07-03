@@ -44,6 +44,14 @@ Copy `base/*` (including dotfiles) into the new repo → overlay a profile if
 one fits → work through `SETUP.md` top to bottom → its exit gate greps for
 leftover `{{PLACEHOLDER}}`/`ADAPT:` markers.
 
+## When not to use this seed
+
+Throwaway spikes and hackathon prototypes don't get a harness — discipline
+you plan to discard is waste. The rule that keeps this safe: a spike never
+graduates to production by accident. If a prototype earns a future, re-seed
+fresh from this template and port the spike's code over piece by piece,
+through the gate.
+
 ## Relationship to installed plugins
 
 The harness deliberately does NOT duplicate generic workflows provided by

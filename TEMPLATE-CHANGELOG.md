@@ -5,6 +5,23 @@ app's stamp against this log to see what it is missing. JSON templates
 (settings.template.json, profile settings.json, package-scripts.json) cannot
 carry comment stamps — their version is tracked only here.
 
+## 2026-07.2 — v2.2
+
+Deltas from mapping Google's "The New SDLC with Vibe Coding" whitepaper
+(May 2026) against the seed. Three small additions; the paper otherwise
+independently converges with the seed's design (hooks as guarantees,
+static-context budget, skills as progressive disclosure). Touched files
+carry the stamp 2026-07.2.
+
+- CLAUDE.template.md: Invariant-5 ADAPT example for LLM/agent features
+  (no prompt or model change ships without its eval set — tests verify
+  the deterministic parts, evals the rest); "LLM-powered features" joins
+  the Deep-Analysis triggers (mirrored in ultrathink's description, the
+  one allowed restatement); Architecture ADAPT note asks for one
+  canonical example file per recurring pattern.
+- README: "When not to use this seed" — spikes don't get a harness, and
+  a spike never graduates to production by accident.
+
 ## 2026-07.1 — v2.1
 
 Gap-analysis round against an external "enterprise guardrails" prompt
