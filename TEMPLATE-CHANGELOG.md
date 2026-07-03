@@ -10,8 +10,9 @@ carry comment stamps — their version is tracked only here.
 Deltas from mapping Google's "The New SDLC with Vibe Coding" whitepaper
 (May 2026) against the seed. Three small additions; the paper otherwise
 independently converges with the seed's design (hooks as guarantees,
-static-context budget, skills as progressive disclosure). Touched files
-carry the stamp 2026-07.2.
+static-context budget, skills as progressive disclosure). Touched
+template files carry the stamp 2026-07.2 (README is an unstamped
+seed-root doc).
 
 - CLAUDE.template.md: Invariant-5 ADAPT example for LLM/agent features
   (no prompt or model change ships without its eval set — tests verify

@@ -202,9 +202,10 @@ avoids it, with the symbol name involved>
 For complex or high-risk changes, run the **ultrathink** skill BEFORE writing
 code. Triggers (sole home — restated only in the ultrathink skill's auto-invocation description): architecture decisions, new
 subsystems, security-sensitive or performance-critical paths, LLM-powered
-features, irreversible data/schema changes. Changes touching more than 2 modules or with
-irreversible consequences also get a one-page spec first (copy
-`docs/specs/SPEC.template.md`); ultrathink then reviews the spec.
+features, irreversible data/schema changes. Changes touching more than
+2 modules or with irreversible consequences also get a one-page spec
+first (copy `docs/specs/SPEC.template.md`); ultrathink then reviews the
+spec.
 
 ---
 
