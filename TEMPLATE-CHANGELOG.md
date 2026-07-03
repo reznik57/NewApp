@@ -5,6 +5,31 @@ app's stamp against this log to see what it is missing. JSON templates
 (settings.template.json, profile settings.json, package-scripts.json) cannot
 carry comment stamps — their version is tracked only here.
 
+## 2026-07.1 — v2.1
+
+Gap-analysis round against an external "enterprise guardrails" prompt
+(30 candidate gaps adversarially verified; 14 adopted, 16 rejected as
+bloat or duplication of plugins/ultrathink). Touched files carry the
+stamp 2026-07.1.
+
+- CLAUDE.template.md: three new Everyday Task Discipline bullets (Reuse
+  first; Verify, don't invent; User first); Security rule now covers PII;
+  Dependencies rule adds a maintenance check; Invariant-5 ADAPT example
+  for reversible DB migrations; session workflow includes deferred debt.
+- Debt capture: log-gotcha gains a deferred-debt branch; docs/wiki/log.md
+  gains the `deferred` verb. Replaces an external TECHNICAL_DEBT.md-style
+  register — same function, existing append-only home.
+- ultrathink: Phase-1 red flag for endpoints/routes/actions changed
+  without an explicit authn/authz decision; Devil's Advocate row for
+  idempotency under retries/replays/double-fires.
+- SPEC.template.md: Rollback section (git revert alone, or explicit
+  data/schema backout steps).
+- TS/Next profile: eslint.config.mjs added — jsx-a11y flat recommended
+  (accessibility, enforced) + no-warning-comments (no TODO/FIXME in
+  shipped code), both failing `check` via `--max-warnings 0`; new Stack
+  Rules section in CLAUDE.stack-sections.md (UI four-state matrix,
+  server-side validation); README gains the copy step (now steps 1–5).
+
 ## 2026-07 — v2
 
 - Enforcement layer: `.claude/settings.template.json`, `protect_files.py`,

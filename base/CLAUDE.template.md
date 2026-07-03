@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.1 -->
 <!--
   ============================================================================
   CLAUDE.md TEMPLATE  (stack-agnostic project guidance for Claude Code / agents)
@@ -72,6 +72,8 @@ Non-negotiable. Breaking one invalidates the task.
 violate. Examples:
   - Security/CLI: never pass unsanitized input to a shell/subprocess.
   - Data/streaming: never buffer the full dataset in memory; stream it.
+  - Data/DB: schema changes ship only as reversible migrations; never mutate
+    schema or data in place.
   - Money/ledger: never use floats for currency; never mutate a posted entry.
   - Frontend: never block the UI thread; keep render paths allocation-light.
 You almost certainly have at least one. -->
@@ -87,10 +89,18 @@ UltraThink review — see Deep-Analysis Protocol below.)
 - **Simplicity first**: no speculative abstractions, no unrequested features,
   no defensive boilerplate for conditions that can't occur. Self-check before
   finishing: "would a senior reviewer call this over-engineered?"
+- **Reuse first**: before creating a component, util, or helper, search the
+  codebase for an existing one — extend it, or state why it doesn't fit.
 - **Think before coding**: state your assumptions. If the request has two
   plausible readings, ask — or state the reading you chose and why.
+- **Verify, don't invent**: never reference an env var, config key, route,
+  schema field, or third-party capability you haven't confirmed exists —
+  inspect first; if you can't verify, say so and ask.
 - **Goal-driven execution**: restate the task as steps of the form
   `[step] → verify: [check]`. A step without a verify is not a step.
+- **User first**: never trade user-facing quality for implementation
+  convenience; between technically equivalent options, pick the better
+  user experience.
 - **Calibration**: bias toward caution; for trivial tasks, use judgment.
 
 ## Tech Stack [Day-0]
@@ -147,16 +157,19 @@ avoids it, with the symbol name involved>
 - **Git**: atomic commits, only at a green `check`. Conventional-commit
   subject; the _why_ in the body. Never commit secrets or `.env`.
 - **Dependencies**: stdlib first → existing deps → a NEW dependency needs
-  explicit approval plus a stated alternative you considered. Lockfile always
+  explicit approval plus a stated alternative you considered and a
+  maintenance check (recent releases, active upstream). Lockfile always
   committed.
 - **Security**: secrets live in env vars only (`.env` ignored,
-  `.env.example` committed). Parameterize all queries. Never log secrets.
+  `.env.example` committed). Parameterize all queries. Never log secrets
+  or personal data (PII).
 - **Errors**: fail fast. No bare catch-and-continue; errors surface to the
   user or the log, never silently vanish.
 - **Style**: enforced by `{{FORMATTER}}` config. Never hand-format against
   it. No style rules belong in this file.
 - **Session workflow**: at start, skim Project Gotchas and recent titles in
-  `docs/adr/`. At end, run `/log-gotcha` for anything hard-won this session.
+  `docs/adr/`. At end, run `/log-gotcha` for anything hard-won or
+  deliberately deferred this session.
 
 ## Docs & Knowledge Schema
 

@@ -3,7 +3,7 @@ name: ultrathink
 description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
 ---
 
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.1 -->
 
 # UltraThink Protocol
 
@@ -37,6 +37,8 @@ implies violating one, or any universal red flag:
 - Irreversible data loss or unsafe migration without a backout path.
 - Breaking a public contract (API shape, schema, file format) without
   versioning.
+- An externally reachable endpoint, route, or action added or changed
+  without an explicit authn/authz decision.
 
 **Minor concerns**: flag them in the synthesis; don't stop.
 
@@ -71,6 +73,7 @@ Simulate the debate internally — reason, don't tick boxes.
 | Malformed / hostile / empty input?                   | Graceful degradation, not a crash                         |
 | Largest realistic input — still holds?               | Memory, timeouts, back-pressure                           |
 | Concurrency / race conditions?                       | Shared state, ordering, cancellation                      |
+| Retried, replayed, or double-fired — still correct?  | Idempotency; duplicated side effects                      |
 | Is failure observable, or silently swallowed?        | Errors must surface                                       |
 | Is cancellation / timeout honored throughout?        | No orphaned work                                          |
 | Does this add an abstraction the task doesn't need?  | Speculative structure is debt                             |

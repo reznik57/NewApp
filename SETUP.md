@@ -10,7 +10,7 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       copy that includes dotfiles (`.gitignore`, `.env.example`,
       `.editorconfig`, `.claude/`, `.github/`).
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
-      `profiles/typescript-next/README.md` steps 1–4.
+      `profiles/typescript-next/README.md` steps 1–5.
 - [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
       `.env.example`. Verify: `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
