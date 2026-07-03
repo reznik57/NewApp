@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.3 -->
+<!-- template-version: 2026-07.4 -->
 
 # Profile: TypeScript / Next.js
 
@@ -12,9 +12,9 @@ the new repo (SETUP.md step 2):
    Delete `.claude/settings.template.json` afterwards.
 3. Copy `ci.yml` → `.github/workflows/ci.yml` (replaces ci.template.yml).
 4. Copy `eslint.config.mjs` → repo root, replacing the one create-next-app
-   generated. It layers enforced accessibility (jsx-a11y) and
-   stale-marker-comment rules on the Next.js defaults — the file's header
-   is the sole home for how they gate.
+   generated. It layers the profile's enforced rules on the Next.js
+   defaults — the file's header is the sole home for what they are and
+   how they gate.
 5. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md with the
    contents of `CLAUDE.stack-sections.md` (includes the `Stack Rules`
    section — keep it).

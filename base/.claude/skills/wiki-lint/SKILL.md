@@ -3,7 +3,7 @@ name: wiki-lint
 description: Docs health check for CLAUDE.md, ADRs, and the wiki. Finds dead symbol references, orphan or unindexed pages, contradicted decisions without superseded-by links, duplicated facts, and leftover placeholders. Run monthly or before major work.
 ---
 
-<!-- template-version: 2026-07.3 -->
+<!-- template-version: 2026-07.4 -->
 
 # /wiki-lint — docs health check
 
@@ -21,10 +21,7 @@ user (docs may encode intent the code lost).
 4. **Duplication drift**: any fact stated in both CLAUDE.md and a wiki/ADR
    page? Propose which single home keeps it (fact-placement law in
    CLAUDE.md → Docs & Knowledge Schema).
-5. **Leftovers**: grep `CLAUDE.md`, `.claude/`, `docs/`, `.github/` for
-   `{{` and `ADAPT:` — both must return nothing, excluding the reusable
-   templates (`docs/adr/0000-template.md`, `docs/specs/SPEC.template.md`)
-   and the files that legitimately keep ADAPT: markers or quote this syntax
-   (`.claude/hooks/protect_files.py`, `.claude/hooks/verify_on_stop.py`,
-   this file).
+5. **Leftovers**: run `.claude/scripts/check_markers.py` — it must print
+   `marker check OK` (scanned paths and exemptions live in the script,
+   their single home).
 6. **Report**: a fix-list grouped by file — finding + suggested action.
