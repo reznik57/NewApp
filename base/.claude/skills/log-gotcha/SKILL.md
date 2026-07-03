@@ -24,8 +24,9 @@ avoids it, naming the symbol involved>`
    - Recurring AND mechanically checkable → propose a hook, lint rule, or CI
      gate to the user; once adopted, DELETE the prose rule it replaces.
    - Deliberate shortcut or workaround shipped → append a `deferred` entry
-     to `docs/wiki/log.md`: what was skipped, why, and what would trigger
-     paying it down.
+     to `docs/wiki/log.md` (content spec: that file's verb list). The entry
+     IS the record — step 1's Problem→Rule form and step 3's `learned`
+     entry don't apply.
 3. **Update the registers**: add any new page to `docs/wiki/index.md`; append
    a `learned` entry to `docs/wiki/log.md` (format: CLAUDE.md → Docs &
    Knowledge Schema).

@@ -19,24 +19,24 @@ compounds instead of evaporating in chat transcripts.
 
 ## Map
 
-| Path                                                            | Job                                                                                                                       |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `SETUP.md`                                                      | The per-app instantiation checklist. Start here.                                                                         |
-| `TEMPLATE-CHANGELOG.md`                                         | Seed version history; how seeded apps learn what they're missing.                                                        |
-| `base/CLAUDE.template.md`                                       | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                       |
-| `base/.claude/settings.template.json`                           | Permission posture + hook registrations.                                                                                 |
-| `base/.claude/hooks/`                                           | `protect_files.py` (blocks edits to .env/lockfiles/.git), `verify_on_stop.py` (the gate runs before the agent may stop). |
-| `base/.claude/skills/ultrathink/`                               | Adversarial design review before complex changes; output saved as an ADR.                                                |
-| `base/.claude/skills/log-gotcha/`                               | End-of-incident knowledge capture with a graduation rule.                                                                |
-| `base/.claude/skills/wiki-lint/`                                | Docs health check — dead references, orphans, duplication, leftovers.                                                    |
-| `base/docs/adr/`                                                | Decision records (MADR-lite, append-only).                                                                               |
-| `base/docs/wiki/`                                               | Index + append-only log; pages grow lazily from incidents.                                                               |
-| `base/docs/specs/`                                              | One-page spec template for >2-module or irreversible changes.                                                            |
-| `base/.github/workflows/`                                       | CI template: the same gate, warnings-as-errors, full tests, audit.                                                       |
-| base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`)  | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                   |
-| `profiles/typescript-next/`                                     | Pre-filled overlay for TS/Next.js apps.                                                                                  |
-| `tests/`                                                        | Seed-only tests for the hook scripts (`python -m unittest discover -s tests`).                                           |
-| `docs/superpowers/`                                             | Specs/plans for the seed itself (not copied).                                                                            |
+| Path                                                           | Job                                                                                                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `SETUP.md`                                                     | The per-app instantiation checklist. Start here.                                                                         |
+| `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                        |
+| `base/CLAUDE.template.md`                                      | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                       |
+| `base/.claude/settings.template.json`                          | Permission posture + hook registrations.                                                                                 |
+| `base/.claude/hooks/`                                          | `protect_files.py` (blocks edits to .env/lockfiles/.git), `verify_on_stop.py` (the gate runs before the agent may stop). |
+| `base/.claude/skills/ultrathink/`                              | Adversarial design review before complex changes; output saved as an ADR.                                                |
+| `base/.claude/skills/log-gotcha/`                              | End-of-incident knowledge capture with a graduation rule.                                                                |
+| `base/.claude/skills/wiki-lint/`                               | Docs health check — dead references, orphans, duplication, leftovers.                                                    |
+| `base/docs/adr/`                                               | Decision records (MADR-lite, append-only).                                                                               |
+| `base/docs/wiki/`                                              | Index + append-only log; pages grow lazily from incidents.                                                               |
+| `base/docs/specs/`                                             | One-page spec template for >2-module or irreversible changes.                                                            |
+| `base/.github/workflows/`                                      | CI template: the same gate, warnings-as-errors, full tests, audit.                                                       |
+| base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                   |
+| `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                  |
+| `tests/`                                                       | Seed-only tests for the hook scripts (`python -m unittest discover -s tests`).                                           |
+| `docs/superpowers/`                                            | Specs/plans for the seed itself (not copied).                                                                            |
 
 ## Instantiation
 
@@ -54,7 +54,8 @@ enforces less.
 
 ## Upgrading seeded apps
 
-Every copied template carries `template-version: YYYY-MM`. Diff an app's
+Every copied template carries `template-version: YYYY-MM` (`YYYY-MM.N` for
+a patch round within the same month). Diff an app's
 stamp against `TEMPLATE-CHANGELOG.md`, then port the missing pieces by hand
 (or with an agent). The seed is the canonical upstream; apps never edit
 their copies expecting it to flow back — improvements land here first.

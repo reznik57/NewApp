@@ -8,7 +8,7 @@
     2. Act on every "ADAPT:" note, then delete the note.
     3. [Day-0] sections are filled at setup. [Grows] sections start empty and
        fill from real incidents — never pre-fill them.
-    4. Delete this comment block. Budget: ~150 lines post-fill; past that,
+    4. Delete this comment block. Budget: ~160 lines post-fill; past that,
        migrate content to docs/wiki/ and leave pointers.
   Load-bearing principles: Invariants 3 and 4 (Source of Truth,
   Symbols-Not-Counts). Keep them even if you cut everything else.

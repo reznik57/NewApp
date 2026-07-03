@@ -24,11 +24,11 @@ stamp 2026-07.1.
   idempotency under retries/replays/double-fires.
 - SPEC.template.md: Rollback section (git revert alone, or explicit
   data/schema backout steps).
-- TS/Next profile: eslint.config.mjs added — jsx-a11y flat recommended
-  (accessibility, enforced) + no-warning-comments (no TODO/FIXME in
-  shipped code), both failing `check` via `--max-warnings 0`; new Stack
-  Rules section in CLAUDE.stack-sections.md (UI four-state matrix,
-  server-side validation); README gains the copy step (now steps 1–5).
+- TS/Next profile: eslint.config.mjs added — jsx-a11y recommended
+  (accessibility) + no-warning-comments (stale-marker comments), both
+  enforced by the `check` gate (mechanism documented in the file header);
+  new Stack Rules section in CLAUDE.stack-sections.md (UI four-state
+  matrix, server-side validation); README gains the copy step (now 1–5).
 
 ## 2026-07 — v2
 
