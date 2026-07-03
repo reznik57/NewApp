@@ -1,9 +1,30 @@
 # Template Changelog
 
-Seeded apps carry a `template-version` stamp in each copied file. Diff an
-app's stamp against this log to see what it is missing. JSON templates
-(settings.template.json, profile settings.json, package-scripts.json) cannot
-carry comment stamps — their version is tracked only here.
+Seed version history (upgrade procedure: README → Upgrading seeded apps).
+JSON templates (settings.template.json, profile settings.json,
+package-scripts.json) cannot carry comment stamps — their version is
+tracked only here.
+
+## 2026-07.5 — v2.3.1
+
+Remaining audit polish (medium/small priorities; touched templates
+stamped 2026-07.5):
+
+- verify_on_stop.py --self-test now verifies non-npm CHECK_COMMANDs too:
+  each shell-operator segment's leading tool must resolve on PATH (or as
+  a file), so a typo'd binary fails at setup instead of blocking every
+  session stop. Two new tests.
+- CLAUDE.template.md slimmed toward its ~160 post-fill budget: success
+  footer moved into SETUP step 7 (now the single home of the fill
+  procedure — the template header is a pointer), purpose line and two
+  emphasis restatements dropped, Task-Discipline intro compressed. The
+  "Don't refactor/rename/reformat" enumeration stays — it counters a
+  known agent bias.
+- wiki-lint gains a budget check (CLAUDE.md over ~160 lines → propose
+  wiki migration) so the growth cap has a home inside seeded apps.
+- Changelog header defers the upgrade procedure to README (one home);
+  SETUP step 4's non-npm tail points at the Commands ADAPT note instead
+  of restating it; ultrathink Phase 6 loses a meta-sentence.
 
 ## 2026-07.4 — v2.3
 

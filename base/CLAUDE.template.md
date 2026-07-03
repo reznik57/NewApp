@@ -1,23 +1,13 @@
-<!-- template-version: 2026-07.3 -->
+<!-- template-version: 2026-07.5 -->
 <!--
-  ============================================================================
-  CLAUDE.md TEMPLATE  (stack-agnostic project guidance for Claude Code / agents)
-  ============================================================================
-  HOW TO USE: follow the seed's SETUP.md checklist. In short:
-    1. Replace every {{PLACEHOLDER}} with a real value.
-    2. Act on every "ADAPT:" note, then delete the note.
-    3. [Day-0] sections are filled at setup. [Grows] sections start empty and
-       fill from real incidents — never pre-fill them.
-    4. Delete this comment block. Budget: ~160 lines post-fill; past that,
-       migrate content to docs/wiki/ and leave pointers.
+  CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
+  the post-fill line budget live there; this comment block is deleted).
   Load-bearing principles: Invariants 3 and 4 (Source of Truth,
   Symbols-Not-Counts). Keep them even if you cut everything else.
-  ============================================================================
 -->
 
 # CLAUDE.md
 
-Guidance for Claude Code (and other agents) working in this repository.
 **These instructions override default behavior — follow them exactly.**
 
 ## Role & Context [Day-0]
@@ -31,7 +21,7 @@ Guidance for Claude Code (and other agents) working in this repository.
 
 ## ⛔ Critical Invariants (NEVER VIOLATE)
 
-Non-negotiable. Breaking one invalidates the task.
+Breaking one invalidates the task.
 
 ### 1. Verification Gate
 
@@ -52,8 +42,7 @@ Non-negotiable. Breaking one invalidates the task.
 
 ### 3. Source of Truth (anti-rot)
 
-- **One fact lives in one place.** Link to it; never duplicate it. Duplicated
-  facts drift out of sync and start contradicting each other.
+- **One fact lives in one place.** Link to it; never duplicate it.
 - **Never document deleted or merely-planned code as if it exists.** Remove a
   section the moment the thing it describes is removed.
 
@@ -82,8 +71,8 @@ You almost certainly have at least one. -->
 
 ## Everyday Task Discipline
 
-Applies to EVERY task. (Complex or risky work additionally gets the
-UltraThink review — see Deep-Analysis Protocol below.)
+Applies to EVERY task; high-risk work additionally gets the Deep-Analysis
+Protocol below.
 
 - **Surgical changes**: every changed line must trace to the user's request.
   Don't refactor, rename, reformat, or "improve" code the task didn't touch.
@@ -202,9 +191,3 @@ features, irreversible data/schema changes. Changes touching more than
 2 modules or with irreversible consequences also get a one-page spec
 first (copy `docs/specs/SPEC.template.md`); ultrathink then reviews the
 spec.
-
----
-
-_These guidelines are working if: sessions start without re-explaining the
-project; agents cite ADRs when questioning decisions; the verification gate
-never needs mentioning in chat._

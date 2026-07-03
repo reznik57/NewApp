@@ -3,7 +3,7 @@ name: wiki-lint
 description: Docs health check for CLAUDE.md, ADRs, and the wiki. Finds dead symbol references, orphan or unindexed pages, contradicted decisions without superseded-by links, duplicated facts, and leftover placeholders. Run monthly or before major work.
 ---
 
-<!-- template-version: 2026-07.4 -->
+<!-- template-version: 2026-07.5 -->
 
 # /wiki-lint — docs health check
 
@@ -24,4 +24,6 @@ user (docs may encode intent the code lost).
 5. **Leftovers**: run `.claude/scripts/check_markers.py` — it must print
    `marker check OK` (scanned paths and exemptions live in the script,
    their single home).
-6. **Report**: a fix-list grouped by file — finding + suggested action.
+6. **CLAUDE.md budget**: over ~160 lines → propose migrating overflow to
+   `docs/wiki/` pages with pointers (fact-placement law).
+7. **Report**: a fix-list grouped by file — finding + suggested action.

@@ -19,9 +19,9 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       `.env.example`. Verify: `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
       `test`, `test:one`, `fix`, `dev`, `build` (the profile's
-      `package-scripts.json` provides them). Non-npm stack: document the
-      equivalents in CLAUDE.md → Commands AND update `CHECK_COMMAND` in
-      `.claude/hooks/verify_on_stop.py`.
+      `package-scripts.json` provides them). Non-npm stack: act on the
+      ADAPT note in CLAUDE.md → Commands now — including its
+      `CHECK_COMMAND` update, which step 6's self-test verifies.
 - [ ] 5. **Activate settings** — rename `.claude/settings.template.json` →
       `.claude/settings.json` (skip if the profile's `settings.json` was
       copied). Review the permission posture; it encodes moderate autonomy —
@@ -42,7 +42,12 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply, keep `[Grows]` sections
-      empty, delete the header comment block. Budget: ~160 lines.
+      empty (they fill from real incidents), delete the header comment
+      block. Budget: ~160 lines post-fill; past that, migrate content to
+      docs/wiki/ and leave pointers. The fill worked if: sessions start
+      without re-explaining the project; agents cite ADRs when
+      questioning decisions; the verification gate never needs
+      mentioning in chat.
 - [ ] 8. **Adapt the ultrathink skill** — fill or delete the `{{}}` rows in
       `.claude/skills/ultrathink/SKILL.md` (Phase 2 stack/domain rows,
       Phase 5 project gate).

@@ -73,6 +73,18 @@ class VerifyOnStopTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("self-test FAIL", result.stdout)
 
+    def test_self_test_fails_for_missing_tool(self):
+        # A typo'd non-npm binary must fail at setup, not block every stop.
+        result = run_hook({}, "definitely-missing-tool-xyz --check", extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("not found", result.stdout)
+
+    def test_self_test_checks_every_compound_segment(self):
+        cmd = PASS_CMD + " && definitely-missing-tool-xyz"
+        result = run_hook({}, cmd, extra_args=["--self-test"])
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("not found", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

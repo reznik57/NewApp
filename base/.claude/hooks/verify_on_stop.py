@@ -7,9 +7,11 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
-# template-version: 2026-07.3
+# template-version: 2026-07.5
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 
@@ -56,6 +58,18 @@ def self_test():
         if script not in scripts:
             print("self-test FAIL: package.json has no '%s' script" % script)
             return 1
+    else:
+        # Non-npm command: verify each segment's leading tool resolves,
+        # so a typo'd binary fails HERE instead of blocking every stop.
+        segments = re.split(r"\s*(?:&&|\|\||[;|])\s*", CHECK_COMMAND)
+        for segment in segments:
+            tokens = segment.split()
+            if not tokens:
+                continue
+            tool = tokens[0]
+            if shutil.which(tool) is None and not os.path.exists(tool):
+                print("self-test FAIL: '%s' not found on PATH" % tool)
+                return 1
     print("self-test OK: check command is '%s'" % CHECK_COMMAND)
     return 0
 
