@@ -13,13 +13,17 @@ Use SETUP.md instead.)
       lint/format configs, the test runner, anything `check`-like in
       package.json. Everything on that list is MERGED below, never
       overwritten.
-- [ ] 2. **Copy the collision-free parts** — from the seed's `base/`:
-      `docs/adr/`, `docs/wiki/`, `docs/specs/`, `.claude/hooks/`,
-      `.claude/scripts/`, `.claude/skills/`, and `.env.example` +
-      `.editorconfig` if none exist. Do NOT copy the settings, CI, or
-      CLAUDE templates yet — those are merge targets (steps 5, 6, 8).
-      Nothing from the seed ROOT (README, SETUP, ADOPTION, profiles/,
-      tests/) is ever copied into an app.
+- [ ] 2. **Copy the collision-free set** — one command at the app root:
+      `robocopy "<seed>\copyfolder" . /E /XC /XN /XO`
+      (the three /X flags skip every file the app already has). This
+      brings `docs/` (adr, wiki, specs), `.claude/` (hooks, scripts,
+      skills), `.env.example`/`.editorconfig` where missing, and the
+      two INERT templates — `CLAUDE.template.md` and
+      `.claude/settings.template.json` collide with nothing and stay
+      inactive until steps 5–6 activate them. Deliberately NOT in the
+      set: `.gitignore` (merge-only, step 3) and CI (step 8). Nothing
+      from the seed ROOT (README, SETUP, ADOPTION, profiles/, tests/)
+      is ever copied into an app.
 - [ ] 3. **Merge .gitignore** — append the seed patterns the app's file
       lacks (secrets block with `!.env.example`, build output, caches,
       `__pycache__/`); never replace a grown .gitignore. Verify:
@@ -37,15 +41,16 @@ Use SETUP.md instead.)
       Non-npm stack: also update CHECK_COMMAND in
       `.claude/hooks/verify_on_stop.py` (as SETUP step 4).
 - [ ] 5. **Green gate BEFORE live hook** — run the check yourself until
-      it exits 0. Only then activate: merge the seed
-      `settings.template.json` (permission posture + both hook
-      registrations) into the existing `.claude/settings.json`, or copy
-      it in as `.claude/settings.json` if none exists (the app's
-      `settings.local.json`, if any, stays untouched — Claude Code
-      merges both). Then self-test as SETUP step 6 (`--self-test`,
-      then the live `.env`-edit probe).
-- [ ] 6. **Merge CLAUDE.md** — copy the seed's `CLAUDE.template.md` in
-      as `CLAUDE.md`, then move the old instructions INTO its sections;
+      it exits 0. Only then activate: merge the copied
+      `.claude/settings.template.json` (permission posture + both hook
+      registrations) into the existing `.claude/settings.json`, or
+      rename it to `.claude/settings.json` if none exists; delete the
+      template copy afterwards (two settings files invite drift). The
+      app's `settings.local.json`, if any, stays untouched — Claude
+      Code merges both. Then self-test as SETUP step 6
+      (`--self-test`, then the live `.env`-edit probe).
+- [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
+      → `CLAUDE.md`, then move the old instructions INTO its sections;
       the template's Invariants and Task Discipline win over softer
       duplicates of the same rule. Unlike a fresh app, fill
       `Architecture [Grows]` NOW — the code already has seams worth
