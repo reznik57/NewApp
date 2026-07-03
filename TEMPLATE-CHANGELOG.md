@@ -5,6 +5,28 @@ app's stamp against this log to see what it is missing. JSON templates
 (settings.template.json, profile settings.json, package-scripts.json) cannot
 carry comment stamps — their version is tracked only here.
 
+## 2026-07.4 — v2.3
+
+Hardening round: three prose rules become mechanisms (touched templates
+stamped 2026-07.4):
+
+- The harness protects itself: protect_files.py blocks agent edits to
+  `.claude/hooks/`, `.claude/scripts/`, and `.claude/settings*.json` —
+  a Stop-hook-blocked agent could previously just edit the gate away.
+  Skills stay agent-editable by design; SETUP's step order (CHECK_COMMAND
+  in step 4, settings activation in step 5) is unaffected.
+- Exit gate has one home: new `.claude/scripts/check_markers.py` (stdlib,
+  tested) holds the scanned paths and exemptions; SETUP step 12 and
+  wiki-lint step 5 just run it. Replaces four hand-maintained grep
+  encodings that had already drifted once. wiki-lint no longer needs a
+  marker exemption at all.
+- TS/Next profile, eslint.config.mjs: `.only`/`.skip` on it/test/describe
+  are errors (Invariant 2 mechanized; approved exceptions carry an
+  eslint-disable comment as the visible approval trail) and
+  `@ts-ignore`/undescribed suppressions are errors via ban-ts-comment
+  (Invariant 1) — live-verified against eslint-config-next@16.
+- Hook test suite: 30 passed, 1 skipped (10 new tests).
+
 ## 2026-07.3 — v2.2.1
 
 Whole-seed audit round (4 lenses over all live files, 45 raw findings, 12

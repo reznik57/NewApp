@@ -54,28 +54,11 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       not on GitHub.
 - [ ] 11. **First commit at green** — `npm run check` (or your check
       equivalent) exits clean, then commit everything.
-- [ ] 12. **EXIT GATE** — both commands print nothing. (Drop `.github` from
-      the path lists if you deleted it in step 10.) Excludes
-      `docs/adr/0000-template.md` and `docs/specs/SPEC.template.md` (reusable
-      templates that ship with placeholders forever — copy them, never fill
-      them in place) and the hooks/skills that legitimately keep `ADAPT:`
-      tailoring markers or quote the `{{` syntax
-      (`.claude/hooks/protect_files.py`,
-      `.claude/hooks/verify_on_stop.py`,
-      `.claude/skills/wiki-lint/SKILL.md`):
-
-  ```powershell
-  $exempt = 'docs[\\/]adr[\\/]0000-template\.md$|docs[\\/]specs[\\/]SPEC\.template\.md$|\.claude[\\/]skills[\\/]wiki-lint[\\/]SKILL\.md$|\.claude[\\/]hooks[\\/](protect_files|verify_on_stop)\.py$'
-  Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github |
-    Where-Object { ($_.FullName.Substring((Get-Location).Path.Length + 1)) -notmatch $exempt } |
-    Select-String -Pattern '\{\{'
-  Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github |
-    Where-Object { ($_.FullName.Substring((Get-Location).Path.Length + 1)) -notmatch $exempt } |
-    Select-String -Pattern 'ADAPT:'
-  ```
-
-  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/ --exclude=0000-template.md --exclude=SPEC.template.md --exclude=protect_files.py --exclude=verify_on_stop.py --exclude-dir=wiki-lint` and the
-  same for `ADAPT:`. grep's `--exclude` matches basenames only, hence
-  `--exclude-dir` for the skill directory.) A live CLAUDE.md containing
-  unfilled placeholders actively misleads agents — do not finish with
-  leftovers.
+- [ ] 12. **EXIT GATE** — run the marker check from the app root; it must
+      print `marker check OK`: `python .claude/scripts/check_markers.py`
+      (Windows: `py` if `python` resolves to the Microsoft Store alias).
+      It lists every leftover placeholder/`ADAPT:` marker; the scanned
+      paths and the exemptions (reusable templates, marker-quoting hooks)
+      live IN the script — its single home. A live CLAUDE.md containing
+      unfilled placeholders actively misleads agents — do not finish with
+      leftovers.
