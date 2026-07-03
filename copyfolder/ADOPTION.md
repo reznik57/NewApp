@@ -9,11 +9,18 @@ every session stop from day one.
 it; step 11 deletes that folder again. Fresh empty repo? Use SETUP.md
 instead.)
 
-- [ ] 1. **Inventory collisions** — note what already exists: a
-      CLAUDE.md or AGENTS.md, `.claude/settings.json`, CI workflows,
-      lint/format configs, the test runner, anything `check`-like in
-      package.json. Everything on that list is MERGED below, never
-      overwritten.
+- [ ] 1. **Repo identity, then inventory** — first: this must be the
+      APP's own repo. Check `git remote -v` — if origin points at the
+      template/seed repo (an app dropped into a template clone), STOP
+      and give the app a fresh start first: delete the clone's `.git`
+      and `git init` anew (the template lives on elsewhere), remove
+      the template leftovers (base/, profiles/, tests/, the seed's
+      root docs), keep `copyfolder/`. Never push an app onto the
+      template remote. Then note what already exists: a CLAUDE.md or
+      AGENTS.md, `.claude/settings.json` and `.claude/commands/`, CI
+      workflows, lint/format configs, the test runner, anything
+      `check`-like in package.json. Everything on that list is
+      MERGED below, never overwritten.
 - [ ] 2. **Distribute the kit** — the kit arrived as `copyfolder/` in
       the app root (if not: copy the FOLDER in now — one move, a
       folder of this name exists in no app, nothing can collide).
@@ -24,7 +31,12 @@ instead.)
       `.editorconfig` → app root only where the app has none. The two
       moved templates are INERT — `CLAUDE.template.md` and
       `.claude/settings.template.json` collide with nothing and stay
-      inactive until steps 5–6 activate them. Everything else (this
+      inactive until steps 5–6 activate them. Same-NAME conflict
+      (e.g. an existing `.claude/commands/ultrathink.md` vs the kit's
+      ultrathink skill): keep ONE — merge the app-specific parts into
+      the kit skill's `{{}}` slots (step 10), then retire the old
+      definition; two live definitions of one name compete at trigger
+      time. Everything else (this
       checklist, SETUP.md, START-HERE.md, `gitignore.template`,
       `ci.template.yml`) STAYS in `copyfolder/` — step 11 deletes the
       whole folder. Deliberately not shipped ready-to-land: a live

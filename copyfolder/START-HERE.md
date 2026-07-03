@@ -6,7 +6,9 @@ app. Two moves, nothing else needed:
 
 1. **Copy this FOLDER into the app's root** (so it sits at
    `<app>/copyfolder/`). One move — a folder of this name exists in
-   no app, so nothing can collide or be overwritten.
+   no app, so nothing can collide or be overwritten. Direction
+   matters: the kit goes INTO your app's repo — never drop your app
+   into the template's folder or a clone of it.
 
 2. **Paste this into your coding agent** (Claude Code, Antigravity,
    Gemini CLI, ...) opened in the app:
