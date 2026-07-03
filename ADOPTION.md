@@ -5,33 +5,35 @@ inside the EXISTING app's repo. The order differs from SETUP.md on
 purpose: an existing codebase is rarely green, and the Stop hook must
 not go live before `check` is — activated on a red `check`, it blocks
 every session stop from day one.
-(This checklist travels with `copyfolder/` into the app and is deleted
-again at step 10. Fresh empty repo? Use SETUP.md instead.)
+(This checklist lives in `copyfolder/` inside the app while you work
+it; step 10 deletes that folder again. Fresh empty repo? Use SETUP.md
+instead.)
 
 - [ ] 1. **Inventory collisions** — note what already exists: a
       CLAUDE.md or AGENTS.md, `.claude/settings.json`, CI workflows,
       lint/format configs, the test runner, anything `check`-like in
       package.json. Everything on that list is MERGED below, never
       overwritten.
-- [ ] 2. **Copy the collision-free set** — usually already done: if
-      this checklist sits in the app root, the copyfolder contents are
-      in place → continue with step 3. Otherwise, one command at the
-      app root: `robocopy "<seed>\copyfolder" . /E /XC /XN /XO`
-      (the three /X flags skip every file the app already has; in a
-      GUI copy, choose "skip" for existing files). The set: `docs/`
-      (adr, wiki, specs), `.claude/` (hooks, scripts, skills),
-      `.env.example`/`.editorconfig` where missing, the kit docs
-      (`START-HERE.md` + both checklists — deleted again at step 10),
-      and the two INERT templates — `CLAUDE.template.md` and
+- [ ] 2. **Distribute the kit** — the kit arrived as `copyfolder/` in
+      the app root (if not: copy the FOLDER in now — one move, a
+      folder of this name exists in no app, nothing can collide).
+      Move the app material to its final places:
+      `copyfolder/.claude/*` → `.claude/` (create it, or add into the
+      existing one), `copyfolder/docs/*` → `docs/`,
+      `CLAUDE.template.md` → app root, and `.env.example` +
+      `.editorconfig` → app root only where the app has none. The two
+      moved templates are INERT — `CLAUDE.template.md` and
       `.claude/settings.template.json` collide with nothing and stay
-      inactive until steps 5–6 activate them. Deliberately NOT in the
-      set: `.gitignore` (merge-only, step 3), CI (step 8), and the
-      seed's own docs (README, TEMPLATE-CHANGELOG, profiles/, tests/).
-- [ ] 3. **Merge .gitignore** — append the patterns from the kit's
-      `gitignore.template` that the app's file lacks (secrets block
-      with `!.env.example`, build output, caches, `__pycache__/`);
-      never replace a grown .gitignore. Delete `gitignore.template`
-      afterwards. Verify: `git check-ignore .env` prints `.env`.
+      inactive until steps 5–6 activate them. Everything else (this
+      checklist, SETUP.md, START-HERE.md, `gitignore.template`,
+      `ci.template.yml`) STAYS in `copyfolder/` — step 10 deletes the
+      whole folder. Deliberately not shipped ready-to-land: a live
+      `.gitignore` (merge-only, step 3) and a live CI file (step 8).
+- [ ] 3. **Merge .gitignore** — append the patterns from
+      `copyfolder/gitignore.template` that the app's file lacks
+      (secrets block with `!.env.example`, build output, caches,
+      `__pycache__/`); never replace a grown .gitignore. Verify:
+      `git check-ignore .env` prints `.env`.
 - [ ] 4. **Define the six-script contract on the CURRENT state** — map
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
       (semantics: CLAUDE.md → Commands; optional reference if the
@@ -66,14 +68,12 @@ again at step 10. Fresh empty repo? Use SETUP.md instead.)
       get ADRs the normal way.
 - [ ] 8. **CI** — merge the gate into the existing workflow (check →
       full tests → build → audit) instead of adding a second one; no
-      workflow yet → copy the kit's `ci.template.yml` to
-      `.github/workflows/ci.yml` and fill it (it sits at the kit root
-      so GitHub never parses the unfilled copy). Delete the kit copy
-      afterwards.
+      workflow yet → copy `copyfolder/ci.template.yml` to
+      `.github/workflows/ci.yml` and fill it (inside copyfolder/ the
+      unfilled copy is never parsed by GitHub).
 - [ ] 9. **Adapt the ultrathink skill** — as SETUP step 8.
 - [ ] 10. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
-      `marker check OK` (Windows: `py`). Then delete the kit
-      scaffolding from the app root — `START-HERE.md`, `ADOPTION.md`,
-      `SETUP.md`, and any leftover `gitignore.template` /
-      `ci.template.yml` — and commit at a green `check`.
+      `marker check OK` (Windows: `py`). Then delete the whole
+      `copyfolder/` from the app (all remaining scaffolding lives
+      there) and commit at a green `check`.
