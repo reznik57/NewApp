@@ -1,6 +1,6 @@
 ---
 name: wiki-lint
-description: Docs health check for CLAUDE.md, ADRs, and the wiki. Finds dead symbol references, orphan or unindexed pages, contradicted decisions without superseded-by links, duplicated facts, and leftover placeholders. Run monthly or before major work.
+description: Docs health check for CLAUDE.md, ADRs, and the wiki. Finds dead symbol references, orphan or unindexed pages, contradicted decisions without superseded-by links, duplicated facts, leftover placeholders, and a CLAUDE.md over its line budget. Run monthly or before major work.
 ---
 
 <!-- template-version: 2026-07.5 -->

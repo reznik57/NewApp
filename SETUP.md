@@ -41,10 +41,11 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       agent to edit `.env` — the hook must block it.
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
-      note, delete sections that don't apply, keep `[Grows]` sections
-      empty (they fill from real incidents), delete the header comment
-      block. Budget: ~160 lines post-fill; past that, migrate content to
-      docs/wiki/ and leave pointers. The fill worked if: sessions start
+      note, delete sections that don't apply. `[Day-0]` sections are
+      filled now; `[Grows]` sections stay empty (they fill from real
+      incidents). Delete the header comment block. Budget: ~160 lines
+      post-fill; past that, migrate content to docs/wiki/ and leave
+      pointers. The fill worked if: sessions start
       without re-explaining the project; agents cite ADRs when
       questioning decisions; the verification gate never needs
       mentioning in chat.

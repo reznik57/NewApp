@@ -10,10 +10,12 @@ tracked only here.
 Remaining audit polish (medium/small priorities; touched templates
 stamped 2026-07.5):
 
-- verify_on_stop.py --self-test now verifies non-npm CHECK_COMMANDs too:
-  each shell-operator segment's leading tool must resolve on PATH (or as
-  a file), so a typo'd binary fails at setup instead of blocking every
-  session stop. Two new tests.
+- verify_on_stop.py --self-test now verifies the whole CHECK_COMMAND:
+  segments are split on shell operators outside quotes, each segment's
+  leading tool must resolve (quoted paths with spaces unwrapped, shell
+  builtins skipped, npm-run segments checked against package.json), so
+  a typo'd binary fails at setup instead of blocking every session
+  stop. Six new tests.
 - CLAUDE.template.md slimmed toward its ~160 post-fill budget: success
   footer moved into SETUP step 7 (now the single home of the fill
   procedure — the template header is a pointer), purpose line and two
