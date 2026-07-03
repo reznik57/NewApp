@@ -3,8 +3,9 @@
 
 Single home for the leftover-marker check — SETUP.md step 12 and the
 wiki-lint skill both run this script instead of maintaining their own
-grep incantations. Exit 0: clean; exit 1: leftovers listed on stdout.
-Run from the app root. Stdlib only; Windows-safe.
+grep incantations. Exit 0: clean; exit 1: leftovers listed on stdout, or
+CLAUDE.md missing (wrong cwd / step-7 rename skipped — fail loud, never
+false-green). Run from the app root. Stdlib only; Windows-safe.
 """
 # template-version: 2026-07.4
 import re
@@ -24,6 +25,15 @@ EXEMPT = re.compile(
 )
 
 
+def read_lines(f):
+    # BOM-aware: PowerShell 5.1 redirection writes UTF-16 LE, where a
+    # plain utf-8 decode keeps interleaved NULs and "{{" never matches.
+    raw = f.read_bytes()
+    if raw[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        return raw.decode("utf-16", errors="ignore").splitlines()
+    return raw.decode("utf-8-sig", errors="ignore").splitlines()
+
+
 def iter_files(root):
     for top in SCAN_TOPS:
         p = root / top
@@ -37,16 +47,22 @@ def iter_files(root):
 
 def main():
     root = Path.cwd()
+    if not (root / "CLAUDE.md").is_file():
+        print(
+            "check_markers: CLAUDE.md not found — run from the app root"
+            " (SETUP step 7 renames CLAUDE.template.md)"
+        )
+        return 1
     hits = []
     for f in iter_files(root):
         rel = str(f.relative_to(root))
         if EXEMPT.search(rel):
             continue
         try:
-            text = f.read_text(encoding="utf-8", errors="ignore")
+            lines = read_lines(f)
         except OSError:
             continue
-        for lineno, line in enumerate(text.splitlines(), 1):
+        for lineno, line in enumerate(lines, 1):
             if any(marker in line for marker in MARKERS):
                 hits.append("%s:%d: %s" % (rel, lineno, line.strip()[:80]))
     if hits:

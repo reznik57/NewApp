@@ -8,6 +8,7 @@ Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|Notebo
 # template-version: 2026-07.4
 import json
 import os
+import posixpath
 import sys
 from pathlib import PurePath
 
@@ -22,7 +23,9 @@ ALLOWED_ENV_FILES = {".env.example"}
 
 def check_path(file_path):
     """Return a human-readable reason if this path string is protected."""
-    path = PurePath(file_path.replace("\\", "/"))
+    # Collapse ".." lexically first: ".claude/hooks/../skills/x" is a
+    # skill (agent-editable), ".claude/skills/../hooks/x" is a hook.
+    path = PurePath(posixpath.normpath(file_path.replace("\\", "/")))
     name = path.name.lower()
     for segment in path.parts[:-1]:
         if segment.lower() in PROTECTED_SEGMENTS:

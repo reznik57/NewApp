@@ -36,9 +36,30 @@ const eslintConfig = [
       ],
       "no-restricted-syntax": [
         "error",
+        // Four selectors: bare (it.only) and one chained modifier deep
+        // (it.concurrent.skip), each in dot and bracket notation — the
+        // forms Vitest documents.
         {
           selector:
             "MemberExpression[object.name=/^(it|test|describe)$/][property.name=/^(only|skip)$/]",
+          message:
+            "Focused/skipped tests violate Invariant 2 (Test Integrity). An approved exception carries an eslint-disable comment — its diff is the approval trail.",
+        },
+        {
+          selector:
+            "MemberExpression[object.object.name=/^(it|test|describe)$/][property.name=/^(only|skip)$/]",
+          message:
+            "Focused/skipped tests violate Invariant 2 (Test Integrity). An approved exception carries an eslint-disable comment — its diff is the approval trail.",
+        },
+        {
+          selector:
+            "MemberExpression[object.name=/^(it|test|describe)$/][property.value=/^(only|skip)$/]",
+          message:
+            "Focused/skipped tests violate Invariant 2 (Test Integrity). An approved exception carries an eslint-disable comment — its diff is the approval trail.",
+        },
+        {
+          selector:
+            "MemberExpression[object.object.name=/^(it|test|describe)$/][property.value=/^(only|skip)$/]",
           message:
             "Focused/skipped tests violate Invariant 2 (Test Integrity). An approved exception carries an eslint-disable comment — its diff is the approval trail.",
         },

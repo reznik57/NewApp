@@ -43,21 +43,42 @@ class CheckMarkersTests(unittest.TestCase):
         self.assertIn("CLAUDE.md:1", result.stdout)
 
     def test_leftover_adapt_note_fails(self):
+        self.write("CLAUDE.md", "clean\n")
         self.write("docs/notes.md", "ADAPT: fill this in\n")
         result = run_check(self.root)
         self.assertEqual(result.returncode, 1)
         self.assertIn("notes.md", result.stdout)
 
     def test_reusable_templates_are_exempt(self):
+        self.write("CLAUDE.md", "clean\n")
         self.write("docs/adr/0000-template.md", "# {{Title}}\n")
         self.write("docs/specs/SPEC.template.md", "# Spec: {{Feature name}}\n")
         result = run_check(self.root)
         self.assertEqual(result.returncode, 0)
 
     def test_hooks_are_exempt(self):
+        self.write("CLAUDE.md", "clean\n")
         self.write(".claude/hooks/protect_files.py", "# ADAPT: extend these per project.\n")
         result = run_check(self.root)
         self.assertEqual(result.returncode, 0)
+
+    def test_missing_claude_md_fails_loud(self):
+        # Wrong cwd or a skipped step-7 rename must never be a false green.
+        self.write("docs/x.md", "clean\n")
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("CLAUDE.md not found", result.stdout)
+
+    def test_utf16_file_markers_detected(self):
+        # PowerShell 5.1 redirection writes UTF-16 LE; the gate must still
+        # see markers there (plain utf-8 decode keeps interleaved NULs).
+        self.write("CLAUDE.md", "clean\n")
+        path = Path(self.root) / "docs" / "note.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("Stack: {{LANGUAGE}}\n", encoding="utf-16")
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("note.md", result.stdout)
 
     def test_missing_github_dir_is_fine(self):
         # Step 10 allows deleting .github entirely; the scan must not choke.

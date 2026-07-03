@@ -75,6 +75,16 @@ class ProtectFilesTests(unittest.TestCase):
         result = run_hook({"file_path": "C:/proj/.claude/skills/ultrathink/SKILL.md"})
         self.assertEqual(result.returncode, 0)
 
+    def test_allows_traversal_out_of_hooks_to_skill(self):
+        # ".." is collapsed lexically before the harness check: this path
+        # resolves to a skill, which stays agent-editable.
+        result = run_hook({"file_path": ".claude/hooks/../skills/x/SKILL.md"})
+        self.assertEqual(result.returncode, 0)
+
+    def test_blocks_traversal_into_hooks(self):
+        result = run_hook({"file_path": ".claude/skills/../hooks/verify_on_stop.py"})
+        self.assertEqual(result.returncode, 2)
+
     def test_blocks_env_example_inside_git_dir(self):
         result = run_hook({"file_path": "C:/proj/.git/.env.example"})
         self.assertEqual(result.returncode, 2)
