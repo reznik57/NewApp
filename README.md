@@ -47,6 +47,26 @@ one fits → work through `SETUP.md` top to bottom → its exit gate greps for
 leftover `{{PLACEHOLDER}}`/`ADAPT:` markers. For an app that already has
 code, follow `ADOPTION.md` instead — same harness, inverted order.
 
+Both checklists are agent-optional: work them by hand, or paste ONE of
+these kickoff prompts into whatever agent sits in the app's repo (Claude
+Code, Antigravity, Gemini CLI, ...). Replace `<seed>` with this folder's
+path.
+
+Fresh, empty repo:
+
+> Read `<seed>/SETUP.md` and work through the checklist top to bottom in
+> this repo. Do not skip the exit gate. Ask me at every decision point.
+
+Existing app:
+
+> Read `<seed>/ADOPTION.md` and work through the checklist top to bottom
+> in this repo — it merges the harness into existing code. Never
+> overwrite an existing file without asking; ask me at every merge
+> conflict and decision point.
+
+Agent or not, the two mechanical gates say when you are done:
+`verify_on_stop.py --self-test` and `check_markers.py`.
+
 ## When not to use this seed
 
 Throwaway spikes and hackathon prototypes don't get a harness — discipline
