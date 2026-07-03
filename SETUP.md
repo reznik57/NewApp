@@ -8,7 +8,11 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
 - [ ] 1. **Copy the base** — from the seed: `robocopy "<seed>\base" . /E`
       run at the new repo root (robocopy exit codes 0–3 are success), or any
       copy that includes dotfiles (`.gitignore`, `.env.example`,
-      `.editorconfig`, `.claude/`, `.github/`).
+      `.editorconfig`, `.claude/`, `.github/`). If the stack has a
+      scaffolder (create-next-app, cargo new, ...), run it FIRST in the
+      empty repo, then copy the base over it — scaffolders refuse non-empty
+      directories, and the base `.gitignore` intentionally replaces the
+      scaffold's (it already covers node_modules/.next/out).
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
       `profiles/typescript-next/README.md` steps 1–5.
 - [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
@@ -57,11 +61,11 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
       them in place) and the hooks/skills that legitimately keep `ADAPT:`
       tailoring markers or quote the `{{` syntax
       (`.claude/hooks/protect_files.py`,
-      `.claude/hooks/verify_on_stop.py`, `.claude/skills/wiki-lint/SKILL.md`,
-      `.claude/skills/log-gotcha/SKILL.md`):
+      `.claude/hooks/verify_on_stop.py`,
+      `.claude/skills/wiki-lint/SKILL.md`):
 
   ```powershell
-  $exempt = 'docs[\\/]adr[\\/]0000-template\.md$|docs[\\/]specs[\\/]SPEC\.template\.md$|\.claude[\\/]skills[\\/]wiki-lint[\\/]SKILL\.md$|\.claude[\\/]skills[\\/]log-gotcha[\\/]SKILL\.md$|\.claude[\\/]hooks[\\/](protect_files|verify_on_stop)\.py$'
+  $exempt = 'docs[\\/]adr[\\/]0000-template\.md$|docs[\\/]specs[\\/]SPEC\.template\.md$|\.claude[\\/]skills[\\/]wiki-lint[\\/]SKILL\.md$|\.claude[\\/]hooks[\\/](protect_files|verify_on_stop)\.py$'
   Get-ChildItem -Recurse -File -Path CLAUDE.md, .claude, docs, .github |
     Where-Object { ($_.FullName.Substring((Get-Location).Path.Length + 1)) -notmatch $exempt } |
     Select-String -Pattern '\{\{'
@@ -70,8 +74,8 @@ docs/superpowers/, tests/, and profiles/ from the app now.)
     Select-String -Pattern 'ADAPT:'
   ```
 
-  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/ --exclude=0000-template.md --exclude=SPEC.template.md --exclude=protect_files.py --exclude=verify_on_stop.py --exclude-dir=wiki-lint --exclude-dir=log-gotcha` and the
+  (POSIX: `grep -rn "{{" CLAUDE.md .claude/ docs/ .github/ --exclude=0000-template.md --exclude=SPEC.template.md --exclude=protect_files.py --exclude=verify_on_stop.py --exclude-dir=wiki-lint` and the
   same for `ADAPT:`. grep's `--exclude` matches basenames only, hence
-  `--exclude-dir` for the two skill directories.) A live CLAUDE.md containing
+  `--exclude-dir` for the skill directory.) A live CLAUDE.md containing
   unfilled placeholders actively misleads agents — do not finish with
   leftovers.

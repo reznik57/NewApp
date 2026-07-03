@@ -7,6 +7,7 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
+# template-version: 2026-07.3
 import json
 import os
 import subprocess

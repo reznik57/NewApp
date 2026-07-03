@@ -3,7 +3,7 @@ name: wiki-lint
 description: Docs health check for CLAUDE.md, ADRs, and the wiki. Finds dead symbol references, orphan or unindexed pages, contradicted decisions without superseded-by links, duplicated facts, and leftover placeholders. Run monthly or before major work.
 ---
 
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.3 -->
 
 # /wiki-lint — docs health check
 
@@ -26,5 +26,5 @@ user (docs may encode intent the code lost).
    templates (`docs/adr/0000-template.md`, `docs/specs/SPEC.template.md`)
    and the files that legitimately keep ADAPT: markers or quote this syntax
    (`.claude/hooks/protect_files.py`, `.claude/hooks/verify_on_stop.py`,
-   this file, `.claude/skills/log-gotcha/SKILL.md`).
+   this file).
 6. **Report**: a fix-list grouped by file — finding + suggested action.

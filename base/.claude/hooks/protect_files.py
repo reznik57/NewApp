@@ -5,6 +5,7 @@ Reads the tool-call JSON from stdin. Exit 2 blocks the call and feeds the
 stderr message back to the agent; exit 0 allows it. Stdlib only; Windows-safe.
 Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|NotebookEdit".
 """
+# template-version: 2026-07.3
 import json
 import os
 import sys
@@ -12,7 +13,8 @@ from pathlib import PurePath
 
 # ADAPT: extend these per project.
 PROTECTED_BASENAMES = {
-    "package-lock.json", "pnpm-lock.yaml", "yarn.lock", "bun.lockb",
+    "package-lock.json", "npm-shrinkwrap.json", "pnpm-lock.yaml",
+    "yarn.lock", "bun.lock", "bun.lockb",
 }
 PROTECTED_SEGMENTS = {".git"}
 ALLOWED_ENV_FILES = {".env.example"}
@@ -25,6 +27,8 @@ def check_path(file_path):
     for segment in path.parts[:-1]:
         if segment.lower() in PROTECTED_SEGMENTS:
             return "%s/ internals must not be edited directly" % segment
+    if name == ".git":
+        return ".git is a git internal (worktree/submodule pointer); must not be edited directly"
     if name in ALLOWED_ENV_FILES:
         return None
     if name == ".env" or name.startswith(".env."):

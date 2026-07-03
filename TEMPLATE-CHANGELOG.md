@@ -5,6 +5,33 @@ app's stamp against this log to see what it is missing. JSON templates
 (settings.template.json, profile settings.json, package-scripts.json) cannot
 carry comment stamps — their version is tracked only here.
 
+## 2026-07.3 — v2.2.1
+
+Whole-seed audit round (4 lenses over all live files, 45 raw findings, 12
+objective defects fixed; touched templates stamped 2026-07.3):
+
+- Setup path unbroken: SETUP step 1 now says to run a scaffolder FIRST
+  (create-next-app refuses non-empty dirs); profile README documents that
+  a first test must exist (`vitest run` exits 1 with zero test files, so
+  `check`/Stop hook/CI cannot go green without one — and `--passWithNoTests`
+  must NOT be added).
+- protect_files.py: blocks `bun.lock` (Bun ≥1.2 default) and
+  `npm-shrinkwrap.json`; blocks a file NAMED `.git` (worktree/submodule
+  gitdir pointer); tests added. Both hooks now carry template-version
+  stamps.
+- Exit gate tightened: the stale log-gotcha exemption removed from SETUP
+  step 12 (both variants) and wiki-lint step 5 — the file has nothing to
+  exempt.
+- settings (base + profile): `Read(.env.staging.local)` added to the deny
+  enumeration (the one missing `.local` twin).
+- Invariant-3 cleanups: ultrathink's dependency bullets are now bare
+  pointers to Standing Rules (they had drifted to a nonexistent "license
+  check"); its body no longer restates the description's skip list;
+  CLAUDE.template.md loses four same-file duplicates (gotcha-migration
+  bullet, wiki filing filter, symbols-not-counts restatement, Git-bullet
+  secrets sentence); log-gotcha step 1 and SPEC.template.md intro become
+  pointers; wiki index.md drops a restated convention.
+
 ## 2026-07.2 — v2.2
 
 Deltas from mapping Google's "The New SDLC with Vibe Coding" whitepaper
@@ -42,6 +69,8 @@ stamp 2026-07.1.
   idempotency under retries/replays/double-fires.
 - SPEC.template.md: Rollback section (git revert alone, or explicit
   data/schema backout steps).
+- CLAUDE.template.md post-fill budget raised ~150 → ~160 (absorbs the
+  three new Task Discipline bullets).
 - TS/Next profile: eslint.config.mjs added — jsx-a11y recommended
   (accessibility) + no-warning-comments (stale-marker comments), both
   enforced by the `check` gate (mechanism documented in the file header);

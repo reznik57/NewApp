@@ -1,10 +1,9 @@
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.3 -->
 
 # Project Wiki — Index
 
 Entry point for on-demand knowledge. Every page in `docs/wiki/` MUST be
-listed here, one line each, with a one-line summary. Read the relevant
-section before working in an unfamiliar area. Conventions live in
+listed here, one line each, with a one-line summary. Conventions live in
 CLAUDE.md → Docs & Knowledge Schema.
 
 ## Architecture

@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.2 -->
+<!-- template-version: 2026-07.3 -->
 <!--
   ============================================================================
   CLAUDE.md TEMPLATE  (stack-agnostic project guidance for Claude Code / agents)
@@ -159,7 +159,7 @@ avoids it, with the symbol name involved>
 ## Standing Rules
 
 - **Git**: atomic commits, only at a green `check`. Conventional-commit
-  subject; the _why_ in the body. Never commit secrets or `.env`.
+  subject; the _why_ in the body.
 - **Dependencies**: stdlib first → existing deps → a NEW dependency needs
   explicit approval plus a stated alternative you considered and a
   maintenance check (recent releases, active upstream). Lockfile always
@@ -186,16 +186,12 @@ avoids it, with the symbol name involved>
 | Decisions and their why                             | `docs/adr/` (append-only; supersede, never edit) |
 | Narratives: incidents, investigations, domain notes | `docs/wiki/`                                     |
 
-- **Gotcha migration**: gotchas start as one-liners above; past ~3 lines they
-  move to a wiki page, leaving a one-line pointer.
 - **ADR discipline**: before changing architecture, grep `docs/adr/` titles.
   Never contradict an accepted ADR without writing a superseding one.
 - **Wiki conventions**: `docs/wiki/index.md` lists every page — read the
   relevant section before working in an unfamiliar area. `docs/wiki/log.md`
-  is append-only: `## [YYYY-MM-DD] <verb> | <title>` plus 1–3 lines. Pages
-  cite stable symbols, never counts. Stale content is deleted, not kept
-  "just in case". File only what is non-obvious, recurring, or expensive to
-  re-derive.
+  is append-only: `## [YYYY-MM-DD] <verb> | <title>` plus 1–3 lines. Stale
+  content is deleted, not kept "just in case".
 
 ## Deep-Analysis Protocol
 

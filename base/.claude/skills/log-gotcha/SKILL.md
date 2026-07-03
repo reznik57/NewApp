@@ -3,7 +3,7 @@ name: log-gotcha
 description: Capture a hard-won lesson at the end of an incident, bug hunt, or debugging session — or record a deliberate shortcut (deferred debt) that shipped. Files it in the right knowledge home (CLAUDE.md gotcha one-liner, wiki page, deferred-debt log entry, or a proposed hook/lint rule) and updates the wiki index and log.
 ---
 
-<!-- template-version: 2026-07.1 -->
+<!-- template-version: 2026-07.3 -->
 
 # /log-gotcha — incident capture
 
@@ -11,9 +11,8 @@ Filing filter first: only file what is **non-obvious, likely to recur, and
 expensive to re-derive**. If it fails the filter, stop here — noise in the
 knowledge base is rot.
 
-1. **Write the lesson** in problem/rule form:
-   `Problem: <what goes wrong, concretely> → Rule: <the pattern that
-avoids it, naming the symbol involved>`
+1. **Write the lesson** in Problem→Rule form (format spec: the Project
+   Gotchas comment in CLAUDE.md).
 2. **Choose the home** (graduation rule):
    - First occurrence, fits in ≤3 lines → one-liner in CLAUDE.md → Project
      Gotchas.
