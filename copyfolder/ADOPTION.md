@@ -57,6 +57,11 @@ instead.)
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
       (semantics: CLAUDE.md → Commands; optional reference if the
       seed is at hand: `profiles/typescript-next/package-scripts.json`).
+      No manifest, but its runner is already in use (node without a
+      package.json, ...)? A minimal scripts-only register
+      (`"private": true`, no deps) beats a bespoke CHECK_COMMAND
+      mapping — standard entry points are the contract's point;
+      record the no-build intent in ADR-0001 (step 7).
       `check` must exit clean on the codebase AS IT IS TODAY — narrow
       its scope rather than weaken any rule:
       - Warning backlog → start `check` without that linter step, or
