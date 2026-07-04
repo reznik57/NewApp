@@ -21,9 +21,9 @@ compounds instead of evaporating in chat transcripts.
 
 | Path                                                           | Job                                                                                                                                             |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SETUP.md`                                                     | The per-app instantiation checklist (fresh repos). Start here.                                                                                  |
-| `copyfolder/ADOPTION.md`                                       | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live. Lives IN the kit.                |
-| `copyfolder/`                                                  | The self-contained adoption kit for existing apps: collision-free set, kit docs (START-HERE, both checklists), inert merge sources (gitignore.template, ci.template.yml). Parity-tested. |
+| `harness-kit/`                                                 | THE single user-facing entry point, new or existing app: self-contained, collision-free by name, START-HERE routes to the right checklist, inert merge sources (gitignore.template, ci.template.yml). Parity-tested mirror of base/ + the checklists. |
+| `harness-kit/ADOPTION.md`                                      | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live. Lives IN the kit.                |
+| `SETUP.md`                                                     | The fresh-repo checklist (root-homed; the kit carries the working copy).                                                                        |
 | `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                                               |
 | `base/CLAUDE.template.md`                                      | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                                              |
 | `base/.claude/settings.template.json`                          | Permission posture + hook registrations.                                                                                                        |
@@ -38,31 +38,24 @@ compounds instead of evaporating in chat transcripts.
 | `base/.github/workflows/`                                      | CI template: the same gate, warnings-as-errors, full tests, audit.                                                                              |
 | base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                                          |
 | `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                                         |
-| `tests/`                                                       | Seed-only tests: hook scripts + parity guards (settings, copyfolder) (`python -m unittest discover -s tests`).                                  |
+| `tests/`                                                       | Seed-only tests: hook scripts + parity guards (settings, kit) (`python -m unittest discover -s tests`).                                         |
 | `docs/superpowers/`                                            | Specs/plans for the seed itself (not copied).                                                                                                   |
 
 ## Instantiation
 
-Copy `base/*` (including dotfiles) into the new repo → overlay a profile if
-one fits → work through `SETUP.md` top to bottom → its exit gate greps for
-leftover `{{PLACEHOLDER}}`/`ADAPT:` markers. For an app that already has
-code, follow the kit's `copyfolder/ADOPTION.md` instead — same harness,
-inverted order.
+ONE entry point for both cases: copy the `harness-kit/` FOLDER into the
+app's repo root — brand new or already grown — and follow
+`harness-kit/START-HERE.md`. Its single fork (does the repo already
+contain application code?) routes to SETUP.md (fresh; scaffold first,
+overlay a profile if one fits) or ADOPTION.md (existing; same harness,
+inverted order). Both kickoff prompts live in START-HERE (their single
+home), both checklists are agent-optional, open with a STOP guard for
+the opposite case, and delete the kit folder at their end.
 
-Both checklists are agent-optional: work them by hand, or paste ONE of
-these kickoff prompts into whatever agent sits in the app's repo (Claude
-Code, Antigravity, Gemini CLI, ...).
-
-Fresh, empty repo (replace `<seed>` with this folder's path):
-
-> Read `<seed>/SETUP.md` and work through the checklist top to bottom in
-> this repo. Do not skip the exit gate. Ask me at every decision point.
-
-Existing app — the kit is self-contained: copy the `copyfolder/`
-FOLDER into the app root (one move, nothing can collide) and follow
-`copyfolder/START-HERE.md`; the kickoff prompt to paste into your
-agent lives there (its single home). The checklist distributes the
-files and deletes the folder again at the end.
+`base/` is the canonical SOURCE both paths derive from — the kit is its
+parity-tested mirror plus packaging. Nobody copies `base/` into an app;
+edits land in `base/` and flow into the kit (tests enforce byte
+equality).
 
 Agent or not, the two mechanical gates say when you are done:
 `verify_on_stop.py --self-test` and `check_markers.py`.
