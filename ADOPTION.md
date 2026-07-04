@@ -16,7 +16,10 @@ instead.)
       and `git init` anew (the template lives on elsewhere), remove
       the template leftovers (base/, profiles/, tests/, the seed's
       root docs), keep `copyfolder/`. Never push an app onto the
-      template remote. Then note what already exists: a CLAUDE.md or
+      template remote. (Deliberately keeping the repo dual-role
+      instead? Expect gate exemptions — the template's own docs will
+      trip check_markers and wiki-lint.)
+      Then note what already exists: a CLAUDE.md or
       AGENTS.md, `.claude/settings.json` and `.claude/commands/`, CI
       workflows, lint/format configs, the test runner, anything
       `check`-like in package.json. Everything on that list is
@@ -69,10 +72,14 @@ instead.)
       registrations) into the existing `.claude/settings.json`, or
       rename it to `.claude/settings.json` if none exists; delete the
       template copy afterwards (two settings files invite drift).
-      While merging: review the app's EXISTING hooks — retire what the
-      harness supersedes or what injects stale content; on a non-npm
-      stack, translate the allow/ask commands to the app's toolchain
-      (the POSTURE carries, not the literal npm entries). The app's
+      While merging: review the app's EXISTING hooks and commands —
+      retire what the harness supersedes, what injects stale content,
+      and anything that would regenerate or overwrite harness files
+      when run (onboarding wizards, scaffolders); `{{}}` slots that
+      were never filled mean a command was never truly in use —
+      default to retiring it, not filling it. On a non-npm stack,
+      translate the allow/ask commands to the app's toolchain (the
+      POSTURE carries, not the literal npm entries). The app's
       `settings.local.json`, if any, stays untouched — Claude Code
       merges both. Then self-test as SETUP step 6 (`--self-test`,
       then the live `.env`-edit probe).
