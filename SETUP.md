@@ -6,8 +6,8 @@ ADOPTION.md cites — its step 11 deletes that whole folder. If you
 copied the seed folder wholesale, delete README.md,
 TEMPLATE-CHANGELOG.md, docs/superpowers/, tests/, profiles/, and
 copyfolder/ from the app now. Bringing the harness into an app that
-already has code? Use ADOPTION.md instead — the step order differs on
-purpose.)
+already has code? Use the kit's copyfolder/ADOPTION.md instead — the
+step order differs on purpose.)
 
 - [ ] 1. **Copy the base** — from the seed:
       `robocopy "<seed>\base" . /E /XD __pycache__`

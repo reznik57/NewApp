@@ -7,7 +7,7 @@ harness set, the seed root for the two checklists); this test pins the
 manifest and byte equality, so a source edit fails here until
 mirrored. Re-sync with:
   robocopy base copyfolder /E /XD __pycache__ .github /XF .gitignore
-  copy /Y SETUP.md copyfolder && copy /Y ADOPTION.md copyfolder
+  copy /Y SETUP.md copyfolder
 Run from the seed root: python -m unittest discover -s tests
 """
 import unittest
@@ -26,12 +26,13 @@ MANIFEST = {
     ".editorconfig": BASE,
     ".claude": BASE,
     "docs": BASE,
-    "ADOPTION.md": ROOT,  # both checklists travel with the kit;
-    "SETUP.md": ROOT,     # ADOPTION step 11 deletes them from the app
+    "SETUP.md": ROOT,  # travels as the reference ADOPTION cites;
+                       # ADOPTION step 11 deletes it from the app
 }
-# Authored directly in the kit, no source twin (the kickoff prompt's
-# single home — the seed README points here).
-KIT_ONLY = {"START-HERE.md"}
+# Authored directly in the kit, no source twin: the kickoff prompt's
+# single home (START-HERE) and the adoption checklist itself — its
+# home IS the kit; the seed root carries no second copy.
+KIT_ONLY = {"START-HERE.md", "ADOPTION.md"}
 
 # Merge sources shipped under an INERT name: the original name would
 # either overwrite an app file on copy (.gitignore) or be parsed by

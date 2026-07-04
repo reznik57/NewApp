@@ -22,7 +22,7 @@ compounds instead of evaporating in chat transcripts.
 | Path                                                           | Job                                                                                                                                             |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SETUP.md`                                                     | The per-app instantiation checklist (fresh repos). Start here.                                                                                  |
-| `ADOPTION.md`                                                  | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live.                                  |
+| `copyfolder/ADOPTION.md`                                       | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live. Lives IN the kit.                |
 | `copyfolder/`                                                  | The self-contained adoption kit for existing apps: collision-free set, kit docs (START-HERE, both checklists), inert merge sources (gitignore.template, ci.template.yml). Parity-tested. |
 | `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                                               |
 | `base/CLAUDE.template.md`                                      | The always-loaded operating manual: invariants, task discipline, standing rules, knowledge schema.                                              |
@@ -46,7 +46,8 @@ compounds instead of evaporating in chat transcripts.
 Copy `base/*` (including dotfiles) into the new repo → overlay a profile if
 one fits → work through `SETUP.md` top to bottom → its exit gate greps for
 leftover `{{PLACEHOLDER}}`/`ADAPT:` markers. For an app that already has
-code, follow `ADOPTION.md` instead — same harness, inverted order.
+code, follow the kit's `copyfolder/ADOPTION.md` instead — same harness,
+inverted order.
 
 Both checklists are agent-optional: work them by hand, or paste ONE of
 these kickoff prompts into whatever agent sits in the app's repo (Claude
