@@ -108,10 +108,14 @@ instead.)
 - [ ] 9. **Debt baseline — inventory, don't fix** — one timeboxed
       pass over the codebase: obvious legacy files (`*_old`, `*.bak`,
       commented-out blocks), unused dependencies (e.g. `npx
-      depcheck`), dead exports, known-fragile areas. Register each as
-      a `deferred` entry in `docs/wiki/log.md` (what, why it stays,
+      depcheck`), dead exports, known-fragile areas — and security
+      exposure (unauthenticated endpoints, 0.0.0.0 binds, secrets in
+      code, raw errors sent to clients). Register each as a
+      `deferred` entry in `docs/wiki/log.md` (what, why it stays,
       what triggers paying it down) — fix now ONLY what blocks the
-      green `check`. From here the harness holds the line: the gate
+      green `check`. EXCEPTION: live security exposure is surfaced
+      to the user immediately with options (fix / mitigate / retire
+      the surface) — an open door is not deferred debt. From here the harness holds the line: the gate
       blocks new debt, `/log-gotcha` records deliberate shortcuts,
       and registered debt is paid down surgically when a real task
       touches that area — no big-bang refactors.
