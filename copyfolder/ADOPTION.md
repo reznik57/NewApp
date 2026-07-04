@@ -136,7 +136,11 @@ instead.)
       what triggers paying it down) — fix now ONLY what blocks the
       green `check`. EXCEPTION: live security exposure is surfaced
       to the user immediately with options (fix / mitigate / retire
-      the surface) — an open door is not deferred debt. From here the harness holds the line: the gate
+      the surface) — an open door is not deferred debt. When
+      mitigating, prefer a secure default plus an explicitly NAMED
+      opt-in (a `dev:lan` script) over a permissive default plus a
+      deferred note — the opening stays deliberate and diff-visible.
+      From here the harness holds the line: the gate
       blocks new debt, `/log-gotcha` records deliberate shortcuts,
       and registered debt is paid down surgically when a real task
       touches that area — no big-bang refactors.
