@@ -1,13 +1,14 @@
-"""copyfolder/ must stay a byte-identical mirror of its sources.
+"""harness-kit/ must stay a byte-identical mirror of its sources.
 
-copyfolder/ is the self-contained adoption kit for existing apps: copy
-its CONTENTS into the app root, paste the README kickoff prompt, done —
-no further seed access needed. Its files are COPIES (base/ for the
-harness set, the seed root for the two checklists); this test pins the
-manifest and byte equality, so a source edit fails here until
-mirrored. Re-sync with:
-  robocopy base copyfolder /E /XD __pycache__ .github /XF .gitignore
-  copy /Y SETUP.md copyfolder
+harness-kit/ is the self-contained kit and the SINGLE user-facing
+entry point: copied as a FOLDER into any app — new or existing —
+where START-HERE.md routes to SETUP or ADOPTION; no further seed
+access needed (except optional profiles). Its files are COPIES
+(base/ for the harness set, the seed root for SETUP.md); this test
+pins the manifest and byte equality, so a source edit fails here
+until mirrored. Re-sync with:
+  robocopy base harness-kit /E /XD __pycache__ .github /XF .gitignore
+  copy /Y SETUP.md harness-kit
 Run from the seed root: python -m unittest discover -s tests
 """
 import unittest
@@ -15,9 +16,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BASE = ROOT / "base"
-COPY = ROOT / "copyfolder"
+COPY = ROOT / "harness-kit"
 
-# copyfolder top-level entry -> the source root it mirrors.
+# harness-kit top-level entry -> the source root it mirrors.
 # Deliberately absent: .gitignore (merge-only, ADOPTION step 3) and
 # .github/ (CI is a merge step, ADOPTION step 8).
 MANIFEST = {
@@ -26,8 +27,8 @@ MANIFEST = {
     ".editorconfig": BASE,
     ".claude": BASE,
     "docs": BASE,
-    "SETUP.md": ROOT,  # travels as the reference ADOPTION cites;
-                       # ADOPTION step 11 deletes it from the app
+    "SETUP.md": ROOT,  # root-homed; travels as the kit's fresh-repo
+                       # checklist (START-HERE routes to it)
 }
 # Authored directly in the kit, no source twin: the kickoff prompt's
 # single home (START-HERE) and the adoption checklist itself — its
@@ -55,7 +56,7 @@ def files_under(root, tops):
                 yield f
 
 
-class CopyfolderParityTests(unittest.TestCase):
+class KitParityTests(unittest.TestCase):
     def test_no_files_outside_the_manifest(self):
         for f in COPY.rglob("*"):
             if f.is_file() and "__pycache__" not in f.parts:
@@ -64,7 +65,7 @@ class CopyfolderParityTests(unittest.TestCase):
                     rel.parts[0] in MANIFEST
                     or rel.parts[0] in KIT_ONLY
                     or rel.parts[0] in RENAMED,
-                    "unexpected file in copyfolder: %s" % rel,
+                    "unexpected file in harness-kit: %s" % rel,
                 )
 
     def test_every_copy_file_matches_its_source_byte_for_byte(self):
@@ -85,7 +86,7 @@ class CopyfolderParityTests(unittest.TestCase):
                 rel = f.relative_to(source_root)
                 self.assertTrue(
                     (COPY / rel).is_file(),
-                    "missing in copyfolder (re-sync): %s" % rel,
+                    "missing in harness-kit (re-sync): %s" % rel,
                 )
 
     def test_renamed_merge_sources_match_byte_for_byte(self):

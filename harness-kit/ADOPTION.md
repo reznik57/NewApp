@@ -5,9 +5,11 @@ inside the EXISTING app's repo. The order differs from SETUP.md on
 purpose: an existing codebase is rarely green, and the Stop hook must
 not go live before `check` is — activated on a red `check`, it blocks
 every session stop from day one.
-(This checklist lives in `copyfolder/` inside the app while you work
-it; step 11 deletes that folder again. Fresh empty repo? Use SETUP.md
-instead.)
+(This checklist lives in `harness-kit/` inside the app while you work
+it; step 11 deletes that folder again.)
+**STOP GUARD**: repo has no application code yet (empty, or nothing
+but a scaffolder's output)? Wrong checklist — use the kit's SETUP.md
+instead.
 
 - [ ] 1. **Repo identity, then inventory** — first: this must be the
       APP's own repo. Check `git remote -v` — if origin points at the
@@ -15,7 +17,7 @@ instead.)
       and give the app a fresh start first: delete the clone's `.git`
       and `git init` anew (the template lives on elsewhere), remove
       the template leftovers (base/, profiles/, tests/, the seed's
-      root docs), keep `copyfolder/`. Never push an app onto the
+      root docs), keep `harness-kit/`. Never push an app onto the
       template remote. (Deliberately keeping the repo dual-role
       instead? Expect gate exemptions — the template's own docs will
       trip check_markers and wiki-lint.)
@@ -27,12 +29,12 @@ instead.)
       of an older template line (docs/templates/, *.template.md
       relics) gets RETIRED, not merged — the seed is the only
       upstream; git history keeps it.
-- [ ] 2. **Distribute the kit** — the kit arrived as `copyfolder/` in
+- [ ] 2. **Distribute the kit** — the kit arrived as `harness-kit/` in
       the app root (if not: copy the FOLDER in now — one move, a
       folder of this name exists in no app, nothing can collide).
       Move the app material to its final places:
-      `copyfolder/.claude/*` → `.claude/` (create it, or add into the
-      existing one), `copyfolder/docs/*` → `docs/`,
+      `harness-kit/.claude/*` → `.claude/` (create it, or add into the
+      existing one), `harness-kit/docs/*` → `docs/`,
       `CLAUDE.template.md` → app root, and `.env.example` +
       `.editorconfig` → app root only where the app has none. The two
       moved templates are INERT — `CLAUDE.template.md` and
@@ -44,11 +46,11 @@ instead.)
       definition; two live definitions of one name compete at trigger
       time. Everything else (this
       checklist, SETUP.md, START-HERE.md, `gitignore.template`,
-      `ci.template.yml`) STAYS in `copyfolder/` — step 11 deletes the
+      `ci.template.yml`) STAYS in `harness-kit/` — step 11 deletes the
       whole folder. Deliberately not shipped ready-to-land: a live
       `.gitignore` (merge-only, step 3) and a live CI file (step 8).
 - [ ] 3. **Merge .gitignore** — append the patterns from
-      `copyfolder/gitignore.template` that the app's file lacks
+      `harness-kit/gitignore.template` that the app's file lacks
       (secrets block with `!.env.example`, build output, caches,
       `__pycache__/`); never replace a grown .gitignore. SKIP any
       template pattern that would untrack something the app ships on
@@ -125,8 +127,8 @@ instead.)
       get ADRs the normal way.
 - [ ] 8. **CI** — merge the gate into the existing workflow (check →
       full tests → build → audit) instead of adding a second one; no
-      workflow yet → copy `copyfolder/ci.template.yml` to
-      `.github/workflows/ci.yml` and fill it (inside copyfolder/ the
+      workflow yet → copy `harness-kit/ci.template.yml` to
+      `.github/workflows/ci.yml` and fill it (inside harness-kit/ the
       unfilled copy is never parsed by GitHub). No remote yet? Create
       it anyway — inert until the first push, and after step 11 the
       template is gone; skip only if the repo will NEVER be hosted
@@ -153,7 +155,7 @@ instead.)
 - [ ] 11. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
       `marker check OK` (Windows: `py`). Then delete the whole
-      `copyfolder/` from the app (all remaining scaffolding lives
+      `harness-kit/` from the app (all remaining scaffolding lives
       there) and make the first commit at a green `check` — curated:
       app code and harness in; junk, backups/, and private data
       (databases, master files) out and .gitignore'd. Re-check

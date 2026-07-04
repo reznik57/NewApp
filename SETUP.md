@@ -1,26 +1,32 @@
 # New App Setup — Checklist
 
 Work top to bottom inside the NEW app's repo. Do not skip the exit gate.
-(This file reaches an app only inside `copyfolder/`, as the reference
-ADOPTION.md cites — its step 11 deletes that whole folder. If you
-copied the seed folder wholesale, delete README.md,
-TEMPLATE-CHANGELOG.md, docs/superpowers/, tests/, profiles/, and
-copyfolder/ from the app now. Bringing the harness into an app that
-already has code? Use the kit's copyfolder/ADOPTION.md instead — the
-step order differs on purpose.)
+This file reaches an app inside `harness-kit/` (see its START-HERE.md);
+step 11 deletes that folder again.
+**STOP GUARD**: repo already contains application code? Wrong
+checklist — use the kit's ADOPTION.md instead; the step order differs
+on purpose. (If you copied the SEED folder wholesale instead of the
+kit, delete README.md, TEMPLATE-CHANGELOG.md, docs/superpowers/,
+tests/, profiles/, and harness-kit/ from the app now.)
 
-- [ ] 1. **Copy the base** — from the seed:
-      `robocopy "<seed>\base" . /E /XD __pycache__`
-      run at the new repo root (robocopy exit codes 0–3 are success), or any
-      copy that includes dotfiles (`.gitignore`, `.env.example`,
-      `.editorconfig`, `.claude/`, `.github/`) and skips `__pycache__/`
-      (seed-test bytecode). If the stack has a scaffolder (create-next-app,
-      cargo new, ...), run it FIRST in the empty repo, then copy the base
-      over it — scaffolders refuse non-empty directories, and the base
-      `.gitignore` intentionally replaces the scaffold's (it covers the
-      scaffold's ignore patterns).
+- [ ] 1. **Scaffold, then distribute the kit** — the kit arrived as
+      `harness-kit/` in the repo root (if not: copy the FOLDER in now,
+      per its START-HERE.md). If the stack has a scaffolder
+      (create-next-app, cargo new, ...), run it FIRST — scaffolders
+      refuse non-empty directories, so if it balks at the kit folder,
+      move `harness-kit/` aside, scaffold, move it back. Then move the
+      app material to its final places:
+      `harness-kit/.claude/*` → `.claude/`,
+      `harness-kit/docs/*` → `docs/`, `CLAUDE.template.md`,
+      `.env.example` and `.editorconfig` → app root,
+      `gitignore.template` → `.gitignore` (replacing the scaffold's —
+      it covers the scaffold's ignore patterns), and
+      `ci.template.yml` → `.github/workflows/ci.template.yml` (filled
+      in step 10). The checklists and START-HERE.md STAY in
+      `harness-kit/` — step 11 deletes the folder.
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
-      `profiles/typescript-next/README.md` steps 1–5.
+      `profiles/typescript-next/README.md` steps 1–5 (profiles live in
+      the SEED, not the kit — this step needs the seed folder at hand).
 - [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
       `.env.example`. Verify: `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
@@ -64,8 +70,10 @@ step order differs on purpose.)
 - [ ] 10. **CI** — fill and rename `.github/workflows/ci.template.yml` →
       `ci.yml`, or use the profile's `ci.yml`, or delete it if the app is
       not on GitHub.
-- [ ] 11. **First commit at green** — `npm run check` (or your check
-      equivalent) exits clean, then commit everything.
+- [ ] 11. **First commit at green** — delete the whole `harness-kit/`
+      from the app first (all remaining scaffolding lives there), then
+      `npm run check` (or your check equivalent) exits clean, then
+      commit everything.
 - [ ] 12. **EXIT GATE** — run the marker check from the app root; it must
       print `marker check OK`: `python .claude/scripts/check_markers.py`
       (Windows: `py` if `python` resolves to the Microsoft Store alias).

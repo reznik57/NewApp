@@ -5,6 +5,40 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.10 — v2.4.4
+
+Single-entry round — the pick-the-wrong-folder error class is removed
+structurally instead of warned about (kit structure and seed docs
+only; base/ templates untouched, so no stamp advances):
+
+- copyfolder/ → harness-kit/: direction-neutral (the kit now serves
+  BOTH instantiation paths) and still collision-proof by name (a bare
+  kit/ is plausible inside real apps; harness-kit/ is not).
+- ONE user-facing entry point: copy harness-kit/ into ANY app's repo
+  root; START-HERE routes via a single fork — does the repo already
+  contain application code? — to ADOPTION (yes) or SETUP (no), with a
+  `git ls-files` tiebreaker. Both kickoff prompts live in START-HERE
+  (single home); README's Instantiation shrinks to a pointer. base/
+  is never copied into an app anymore — it is the canonical source
+  the kit mirrors (parity-tested), stated as such in the README.
+- SETUP now works from inside the kit, as ADOPTION always did:
+  step 1 becomes scaffold-first-then-distribute (a scaffolder that
+  balks at the kit folder → move it aside, scaffold, move it back;
+  gitignore.template → .gitignore and ci.template.yml →
+  .github/workflows/ land by rename), step 2 notes profiles stay
+  seed-side, step 11 deletes the kit before the first commit. The
+  robocopy-from-base instruction leaves the user path.
+- STOP guards, belt to the router's suspenders: both checklists open
+  with a guard for the opposite case (ADOPTION on a code-less repo,
+  SETUP on a repo with application code), so a wrong pick fails at
+  step 0, not at step 8.
+- check_markers.py needed no change: SCAN_TOPS never scanned the kit
+  folder, so the exit gate ignores it under either name.
+- Parity test renamed test_copyfolder_parity.py → test_kit_parity.py;
+  manifest comments and re-sync commands updated (suite: 52,
+  1 skipped). The fresh-app path remains unvalidated — first real
+  SETUP run doubles as its validation.
+
 ## 2026-07.9 — v2.4.3
 
 Unknowns round — mapping "Know your unknowns" (Thariq Shihipar's "The
