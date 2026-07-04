@@ -5,7 +5,7 @@ Reads the tool-call JSON from stdin. Exit 2 blocks the call and feeds the
 stderr message back to the agent; exit 0 allows it. Stdlib only; Windows-safe.
 Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|NotebookEdit".
 """
-# template-version: 2026-07.4
+# template-version: 2026-07.8
 import json
 import os
 import posixpath
@@ -19,6 +19,16 @@ PROTECTED_BASENAMES = {
 }
 PROTECTED_SEGMENTS = {".git"}
 ALLOWED_ENV_FILES = {".env.example"}
+# A text Edit/Write into a binary file is ALWAYS corruption, wherever
+# the file lives — suffix rule, not path list. ADAPT: extend with the
+# app's own binary crown jewels (e.g. .xlsm masters).
+BINARY_SUFFIXES = {
+    ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico",
+    ".pdf", ".xlsx", ".xls", ".docx",
+    ".zip", ".gz", ".7z",
+    ".db", ".sqlite", ".sqlite3",
+    ".woff", ".woff2", ".ttf", ".otf",
+}
 
 
 def check_path(file_path):
@@ -49,6 +59,9 @@ def check_path(file_path):
         return "%s may contain secrets; the user edits it manually" % path.name
     if name in PROTECTED_BASENAMES:
         return "%s is a lockfile; change deps via the package manager" % path.name
+    if PurePath(name).suffix in BINARY_SUFFIXES:
+        return ("%s is a binary file; a text edit corrupts it — "
+                "use a proper tool or ask the user" % path.name)
     return None
 
 

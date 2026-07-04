@@ -39,6 +39,21 @@ class ProtectFilesTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("lockfile", result.stderr)
 
+    def test_blocks_binary_suffix_anywhere(self):
+        # Suffix rule, not path list: a text Write into a binary is
+        # always corruption, wherever the file lives.
+        result = run_hook({"file_path": "C:/proj/content/img/chart.png"})
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("binary", result.stderr)
+
+    def test_blocks_binary_suffix_case_insensitive(self):
+        result = run_hook({"file_path": "C:/proj/Screenshot.PNG"})
+        self.assertEqual(result.returncode, 2)
+
+    def test_allows_text_file_between_binaries(self):
+        result = run_hook({"file_path": "C:/proj/content/pdf/notes.md"})
+        self.assertEqual(result.returncode, 0)
+
     def test_blocks_git_internals(self):
         result = run_hook({"file_path": "C:/proj/.git/config"})
         self.assertEqual(result.returncode, 2)
