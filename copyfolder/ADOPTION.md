@@ -23,7 +23,10 @@ instead.)
       AGENTS.md, `.claude/settings.json` and `.claude/commands/`, CI
       workflows, lint/format configs, the test runner, anything
       `check`-like in package.json. Everything on that list is
-      MERGED below, never overwritten.
+      MERGED below, never overwritten. One exception: a vendored copy
+      of an older template line (docs/templates/, *.template.md
+      relics) gets RETIRED, not merged — the seed is the only
+      upstream; git history keeps it.
 - [ ] 2. **Distribute the kit** — the kit arrived as `copyfolder/` in
       the app root (if not: copy the FOLDER in now — one move, a
       folder of this name exists in no app, nothing can collide).
@@ -88,7 +91,10 @@ instead.)
       were never filled mean a command was never truly in use —
       default to retiring it, not filling it. On a non-npm stack,
       translate the allow/ask commands to the app's toolchain (the
-      POSTURE carries, not the literal npm entries). The app's
+      POSTURE carries, not the literal npm entries); a deny that
+      breaks a DOCUMENTED app workflow (a gotcha citing curl for
+      local verification) moves to ask instead — the guard stays,
+      the workflow survives. The app's
       `settings.local.json`, if any, stays untouched — Claude Code
       merges both. Then self-test as SETUP step 6 (`--self-test`,
       then the live `.env`-edit probe).
@@ -102,7 +108,10 @@ instead.)
       (AGENTS.md, .cursorrules, GEMINI.md): merge its rules the same
       way — domain rules often make a strong Invariant 5 — then
       shrink that file to a pointer at CLAUDE.md (keep it only if
-      other tools read it). Unlike a fresh app, fill
+      other tools read it). Loose narratives already under `docs/`
+      move into `docs/wiki/` (git mv + index entry); process history
+      (old plans/specs folders) stays put — knowledge gets indexed,
+      history doesn't. Unlike a fresh app, fill
       `Architecture [Grows]` NOW — the code already has seams worth
       naming. Otherwise follow SETUP step 7 (markers, ADAPT notes,
       line budget).

@@ -5,6 +5,35 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.8 — v2.4.2
+
+Second live adoption round (deliberately-no-build node tool with
+committed dist/standalone.html and a v1-era vendored template line):
+
+- protect_files.py: binary-suffix block by DEFAULT (stamped
+  2026-07.8) — the graduation rule applied to the seed itself:
+  both live adoptions needed the same class (workbooks/DB, then
+  png/pdf masters). A text Edit/Write into a binary is always
+  corruption, wherever the file lives — suffix rule beats path
+  lists; ADAPT extends it with app-specific formats. 3 new tests
+  (suite: 52, 1 skipped).
+- ADOPTION step 3: a template .gitignore pattern that would untrack
+  something the app ships on purpose is SKIPPED, with a one-line
+  why-comment in .gitignore so no future cleanup "fixes" it (the
+  committed-dist case).
+- ADOPTION step 4: runner already in use but no manifest → a
+  minimal scripts-only package.json ("private": true, no deps)
+  beats a bespoke CHECK_COMMAND mapping; record the no-build intent
+  in ADR-0001.
+- ADOPTION step 1: vendored copies of an older template line get
+  RETIRED, not merged — the seed is the only upstream.
+- ADOPTION step 5: a deny that breaks a documented app workflow
+  (gotcha citing curl for local verification) moves to ask — the
+  guard stays, the workflow survives.
+- ADOPTION step 6: loose narratives under docs/ move into
+  docs/wiki/ with index entries; process history (old plans/specs
+  folders) stays put — knowledge gets indexed, history doesn't.
+
 ## 2026-07.7 — v2.4.1
 
 Adoption-kit round — seed structure only; base/ templates untouched,
