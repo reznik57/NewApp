@@ -120,4 +120,8 @@ instead.)
       `python .claude/scripts/check_markers.py` prints
       `marker check OK` (Windows: `py`). Then delete the whole
       `copyfolder/` from the app (all remaining scaffolding lives
-      there) and commit at a green `check`.
+      there) and make the first commit at a green `check` — curated:
+      app code and harness in; junk, backups/, and private data
+      (databases, master files) out and .gitignore'd. Re-check
+      `git remote -v` BEFORE the first push: it must point at the
+      app's own repo, never the template's (step 1).
