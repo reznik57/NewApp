@@ -122,7 +122,10 @@ instead.)
       full tests → build → audit) instead of adding a second one; no
       workflow yet → copy `copyfolder/ci.template.yml` to
       `.github/workflows/ci.yml` and fill it (inside copyfolder/ the
-      unfilled copy is never parsed by GitHub).
+      unfilled copy is never parsed by GitHub). No remote yet? Create
+      it anyway — inert until the first push, and after step 11 the
+      template is gone; skip only if the repo will NEVER be hosted
+      (then record that in ADR-0001).
 - [ ] 9. **Debt baseline — inventory, don't fix** — one timeboxed
       pass over the codebase: obvious legacy files (`*_old`, `*.bak`,
       commented-out blocks), unused dependencies (e.g. `npx
