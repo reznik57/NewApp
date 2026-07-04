@@ -54,8 +54,10 @@ instead.)
       template pattern that would untrack something the app ships on
       purpose (a committed build artifact, a vendored file) — and
       leave a one-line comment in .gitignore saying why, so no future
-      cleanup "fixes" it. Verify: `git check-ignore .env` prints
-      `.env`.
+      cleanup "fixes" it. If that shipped artifact is BUILT, put its
+      build into `check` (step 4) — the gate then keeps the committed
+      copy fresh, mechanically. Verify: `git check-ignore .env`
+      prints `.env`.
 - [ ] 4. **Define the six-script contract on the CURRENT state** — map
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
       (semantics: CLAUDE.md → Commands; optional reference if the
@@ -97,7 +99,10 @@ instead.)
       the workflow survives. The app's
       `settings.local.json`, if any, stays untouched — Claude Code
       merges both. Then self-test as SETUP step 6 (`--self-test`,
-      then the live `.env`-edit probe).
+      then the live `.env`-edit probe) — knowing that hooks register
+      at session START: the freshly activated settings bind only the
+      NEXT session, so verify in this one via stdin probes and run
+      the live probe after a restart.
 - [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
       → `CLAUDE.md`, then move the old instructions INTO its sections;
       the template's Invariants and Task Discipline win over softer
