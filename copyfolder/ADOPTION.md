@@ -60,14 +60,22 @@ instead.)
       Non-npm stack: also update CHECK_COMMAND in
       `.claude/hooks/verify_on_stop.py` (as SETUP step 4).
 - [ ] 5. **Green gate BEFORE live hook** — run the check yourself until
-      it exits 0. Only then activate: merge the copied
+      it exits 0. Finish ALL harness edits before activating (the
+      harness blocks agent edits to itself afterwards): CHECK_COMMAND
+      (step 4), and protect_files.py's PROTECTED lists extended with
+      the app's crown jewels (binary masters, databases — text tools
+      corrupt them). Only then activate: merge the copied
       `.claude/settings.template.json` (permission posture + both hook
       registrations) into the existing `.claude/settings.json`, or
       rename it to `.claude/settings.json` if none exists; delete the
-      template copy afterwards (two settings files invite drift). The
-      app's `settings.local.json`, if any, stays untouched — Claude
-      Code merges both. Then self-test as SETUP step 6
-      (`--self-test`, then the live `.env`-edit probe).
+      template copy afterwards (two settings files invite drift).
+      While merging: review the app's EXISTING hooks — retire what the
+      harness supersedes or what injects stale content; on a non-npm
+      stack, translate the allow/ask commands to the app's toolchain
+      (the POSTURE carries, not the literal npm entries). The app's
+      `settings.local.json`, if any, stays untouched — Claude Code
+      merges both. Then self-test as SETUP step 6 (`--self-test`,
+      then the live `.env`-edit probe).
 - [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
       → `CLAUDE.md`, then move the old instructions INTO its sections;
       the template's Invariants and Task Discipline win over softer
