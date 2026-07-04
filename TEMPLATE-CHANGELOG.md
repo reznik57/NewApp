@@ -5,6 +5,37 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.9 — v2.4.3
+
+Unknowns round — mapping "Know your unknowns" (Thariq Shihipar's "The
+Unreasonable Effectiveness of HTML", 2026) against the seed. Its frame
+(Johari quadrants × pre/during/post implementation) confirms the
+harness's coverage of execution unknowns (gates/hooks) and memory
+unknowns (knowledge schema); three small adoptions close the
+intent-phase flank (touched templates stamped 2026-07.9):
+
+- ultrathink Phase 0: clarifying questions are asked in blast-radius
+  order — the answer that could invalidate the most downstream design
+  (or is hardest to reverse) comes first. The 1–2 question cap and the
+  skip rule are unchanged.
+- ultrathink CHECKPOINT: tweakables first — the plan-mode presentation
+  opens with the decisions the user is most likely to want differently
+  (schema shape, naming, user-facing placement); the mechanical rest is
+  compressed. Approval is the gate; reviewer attention is what it
+  spends.
+- ultrathink Phase 4 + wiki log: deviations are data. The moment
+  execution forces a change to an approved step or the ADR, a
+  `deviated` line lands in docs/wiki/log.md (new verb, symmetric with
+  v2.1's `deferred`) — never reconstructed at session end; the standing
+  /log-gotcha sweep graduates the durable ones. ADR-contradicting
+  deviations follow the existing ADR discipline.
+- Rejected with reasons (don't re-litigate): HTML artifacts as seed
+  content (portability layer 1 is plain markdown; a session-level
+  practice, not a project contract), buy-in doc and merge quiz (team
+  artifacts / no incident evidence — the graduation rule waits for
+  one), a standalone blindspot-pass step (duplicates Phase 0 plus
+  "Verify, don't invent").
+
 ## 2026-07.8 — v2.4.2
 
 Second live adoption round (deliberately-no-build node tool with

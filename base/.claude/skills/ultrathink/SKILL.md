@@ -3,7 +3,7 @@ name: ultrathink
 description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, LLM-powered features, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
 ---
 
-<!-- template-version: 2026-07.5 -->
+<!-- template-version: 2026-07.9 -->
 
 # UltraThink Protocol
 
@@ -23,6 +23,9 @@ Identify 1–2 critical unknowns. Ask only if genuinely ambiguous:
 - **Scope**: production-grade or proof-of-concept?
 - **Trade-off**: optimize for speed, memory, simplicity, or maintainability?
 - **Integration**: which existing component should own this?
+
+Ask in blast-radius order: the question whose answer could invalidate the
+most downstream design — or is hardest to reverse later — goes first.
 
 **Skip** if requirements are unambiguous from context.
 
@@ -96,7 +99,10 @@ status: proposed) BEFORE implementation starts. See `docs/adr/README.md`.
 ## CHECKPOINT
 
 Present Phase 3 via plan mode. **Plan approval IS the checkpoint** — it also
-flips the ADR to accepted.
+flips the ADR to accepted. Tweakables first: open with the decisions the
+user is most likely to want differently (schema shape, naming, user-facing
+placement); compress the mechanical rest. Approval spends attention — aim
+it where a "no" is still cheap.
 
 ## Phase 4: Implementation Plan
 
@@ -107,6 +113,10 @@ Only after approval.
 - Derive integration points fresh from CLAUDE.md → Architecture — do NOT
   maintain a copy of that map here.
 - 3–7 atomic steps, each written as `[step] → verify: [check]`.
+- Deviations are data: the moment execution forces a change to an approved
+  step or the ADR, append a `deviated` line to `docs/wiki/log.md` (what
+  changed, why) — never reconstruct at session end. A deviation that
+  contradicts the accepted ADR follows CLAUDE.md → ADR discipline.
 
 ## Phase 5: Design-Review Gates
 
