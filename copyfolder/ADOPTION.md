@@ -79,7 +79,14 @@ instead.)
 - [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
       → `CLAUDE.md`, then move the old instructions INTO its sections;
       the template's Invariants and Task Discipline win over softer
-      duplicates of the same rule. Unlike a fresh app, fill
+      duplicates of the same rule. Narrative overflow (feature docs,
+      changelog prose) becomes `docs/wiki/` pages with pointers —
+      registered in the wiki index — and volatile statistics are
+      dropped, not migrated (Invariant 4). A SECOND instruction file
+      (AGENTS.md, .cursorrules, GEMINI.md): merge its rules the same
+      way — domain rules often make a strong Invariant 5 — then
+      shrink that file to a pointer at CLAUDE.md (keep it only if
+      other tools read it). Unlike a fresh app, fill
       `Architecture [Grows]` NOW — the code already has seams worth
       naming. Otherwise follow SETUP step 7 (markers, ADAPT notes,
       line budget).
