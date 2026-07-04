@@ -47,8 +47,12 @@ instead.)
 - [ ] 3. **Merge .gitignore** — append the patterns from
       `copyfolder/gitignore.template` that the app's file lacks
       (secrets block with `!.env.example`, build output, caches,
-      `__pycache__/`); never replace a grown .gitignore. Verify:
-      `git check-ignore .env` prints `.env`.
+      `__pycache__/`); never replace a grown .gitignore. SKIP any
+      template pattern that would untrack something the app ships on
+      purpose (a committed build artifact, a vendored file) — and
+      leave a one-line comment in .gitignore saying why, so no future
+      cleanup "fixes" it. Verify: `git check-ignore .env` prints
+      `.env`.
 - [ ] 4. **Define the six-script contract on the CURRENT state** — map
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
       (semantics: CLAUDE.md → Commands; optional reference if the
