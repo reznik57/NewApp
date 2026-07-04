@@ -5,6 +5,39 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.7 — v2.4.1
+
+Adoption-kit round — seed structure only; base/ templates untouched,
+so no stamp advances. Battle-tested the same day against the first
+real brownfield adoption (13 findings, six fix rounds):
+
+- copyfolder/ is the self-contained, SINGLE-USE adoption kit: copied
+  as a FOLDER into the app (collision-proof by name — nothing to
+  skip or overwrite), distributed by the checklist (step 2 moves app
+  material to its places; scaffolding stays inside), deleted whole
+  at step 11. Ships both checklists, START-HERE (the kickoff
+  prompt's single home — the README points there, path-free), inert
+  merge sources (gitignore.template; ci.template.yml at kit root so
+  GitHub never parses the unfilled copy), and the harness set.
+  Parity-tested against its sources (MANIFEST / RENAMED / KIT_ONLY;
+  suite: 49, 1 skipped).
+- One-home cleanup: ADOPTION.md's home IS the kit (root copy
+  removed); SETUP.md stays root-homed with a parity-pinned reference
+  copy in the kit (ADOPTION and the CLAUDE template header cite its
+  steps).
+- ADOPTION hardened by the live run: repo-identity gate first (never
+  push an app onto the template remote; dual-role cost named);
+  same-name AND same-effect collision rules (retire wizards that
+  regenerate harness files; never-filled {{}} slots mean never in
+  use); all harness edits BEFORE activation (CHECK_COMMAND +
+  PROTECTED crown jewels); existing-hook review; permission-posture
+  translation for non-npm stacks; CLAUDE-merge doctrine (narrative
+  overflow → wiki with pointers, volatile stats dropped, second
+  instruction file merged then shrunk to a pointer); debt baseline
+  with a security-exposure lens and immediate escalation for live
+  exposure (an open door is not deferred debt); curated first commit
+  + remote re-check before the first push.
+
 ## 2026-07.6 — v2.4
 
 Universality round: brownfield path, portability documented, audit
