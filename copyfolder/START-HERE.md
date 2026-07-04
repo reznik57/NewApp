@@ -25,5 +25,8 @@ gates say when you are done:
 `.claude/scripts/check_markers.py`.
 
 ADOPTION step 11 deletes this whole folder again — the harness stays,
-the scaffolding goes. Fresh empty repo instead? Don't use this kit;
-seed from the template's `base/` per its `SETUP.md`.
+the scaffolding goes. The kit is SINGLE-USE: step 2 moves files out
+of it and step 11 deletes it, so for the next app always copy a
+fresh `copyfolder/` from the seed — it also carries the latest
+checklist fixes. Fresh empty repo instead? Don't use this kit; seed
+from the template's `base/` per its `SETUP.md`.
