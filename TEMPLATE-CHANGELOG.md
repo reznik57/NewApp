@@ -5,6 +5,36 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.13 — v2.4.7
+
+Static audit of the SETUP fresh-app path — the one route never run on a
+real app (all prior validation was brownfield ADOPTION). Done inline (the
+5-lens adversarial workflow hit the account session limit mid-run, so the
+findings are inline-verified against the files, not workflow-cross-checked).
+Most of the path is sound: every referenced artifact exists, the hook
+commands and the `--self-test` OK-path check out (package.json is required
+only for `npm run` segments — correct), and the settings.json handshake
+between SETUP step 5 and the TS/Next profile holds both ways. Three fixes,
+all on the fresh + profile path:
+
+- SETUP step 3 gains the repo-identity guard ADOPTION step 1 already has:
+  `git remote -v` must be empty or the app's own repo, never the
+  template/seed — a fresh app scaffolded inside a seed clone inherits the
+  seed's `origin` (the documented push-onto-template incident, now guarded
+  on the greenfield path too).
+- profiles/typescript-next/README.md step 5 no longer says to edit
+  "CLAUDE.md" at overlay time (SETUP step 2) — the file is still named
+  CLAUDE.template.md until SETUP step 7 renames it; the step now says so in
+  place.
+- profiles/typescript-next/README.md step 3 now tells you to DELETE the
+  leftover .github/workflows/ci.template.yml after copying the profile
+  ci.yml — GitHub parses every *.yml there and check_markers scans .github/
+  (ci.template.yml is not EXEMPT), so a leftover fails both; the exit gate
+  already catches it, this just saves the red round-trip.
+
+Re-stamped 2026-07.13: profiles/typescript-next/README.md. SETUP.md carries
+no stamp (process doc, versioned only here).
+
 ## 2026-07.12 — v2.4.6
 
 Run-4 close — findings from the first UPDATE run: a newer `harness-kit/`
