@@ -33,7 +33,9 @@ can prove" doctrine correctly kept hard rules out; what was missing was the
   profiles" caveat; profiles sit outside the parity manifest, so no test
   churn. The pointer therefore drops its "if available" hedge — post-overlay
   the skill is present. The vendored copy drifts from upstream by design;
-  its version is tracked here (like the JSON templates), not by a stamp.
+  its version is tracked here (like the JSON templates), not by a stamp. A
+  scoped `.gitattributes` pins these files to `eol=lf` so `core.autocrlf` on
+  Windows can't rewrite the working copy away from the upstream bytes.
 - Reliability is invocation, not presence: a bundled skill is auto-surfaced
   to the model, but the model still *decides* to call it — no hook forces
   it. So the pointer is imperative ("invoke … BEFORE writing component
