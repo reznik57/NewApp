@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.4 -->
+<!-- template-version: 2026-07.13 -->
 
 # Profile: TypeScript / Next.js
 
@@ -10,14 +10,18 @@ the new repo (SETUP.md step 2):
 2. Copy `settings.json` → `.claude/settings.json` (replaces renaming the
    base template; already filled for npm/next/vitest/eslint/tsc).
    Delete `.claude/settings.template.json` afterwards.
-3. Copy `ci.yml` → `.github/workflows/ci.yml` (replaces ci.template.yml).
+3. Copy `ci.yml` → `.github/workflows/ci.yml`, then DELETE the leftover
+   `.github/workflows/ci.template.yml` that SETUP step 1 placed there —
+   GitHub parses every `*.yml` in that dir and the exit-gate marker check
+   (SETUP step 12) scans `.github/`, so an unfilled template fails both.
 4. Copy `eslint.config.mjs` → repo root, replacing the one create-next-app
    generated. It layers the profile's enforced rules on the Next.js
    defaults — the file's header is the sole home for what they are and
    how they gate.
-5. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md with the
-   contents of `CLAUDE.stack-sections.md` (includes the `Stack Rules`
-   section — keep it).
+5. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md — still
+   named `CLAUDE.template.md` at overlay time; SETUP step 7 renames it and
+   fills the rest — with the contents of `CLAUDE.stack-sections.md`
+   (includes the `Stack Rules` section — keep it).
 
 Still manual afterwards: Role & Context, the project-specific invariant,
 Invariant 1's `{{CHECK CMD}}` (fill with `npm run check`) and

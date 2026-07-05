@@ -27,8 +27,13 @@ tests/, profiles/, and harness-kit/ from the app now.)
 - [ ] 2. **Overlay a profile** (optional) — TS/Next.js: follow
       `profiles/typescript-next/README.md` steps 1–5 (profiles live in
       the SEED, not the kit — this step needs the seed folder at hand).
-- [ ] 3. **Git + env hygiene** — `git init` if needed. Create `.env` from
-      `.env.example`. Verify: `git check-ignore .env` prints `.env`.
+- [ ] 3. **Git + env hygiene** — `git init` if needed, then confirm repo
+      identity: `git remote -v` must be empty or point at the app's OWN
+      repo, never the template/seed. A fresh app scaffolded inside a seed
+      clone inherits the seed's `origin` — delete `.git` and `git init`
+      anew, or repoint `origin`, so the app never pushes onto the template
+      remote. Create `.env` from `.env.example`. Verify:
+      `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
       `test`, `test:one`, `fix`, `dev`, `build` (the profile's
       `package-scripts.json` provides them). Non-npm stack: act on the
