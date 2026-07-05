@@ -151,6 +151,32 @@ class ProtectFilesTests(unittest.TestCase):
         result = run_hook({})
         self.assertEqual(result.returncode, 0)
 
+    def test_probe_blocked_path_exits_2(self):
+        # --probe replaces hand-built stdin JSON at setup time, where a
+        # payload typo hits the fail-open path and reads as "allowed".
+        result = subprocess.run(
+            [sys.executable, str(HOOK), "--probe", "C:/proj/.env"],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("BLOCKED", result.stdout)
+
+    def test_probe_allowed_path_exits_0(self):
+        result = subprocess.run(
+            [sys.executable, str(HOOK), "--probe", "src/app.py"],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("allowed", result.stdout)
+
+    def test_probe_without_path_fails_usage(self):
+        result = subprocess.run(
+            [sys.executable, str(HOOK), "--probe"],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("usage", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

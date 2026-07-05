@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.5 -->
+<!-- template-version: 2026-07.11 -->
 <!--
   CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
   the post-fill line budget live there; this comment block is deleted).
@@ -112,7 +112,10 @@ The six-script contract lives in `package.json` (single source of truth):
 <!-- ADAPT (non-JS stacks): replace with a table mapping the six contract
 names to your real commands, e.g. check = `cargo clippy -- -D warnings;
 cargo test --lib`. The six semantics stay; the tool changes. Update
-CHECK_COMMAND in .claude/hooks/verify_on_stop.py to match. -->
+CHECK_COMMAND in .claude/hooks/verify_on_stop.py to match. Stack with two
+strictness tiers (Debug/Release builds, dev/prod lint)? `check` is the
+fast lenient tier, `build` the strict one CI runs — mapping both to the
+same command makes the gate too slow or CI too lax. -->
 
 ## Architecture [Grows]
 
