@@ -4,8 +4,19 @@
 Reads the tool-call JSON from stdin. Exit 2 blocks the call and feeds the
 stderr message back to the agent; exit 0 allows it. Stdlib only; Windows-safe.
 Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|NotebookEdit".
+
+Bash is deliberately NOT matched: this guard is friction plus forced user
+involvement, not a security boundary. When it rightly blocks a needed
+harness edit, the sanctioned path is the user applying the change or
+explicitly delegating it (e.g. a scripted patch) — never a silent bypass.
+
+--probe <path> checks one path against the block/allow logic with the
+hook's exit contract (2 blocked, 0 allowed) — a setup-time seam that
+avoids hand-built stdin JSON (where a typo makes the fail-open path
+look like "allowed"). It does NOT verify the settings.json
+registration; the live .env-edit probe in a fresh session does.
 """
-# template-version: 2026-07.8
+# template-version: 2026-07.11
 import json
 import os
 import posixpath
@@ -77,6 +88,17 @@ def is_protected(file_path):
 
 
 def main():
+    if "--probe" in sys.argv:
+        args = sys.argv[sys.argv.index("--probe") + 1:]
+        if not args:
+            print("usage: protect_files.py --probe <path>", file=sys.stderr)
+            return 2
+        reason = is_protected(args[0])
+        if reason:
+            print("BLOCKED: %s." % reason)
+            return 2
+        print("allowed: %s" % args[0])
+        return 0
     try:
         # Read as bytes: json.loads() strips a leading UTF-8 BOM per spec,
         # but json.load() on a text stream does not (Windows PowerShell's

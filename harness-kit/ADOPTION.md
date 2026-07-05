@@ -28,7 +28,11 @@ instead.
       MERGED below, never overwritten. One exception: a vendored copy
       of an older template line (docs/templates/, *.template.md
       relics) gets RETIRED, not merged — the seed is the only
-      upstream; git history keeps it.
+      upstream; git history keeps it. Snapshot the tree state now
+      (`git status --short`) — a mature repo is often mid-work, and
+      step 11 curates the adoption commit against this baseline so
+      pre-existing modifications (even to files inside `.claude/`)
+      stay out of it.
 - [ ] 2. **Distribute the kit** — the kit arrived as `harness-kit/` in
       the app root (if not: copy the FOLDER in now — one move, a
       folder of this name exists in no app, nothing can collide).
@@ -101,21 +105,35 @@ instead.
       the workflow survives. The app's
       `settings.local.json`, if any, stays untouched — Claude Code
       merges both. Then self-test as SETUP step 6 (`--self-test`,
-      then the live `.env`-edit probe) — knowing that hooks register
-      at session START: the freshly activated settings bind only the
-      NEXT session, so verify in this one via stdin probes and run
-      the live probe after a restart.
+      plus `protect_files.py --probe` per path) — and treat both
+      hooks as potentially LIVE from the moment settings.json is
+      written: Claude Code versions differ on whether hooks bind
+      immediately or at the next session start, so never plan a
+      harness edit on the assumption of a grace window. The live
+      `.env`-edit probe still needs a fresh session.
 - [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
       → `CLAUDE.md`, then move the old instructions INTO its sections;
       the template's Invariants and Task Discipline win over softer
-      duplicates of the same rule. Narrative overflow (feature docs,
+      duplicates of the same rule. (Direction flips when the EXISTING
+      CLAUDE.md is substantially richer than the template: keep it as
+      the base and graft IN the template's load-bearing pieces — the
+      source-of-truth and no-volatile-counts Invariants, the Commands
+      table, the docs & knowledge schema, the deep-analysis pointer.
+      The goal is fixed — ONE file with every frame piece present;
+      only the direction is the judgment call.) Narrative overflow (feature docs,
       changelog prose) becomes `docs/wiki/` pages with pointers —
       registered in the wiki index — and volatile statistics are
       dropped, not migrated (Invariant 4). A SECOND instruction file
       (AGENTS.md, .cursorrules, GEMINI.md): merge its rules the same
       way — domain rules often make a strong Invariant 5 — then
-      shrink that file to a pointer at CLAUDE.md (keep it only if
-      other tools read it). Loose narratives already under `docs/`
+      shrink that file to a pointer at CLAUDE.md. Other tools
+      actively read it (the AGENTS.md convention, GEMINI.md)? Then
+      its surviving shape is: tool-specific delta (persona, loading
+      mechanics, tool-own protocols) + a compact invariant summary +
+      the pointer — a small, deliberate duplication. What must NOT
+      survive is duplicated detail substance (architecture, versions,
+      counts): unmaintained mirrors rot into actively wrong guidance
+      while CLAUDE.md moves on. Loose narratives already under `docs/`
       move into `docs/wiki/` (git mv + index entry); process history
       (old plans/specs folders) stays put — knowledge gets indexed,
       history doesn't. Unlike a fresh app, fill
@@ -132,7 +150,15 @@ instead.
       unfilled copy is never parsed by GitHub). No remote yet? Create
       it anyway — inert until the first push, and after step 11 the
       template is gone; skip only if the repo will NEVER be hosted
-      (then record that in ADR-0001).
+      (then record that in ADR-0001). Run the dependency audit
+      locally BEFORE wiring its CI step. Red today with the fix
+      deferred (step 9's exception decides what is surfaced to the
+      user immediately)? Wire the step non-failing
+      (`continue-on-error: true`) and record a `deferred` entry in
+      `docs/wiki/log.md` naming the trigger that turns it hard —
+      the same ratchet doctrine as step 4's warning backlog. Never
+      day-one-red CI for debt you just catalogued, and never silent
+      yellow either; the log entry is the difference.
 - [ ] 9. **Debt baseline — inventory, don't fix** — one timeboxed
       pass over the codebase: obvious legacy files (`*_old`, `*.bak`,
       commented-out blocks), unused dependencies (e.g. `npx
@@ -154,10 +180,17 @@ instead.
 - [ ] 10. **Adapt the ultrathink skill** — as SETUP step 8.
 - [ ] 11. **EXIT GATE** — as SETUP step 12:
       `python .claude/scripts/check_markers.py` prints
-      `marker check OK` (Windows: `py`). Then delete the whole
+      `marker check OK` (Windows: `py`). The gate surfacing a harness
+      adaptation (an EXEMPT extension, a MARKERS tweak) is the
+      ask-the-user case working as designed: the user applies the
+      edit or explicitly delegates it — never bypass the guard
+      silently. Then delete the whole
       `harness-kit/` from the app (all remaining scaffolding lives
       there) and make the first commit at a green `check` — curated:
       app code and harness in; junk, backups/, and private data
-      (databases, master files) out and .gitignore'd. Re-check
+      (databases, master files) out and .gitignore'd. Tree was dirty
+      at step 1? Commit on a dedicated branch and stage ONLY adoption
+      paths, checked against the step-1 baseline so pre-existing
+      modifications ride along nowhere; never `git add -A`. Re-check
       `git remote -v` BEFORE the first push: it must point at the
       app's own repo, never the template's (step 1).

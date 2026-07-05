@@ -1,4 +1,4 @@
-# template-version: 2026-07
+# template-version: 2026-07.11
 # ADAPT: fill every {{}} slot for your stack, or overlay profiles/<stack>/ci.yml
 # from the seed. Rename to ci.yml. Delete this file if not hosted on GitHub.
 # Policy: lint treats warnings as errors — any new warning fails the build.
@@ -25,4 +25,9 @@ jobs:
       - name: Build
         run: {{BUILD CMD}}
       - name: Dependency audit
+        # Audit red on adoption day with the fix deferred (ADOPTION
+        # steps 8–9)? Add `continue-on-error: true` here plus a
+        # `deferred` entry in docs/wiki/log.md naming the trigger that
+        # turns the step hard again — never day-one-red CI, and never
+        # silent yellow either; the log entry is the difference.
         run: {{AUDIT CMD — e.g. npm audit --audit-level=high}}

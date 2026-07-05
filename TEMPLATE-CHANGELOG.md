@@ -5,6 +5,91 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.11 — v2.4.5
+
+Run-3 close — findings from the third brownfield adoption (PCAP
+.NET 10/Avalonia, ~420K LOC): the first non-Node stack, the first app
+with a rich pre-existing harness (own CLAUDE.md/agents/skills/CI), and
+the first exit gate run on a cp1252 Windows console. The generic
+mechanics held (11/11 steps, both guards fired correctly live); the
+findings cluster at exactly those three new edges. Touched templates
+stamped 2026-07.11:
+
+- check_markers.py, two defects: (1) printing a hit line containing an
+  emoji crashed on cp1252 consoles — a crashed gate exits 1 like a red
+  gate but without the list; stdout is now reconfigured to utf-8 with
+  errors=replace, making the "Windows-safe" promise cover output too.
+  (2) `${{` no longer counts as a marker: GitHub Actions expressions
+  live in the scanned .github/. Handled in the marker logic, NOT as a
+  path exemption, so an unfilled {{SLOT}} in ci.yml still fails —
+  test-pinned in both directions.
+- ADOPTION step 5 no longer claims hooks bind "only the NEXT session":
+  the run proved PreToolUse live in the SAME session it was activated.
+  New doctrine: treat hooks as potentially LIVE the moment
+  settings.json is written; never plan a harness edit on the
+  assumption of a grace window.
+- ADOPTION step 8 + the CI template's audit step get the
+  red-on-adoption-day path: run the audit locally BEFORE wiring it;
+  red today with the fix deferred → wire the step non-failing plus a
+  `deferred` log entry naming the trigger that turns it hard again
+  (step 4's ratchet doctrine, applied to audit). Never day-one-red CI,
+  never silent yellow — the log entry is the difference.
+- ADOPTION step 6, second-instruction-file doctrine sharpened: when
+  other tools actively read AGENTS.md/GEMINI.md, the surviving shape
+  is tool delta + compact invariant summary + pointer. The duplicated
+  detail substance must go — the run found an unmaintained AGENTS.md
+  mandating "NO lazy loading" against the app's real hybrid
+  architecture: mirrors rot into actively WRONG guidance. Also named:
+  the merge DIRECTION is a judgment call — an existing CLAUDE.md
+  substantially richer than the template stays base, and the
+  template's load-bearing pieces graft in.
+- ADOPTION steps 1+11, dirty-tree curation: snapshot
+  `git status --short` at step 1; a dirty tree means the adoption
+  commits on a dedicated branch, staging ONLY adoption paths checked
+  against that baseline (the run had 169 unrelated WIP files plus
+  pre-existing modifications inside .claude/ that path-based staging
+  would have swept in). Never `git add -A`.
+- ADOPTION step 11 + protect_files docstring name the sanctioned
+  escape hatch: the guard blocking a late harness edit is the
+  ask-the-user case working as designed — the user applies the edit
+  or explicitly delegates it; Bash is deliberately unmatched (the
+  guard is friction plus forced user involvement, not a security
+  boundary); never a silent bypass.
+- protect_files.py grows `--probe <path>`: setup-time seam with the
+  hook's exact exit contract (2 blocked / 0 allowed). Replaces
+  hand-built stdin JSON, where a payload typo hits the fail-open path
+  and reads as "allowed". SETUP step 6 and ADOPTION step 5 use it; the
+  live .env probe in a fresh session still verifies registration.
+- CLAUDE.template Commands ADAPT: stacks with two strictness tiers
+  (Debug/Release builds, dev/prod lint) map `check` to the fast
+  lenient tier and `build` to the strict one CI runs — the same
+  command for both makes the gate too slow or CI too lax.
+- .env.example header: an app that doesn't auto-load .env documents
+  its REAL process env vars instead and says so in the header — an
+  aspirational example the app never reads misleads agents.
+
+Rejected, with reasons (don't relitigate):
+
+- Blanket EXEMPT of .github/workflows/ (the run's improvised fix):
+  would pass unfilled ci.yml slots silently; the in-logic `${{` fix
+  is strictly better.
+- Scanning only git-tracked files: untracked template relics mislead
+  agents just as much (agents read the filesystem, not the index);
+  the crash was the bug, not the scan scope.
+- Matching Bash in protect_files: brittle (quoting, heredocs,
+  variables) and unclosable in principle — documented intent instead.
+- More rm deny variants (`rm -r` after `rm -rf`): the posture is an
+  accident guard by design; the variant chase is unbounded and would
+  block legitimate cleanup.
+- Git micro-lessons in the checklist (pathspec abort aborts the whole
+  `git add`; tracked-aware delete): generic git knowledge, agents
+  recover in one step; checklists that teach git grow without end.
+- A dotnet profile from a single run: the graduation rule holds (wait
+  for the second .NET app); the two-tier principle was adopted
+  instead.
+
+(Suite: 58, 1 skipped.)
+
 ## 2026-07.10 — v2.4.4
 
 Single-entry round — the pick-the-wrong-folder error class is removed

@@ -86,6 +86,44 @@ class CheckMarkersTests(unittest.TestCase):
         result = run_check(self.root)
         self.assertEqual(result.returncode, 0)
 
+    def test_github_actions_expressions_are_not_markers(self):
+        # ${{ ... }} is GitHub Actions syntax, not a template slot — and
+        # .github/ is deliberately still scanned (see the next test), so
+        # this must pass via marker logic, not a path exemption.
+        self.write("CLAUDE.md", "clean\n")
+        self.write(
+            ".github/workflows/ci.yml",
+            "key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}\n",
+        )
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 0)
+
+    def test_bare_slot_in_workflow_still_fails(self):
+        # The reason .github/workflows/ gets no blanket exemption: an
+        # unfilled kit slot in ci.yml must still fail the exit gate.
+        self.write("CLAUDE.md", "clean\n")
+        self.write(".github/workflows/ci.yml", "        run: {{CHECK CMD}}\n")
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("ci.yml", result.stdout)
+
+    def test_emoji_hit_survives_cp1252_stdout(self):
+        # A gate must judge any input without crashing on it: Windows
+        # consoles default to cp1252, which cannot encode an emoji in a
+        # hit line — the report must print, not traceback (a crash exits
+        # 1 too, indistinguishable from "markers found" minus the list).
+        self.write("CLAUDE.md", "clean\n")
+        self.write("docs/notes.md", "> \U0001f4dd ADAPT: fill this in\n")
+        result = subprocess.run(
+            [sys.executable, str(SCRIPT)],
+            cwd=self.root, capture_output=True, timeout=30,
+            env=dict(os.environ, PYTHONIOENCODING="cp1252"),
+        )
+        stdout = result.stdout.decode("utf-8", errors="replace")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("notes.md", stdout)
+        self.assertNotIn(b"Traceback", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

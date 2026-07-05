@@ -48,7 +48,11 @@ tests/, profiles/, and harness-kit/ from the app now.)
       `python .claude/hooks/verify_on_stop.py --self-test` prints
       `self-test OK` (Windows: use `py` if `python` resolves to the
       Microsoft Store alias — the registered hook commands probe
-      python3/python/py by execution and fail closed if none works). On the
+      python3/python/py by execution and fail closed if none works).
+      Then `python .claude/hooks/protect_files.py --probe .env` exits 2
+      (BLOCKED) and `--probe .env.example` exits 0 — the probe
+      exercises the block/allow logic only, not the settings
+      registration. On the
       app's first live session, confirm enforcement end-to-end: ask the
       agent to edit `.env` — the hook must block it.
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
