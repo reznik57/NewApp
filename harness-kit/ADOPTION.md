@@ -11,6 +11,35 @@ it; step 11 deletes that folder again.)
 but a scaffolder's output)? Wrong checklist — use the kit's SETUP.md
 instead.
 
+**UPDATE MODE** — harness already present (`.claude/hooks/verify_on_stop.py`
+exists)? Then a newer `harness-kit/` was re-dropped on an already-adopted
+app; this is a version merge, not a first adoption, and the full run below
+collapses to four moves:
+1. **Baseline first, then stamp diff** — run step 1's repo-identity STOP
+   check (`git remote -v` must point at the app's own repo, never the
+   template's) and snapshot the tree (`git status --short`) BEFORE any
+   move-2 edit — a mature app is usually mid-work and move 4 stages against
+   this baseline. Then compare each kit file's `template-version:` against
+   its live twin; only changed stamps need porting. JSON templates carry no
+   stamp — read `TEMPLATE-CHANGELOG.md` for settings/profile changes.
+2. **Live wins** — merge kit→live per file, but the app's adaptations win:
+   filled ultrathink slots, a filled `ci.yml`, a richer CLAUDE.md, PROTECTED
+   lists extended for the app's crown jewels. Port only genuine template
+   improvements into those files — never overwrite an adaptation with a bare
+   slot.
+3. **Hooks are already LIVE** — the harness blocks agent edits to itself
+   (`.claude/hooks`, `.claude/scripts`, `settings.json`) from the first
+   moment of this session, not the next (step 5's closing note: no grace
+   window). A harness-file update is therefore the ask-the-user /
+   explicit-delegation case (step 11's doctrine, `protect_files.py`
+   docstring): batch those edits and have the user apply or delegate them
+   (e.g. a scripted `cp` from the kit) — never a silent bypass. Files
+   outside the harness you edit normally.
+4. **Exit** — as step 11: marker check green, delete `harness-kit/`, commit
+   ONLY the harness paths against a step-1 `git status --short` baseline (a
+   mature app is usually mid-work — never `git add -A`; see step 11's
+   shared-file rule for a file that mixes WIP and harness content).
+
 - [ ] 1. **Repo identity, then inventory** — first: this must be the
       APP's own repo. Check `git remote -v` — if origin points at the
       template/seed repo (an app dropped into a template clone), STOP
@@ -139,7 +168,7 @@ instead.
       history doesn't. Unlike a fresh app, fill
       `Architecture [Grows]` NOW — the code already has seams worth
       naming. Otherwise follow SETUP step 7 (markers, ADAPT notes,
-      line budget).
+      stamp-survives-fill, line budget).
 - [ ] 7. **ADR-0001 retroactively** — record the stack AS IT IS and why
       it stays (migration cost is a valid reason). Future decisions
       get ADRs the normal way.
@@ -191,6 +220,12 @@ instead.
       (databases, master files) out and .gitignore'd. Tree was dirty
       at step 1? Commit on a dedicated branch and stage ONLY adoption
       paths, checked against the step-1 baseline so pre-existing
-      modifications ride along nowhere; never `git add -A`. Re-check
+      modifications ride along nowhere; never `git add -A`. One file
+      that mixes WIP and adoption content (e.g. a `docs/wiki/log.md`
+      carrying both an app entry and the harness-update entry) cannot
+      be split by path — DEFAULT: have the user commit their WIP first,
+      so the adoption commit is clean; hand-crafting a partial blob
+      (`git hash-object`) to stage only the adoption lines is a
+      deliberate exception, not the norm. Re-check
       `git remote -v` BEFORE the first push: it must point at the
       app's own repo, never the template's (step 1).

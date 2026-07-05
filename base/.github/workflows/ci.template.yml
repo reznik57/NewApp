@@ -1,6 +1,9 @@
-# template-version: 2026-07.11
+# template-version: 2026-07.12
+#
 # ADAPT: fill every {{}} slot for your stack, or overlay profiles/<stack>/ci.yml
-# from the seed. Rename to ci.yml. Delete this file if not hosted on GitHub.
+# from the seed. Rename to ci.yml. Keep the template-version line above when
+# you strip these ADAPT comments — it is what "Upgrading seeded apps" diffs.
+# Delete this file only if not hosted on GitHub.
 # Policy: lint treats warnings as errors — any new warning fails the build.
 name: CI
 

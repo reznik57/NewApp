@@ -27,6 +27,10 @@ new-vs-existing fork comes afterwards, guided.
    > existing file without asking; ask me at every merge conflict and
    > decision point.
 
+   (Already carries the harness from an earlier kit? Same route —
+   ADOPTION.md's UPDATE MODE detects it and switches to a version-diff
+   merge instead of a first adoption.)
+
    **Repo is fresh** (empty, or nothing but a scaffolder's output) —
    paste this instead:
 

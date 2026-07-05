@@ -59,7 +59,9 @@ tests/, profiles/, and harness-kit/ from the app now.)
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply. `[Day-0]` sections are
       filled now; `[Grows]` sections stay empty (they fill from real
-      incidents). Delete the header comment block. Budget: ~160 lines
+      incidents). Delete the header comment block — but KEEP the
+      `template-version:` stamp on line 1; it survives the fill and is
+      what "Upgrading seeded apps" diffs against. Budget: ~160 lines
       post-fill; past that, migrate content to docs/wiki/ and leave
       pointers. The fill worked if: sessions start
       without re-explaining the project; agents cite ADRs when
@@ -73,7 +75,8 @@ tests/, profiles/, and harness-kit/ from the app now.)
       alternatives you rejected.
 - [ ] 10. **CI** — fill and rename `.github/workflows/ci.template.yml` →
       `ci.yml`, or use the profile's `ci.yml`, or delete it if the app is
-      not on GitHub.
+      not on GitHub. Keep the `template-version:` stamp when you strip the
+      ADAPT header comments — same reason as step 7.
 - [ ] 11. **First commit at green** — delete the whole `harness-kit/`
       from the app first (all remaining scaffolding lives there), then
       `npm run check` (or your check equivalent) exits clean, then

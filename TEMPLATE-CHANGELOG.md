@@ -5,6 +5,43 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.12 — v2.4.6
+
+Run-4 close — findings from the first UPDATE run: a newer `harness-kit/`
+re-dropped on an already-adopted app (a Node games repo, harness already
+live from an earlier kit). ADOPTION.md only knew first-adoption, so the
+agent had to invent the whole update path — stamp diff, live-wins merge,
+delegated harness edits, curated blob staging. The generic mechanics held
+(11/11, both guards fired live); the four findings all cluster at the
+update seam the checklist never named:
+
+- ADOPTION.md gains an **UPDATE MODE** block at the top: detected by
+  `.claude/hooks/verify_on_stop.py` already existing, it collapses the full
+  run to stamp-diff → live-wins merge → delegated harness edits → curated
+  exit. START-HERE.md now routes an already-adopted app down the same
+  ADOPTION.md door instead of implying only greenfield-vs-brownfield.
+- Hooks-are-live doctrine, carried from run-3 into UPDATE mode: the harness
+  blocks agent edits to itself from move one (no green window — unlike first
+  adoption, where step 5 activates the hooks last). A harness-file update is
+  therefore the ask-the-user / explicit-delegation case: batch the edits and
+  have the user apply or delegate them (a scripted `cp` from the kit), never
+  a silent bypass.
+- **Stamp-survives-fill**: SETUP steps 7 and 10 now state the
+  `template-version:` line outlives the fill — deleting "the header comment
+  block" must not take the stamp with it, or "Upgrading seeded apps" has
+  nothing to diff. ci.template.yml re-stamped 2026-07.12 with the stamp
+  visually split from the ADAPT prose plus a keep-it note; ADOPTION step 6
+  inherits the rule through its SETUP-step-7 pointer.
+- **Shared-file rule** (ADOPTION step 11): one file that mixes WIP and
+  adoption content (a `docs/wiki/log.md` carrying both an app entry and the
+  harness-update entry) can't be split by path — DEFAULT is the user commits
+  their WIP first, so the adoption commit is clean; hand-crafting a partial
+  blob (`git hash-object`) to stage only the adoption lines is a deliberate
+  exception, not the norm.
+
+Re-stamped 2026-07.12: ci.template.yml. ADOPTION.md, START-HERE.md, and
+SETUP.md carry no stamp (process docs, versioned only here).
+
 ## 2026-07.11 — v2.4.5
 
 Run-3 close — findings from the third brownfield adoption (PCAP
