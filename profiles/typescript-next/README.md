@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.13 -->
+<!-- template-version: 2026-07.14 -->
 
 # Profile: TypeScript / Next.js
 
@@ -21,7 +21,15 @@ the new repo (SETUP.md step 2):
 5. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md — still
    named `CLAUDE.template.md` at overlay time; SETUP step 7 renames it and
    fills the rest — with the contents of `CLAUDE.stack-sections.md`
-   (includes the `Stack Rules` section — keep it).
+   (includes the `Stack Rules` section — keep it). Its third Stack Rule
+   points at the `frontend-design` skill, so it REQUIRES step 6 — do both
+   or neither; step 5 alone leaves a dead pointer in the app's CLAUDE.md.
+6. Copy `skills/frontend-design/` → `.claude/skills/frontend-design/`
+   (both `SKILL.md` and its `LICENSE.txt` — Apache-2.0, keep them
+   together). The other half of step 5: this profile vendors the
+   `frontend-design` skill from claude-plugins-official so a seeded TS/Next
+   app has it without the plugin installed, and step 5's design pointer
+   invokes it by name.
 
 Still manual afterwards: Role & Context, the project-specific invariant,
 Invariant 1's `{{CHECK CMD}}` (fill with `npm run check`) and

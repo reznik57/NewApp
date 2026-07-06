@@ -5,6 +5,52 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.14 — v2.4.8
+
+Visual-design guidance seam + profile-scoped skill bundle. The TS/Next
+profile gated UI *behavior* (four states, server-side validation) and
+*accessibility* (jsx-a11y as `check` errors) but said nothing about
+layout, typography, spacing, or color — the one profile that by definition
+ships a visible frontend had no home for "make it not read as templated
+defaults." Aesthetics aren't gate-able, so the "mechanize only what a gate
+can prove" doctrine correctly kept hard rules out; what was missing was the
+*pointer* to where such judgment lives, and the skill it points at.
+
+- CLAUDE.stack-sections.md gains a third Stack Rule: a workflow pointer,
+  not a style rule. It names the boundary explicitly — accessibility is
+  mechanized (jsx-a11y fails `check`), visual design is not and carries no
+  rule — then points UI work at the `frontend-design` skill. Mirrors the
+  ultrathink Deep-Analysis Protocol pointer; honors the Standing Rules "no
+  style rules in CLAUDE.md" line by staying guidance, not a rule.
+- frontend-design is now bundled *by the profile*, not the core kit:
+  profiles/typescript-next/skills/frontend-design/ (SKILL.md + LICENSE.txt,
+  vendored byte-for-byte from claude-plugins-official, Apache-2.0). README
+  step 6 copies it into .claude/skills/ during overlay. Chosen over a core
+  bundle because base/ ↔ harness-kit/ parity is byte-exact — a kit skill
+  MUST also live in base/ and would then ship to every app, including
+  CLI/lib/data ones with no frontend. Profile-scoping keeps the skill with
+  the one stack that has a UI, matching the kit's own "except optional
+  profiles" caveat; profiles sit outside the parity manifest, so no test
+  churn. The pointer therefore drops its "if available" hedge — post-overlay
+  the skill is present. The vendored copy drifts from upstream by design;
+  its version is tracked here (like the JSON templates), not by a stamp. A
+  scoped `.gitattributes` pins these files to `eol=lf` so `core.autocrlf` on
+  Windows can't rewrite the working copy away from the upstream bytes.
+- Reliability is invocation, not presence: a bundled skill is auto-surfaced
+  to the model, but the model still *decides* to call it — no hook forces
+  it. So the pointer is imperative ("invoke … BEFORE writing component
+  code," mirroring the ultrathink protocol), not a soft suggestion. Going
+  *global* (core bundle) was considered and rejected: it would add the
+  skill to every app but NOT change whether it fires for a GUI app — the
+  skill sits in that app's `.claude/skills/` either way and the model
+  judges identically — so it buys scope-creep (frontend skill in every
+  CLI/lib/data app) with zero trigger gain. README steps 5 (pointer) and 6
+  (skill) are now cross-linked "do both or neither," so a partial overlay
+  can't leave a dead pointer.
+
+Re-stamped 2026-07.14: profiles/typescript-next/CLAUDE.stack-sections.md,
+profiles/typescript-next/README.md.
+
 ## 2026-07.13 — v2.4.7
 
 Static audit of the SETUP fresh-app path — the one route never run on a

@@ -1,0 +1,8 @@
+# Vendored third-party content: pin to LF so the working copy stays
+# byte-identical to its upstream source on every platform, regardless of
+# core.autocrlf (which is `true` on Windows checkouts). Without this a
+# fresh Windows checkout rewrites these to CRLF, breaking the "byte-for-byte
+# from upstream" property the vendoring relies on. See TEMPLATE-CHANGELOG
+# v2.4.8. Scoped deliberately — repo-wide line-ending policy is a separate
+# call, not made here.
+profiles/typescript-next/skills/frontend-design/** text eol=lf
