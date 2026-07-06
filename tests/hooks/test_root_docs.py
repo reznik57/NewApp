@@ -100,5 +100,24 @@ class CheckDocDiscriminationTests(unittest.TestCase):
         )
 
 
+class RootDocsGuardTests(unittest.TestCase):
+    """The four live singleton docs must stay healthy."""
+
+    def test_every_singleton_doc_is_healthy(self):
+        for rel, anchors in REQUIRED.items():
+            path = ROOT / rel
+            self.assertTrue(path.is_file(), "missing doc: %s" % rel)
+            problems = check_doc(path.read_text(encoding="utf-8"), anchors)
+            self.assertEqual(problems, [], "%s: %s" % (rel, problems))
+
+    def test_changelog_keeps_its_version_history(self):
+        text = (ROOT / "TEMPLATE-CHANGELOG.md").read_text(encoding="utf-8")
+        entries = [l for l in text.splitlines() if l.startswith("## ")]
+        self.assertGreaterEqual(
+            len(entries), CHANGELOG_ENTRY_FLOOR,
+            "version history implausibly short: %d entries" % len(entries),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
