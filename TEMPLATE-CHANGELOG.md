@@ -5,6 +5,35 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.17 — v2.5.1
+
+Multi-tool readiness as a recipe, not shipped wiring — README Portability
+only; base/ templates untouched, so no stamp advances (suite unchanged: 58,
+1 env-gated skip). Future-proofing for the AGENTS.md ecosystem (Codex,
+Antigravity, Gemini CLI, and more) without reversing the section's own YAGNI
+stance.
+
+- README Portability layer 2 sharpened: the cross-tool instruction file is
+  converging on AGENTS.md — an open standard a broad ecosystem reads
+  (verified via agents.md: OpenAI Codex and Gemini CLI among them;
+  Antigravity per the prior note). Claude Code does not read it natively
+  (mid-2026).
+- Layer 3: enforcement concepts port, hook wiring is a rewrite per tool;
+  added "verify the tool's current hook API when you wire it" — the
+  specifics move fast.
+- New "Multi-tool activation recipe": three core-neutral moves (CLAUDE.md
+  content -> AGENTS.md + a one-line @AGENTS.md shim; skills on-demand; CI as
+  the shared hard gate under every tool, the same backstop that carries
+  Cowork). Executed only when a real app drives one of these tools; ready,
+  not carried.
+
+Rejected, with reason (don't relitigate): shipping docs/CODEX.md +
+docs/ANTIGRAVITY.md adapters now (Cowork-style, approach C). Blind and
+unvalidated against the real tools, reverses the documented YAGNI stance for
+zero current users, touches the core (instruction-loading forces a CLAUDE.md
+shim), and adds two root-only docs the kit-parity net does not guard. The
+recipe captures the pattern; a real app later validates the wiring.
+
 ## 2026-07.16 — v2.5.0
 
 Cowork / claude.ai promoted from a degraded-mode caveat to a first-class

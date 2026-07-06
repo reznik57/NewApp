@@ -77,19 +77,42 @@ Three layers, decreasingly portable:
    six-script contract, and `check_markers.py` are plain git/npm/CLI;
    they work under any agent, or none.
 2. **Concept-portable** — CLAUDE.template.md's rules and the three
-   skills are plain Markdown. Antigravity 2.0 reads the same content as
-   `AGENTS.md` (skills under `.agents/skills/`), Gemini CLI as
-   `GEMINI.md`. Claude Code does NOT read AGENTS.md natively (as of
-   mid-2026); if multi-tool use becomes real, the known pattern is:
-   content moves to `AGENTS.md`, `CLAUDE.md` becomes a one-line
-   `@AGENTS.md` import shim. Not done speculatively — YAGNI.
+   skills are plain Markdown. The cross-tool instruction file is
+   converging on `AGENTS.md`, an open format a broad ecosystem reads —
+   OpenAI Codex and Gemini CLI among them, and Antigravity 2.0 too
+   (skills under `.agents/skills/`). Gemini CLI also honors its native
+   `GEMINI.md`. Claude Code does NOT read `AGENTS.md` natively (as of
+   mid-2026).
 3. **Claude-Code-bound** — `.claude/settings*.json` (permission syntax,
    hook registration) and the two hooks' stdin protocol
-   (`tool_input.file_path`, `stop_hook_active`). Gemini CLI's hook
-   system shares the exit-2-blocks semantics but renames the events
+   (`tool_input.file_path`, `stop_hook_active`). The enforcement
+   CONCEPTS port; the hook wiring is a rewrite per tool — Gemini CLI
+   shares the exit-2-blocks semantics but renames the events
    (`BeforeTool`/`AfterAgent`) and payload fields; Antigravity 2.0 has
-   its own JSON hooks. The enforcement CONCEPTS port; the wiring is a
-   rewrite per tool.
+   its own JSON hooks. Verify the tool's current hook API when you wire
+   it.
+
+**Multi-tool activation recipe (when a real app needs it — not shipped,
+YAGNI).** To drive a seeded app from an `AGENTS.md` tool (Codex,
+Antigravity, and much of the ecosystem) or Gemini CLI, three moves —
+none touch the shared core:
+
+- **Manual:** move `CLAUDE.md`'s content to `AGENTS.md`; leave
+  `CLAUDE.md` a one-line `@AGENTS.md` import. One home for the
+  invariants, every tool reads it — the one-core rule the Cowork
+  adapter already follows.
+- **Skills:** already plain Markdown; point the tool at them on demand
+  (Antigravity auto-surfaces `.agents/skills/`), never a second copy —
+  exactly `docs/COWORK.md` §3.
+- **Enforcement:** the Stop/protect hooks are Claude-Code-specific; port
+  the concept per tool if it supports one, but **CI is the shared hard
+  gate under every tool** — the same agent-independent, unskippable
+  backstop that carries Cowork. A tool with zero hook wiring is still
+  gated.
+
+Execute this only when a real app drives one of these tools; that run
+validates the wiring. Until then the pattern is ready, not carried —
+still YAGNI, now with a recipe.
 
 Models are not a portability axis: within Claude Code, Opus, Sonnet, or
 any other model shares the same settings, hooks, and skills. Enforcement
