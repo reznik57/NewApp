@@ -5,6 +5,87 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.16 — v2.5.0
+
+Cowork / claude.ai promoted from a degraded-mode caveat to a first-class
+second surface: one shared core, two adapters — never two harnesses (a second
+copy of the invariants or knowledge system would drift, against Invariant 3).
+v2.4.9 documented Cowork as advisory-plus-CI in the README; this ships the
+wiring, an honest enforcement story, and a manual that reads correctly on both
+surfaces.
+
+- New `base/docs/COWORK.md` (mirrored to the kit) — the Cowork adapter, the
+  twin of `.claude/settings.json`: a project-instructions pointer that loads
+  CLAUDE.md (Cowork does not auto-inject it), CI as the sole hard gate (hooks
+  don't fire — anthropics/claude-code#63360), on-demand skill invocation, and
+  a user-mediated-permissions note. Pointer-only, no substance duplicated
+  (Invariant 3); ships ready-to-use (no `{{}}`/`ADAPT:` markers) and carries
+  its own "delete if Claude-Code-only".
+- CLAUDE.template.md Invariant 1 reworded surface-neutral: under Claude Code
+  the Stop hook enforces mechanically; where no hook fires (e.g. Cowork) it
+  stands as an instruction, with CI as the backstop. Stamp -> 2026-07.16.
+- README Portability: the same-vendor paragraph rewritten from "loses the top
+  two rungs / advisory-plus-CI mode" to the one-core-two-adapters model, with
+  the honest residual (the two hooks stay Claude-Code-only; CI is the shared
+  hard gate). New Map row for `base/docs/COWORK.md`.
+- SETUP / ADOPTION / START-HERE gain an optional, unnumbered Cowork wiring
+  note — deliberately not renumbered, since the hooks' docstrings,
+  check_markers, and ADOPTION all cite "SETUP step N".
+
+Supersedes v2.4.9's "documented, not mechanized — keep the per-tool caveat out
+of Invariant 1." Correct while Cowork was an afterthought; once it is
+first-class, the most-read file asserting "the Stop hook enforces this" is a
+live falsehood for half its readers, not portability trivia. The reword is
+surface-neutral (mechanical where the runtime supports it, CI as backstop), so
+it states a truer general principle rather than adding per-tool bloat; the
+operational how-to still lives in docs/COWORK.md, not CLAUDE.md
+(fact-placement law).
+
+Rejected, with reason (don't relitigate):
+- Packaging the skills as an installable plugin so they auto-surface under
+  Cowork. Gives a second home for skill content (drift vs. Invariant 3),
+  cannot carry the per-app `{{}}` fills (ultrathink Phase 2/5) that on-demand
+  invocation reads straight from the app's own copy, and adds the product
+  coupling the harness avoids. On-demand invocation (COWORK.md section 3)
+  keeps one home and the fills.
+- Seeding the invariants into Cowork memory. Wrong scope (space-wide, not
+  per-repo) and a second, drifting copy of the rules; the pointer loads the
+  one home instead.
+- A third, Cowork-only checklist. The optional notes on SETUP/ADOPTION cover
+  it without a new entry point.
+
+Re-stamped 2026-07.16: base/CLAUDE.template.md (+ kit mirror). New:
+base/docs/COWORK.md (+ kit mirror). Updated, no stamp carried: README.md,
+SETUP.md (+ kit mirror), harness-kit/ADOPTION.md, harness-kit/START-HERE.md.
+Suite: green — 58 tests, 0 failures, 1 skipped (the symlink case in
+test_protect_files.py, environment-gated; 0 skipped where symlinks resolve).
+
+## 2026-07.15 — v2.4.9
+
+Cowork / hook-less-agent portability note — README only; base/ templates
+untouched, so no stamp advances (suite unchanged: 58, 1 skipped).
+
+- README Portability gains the same-vendor edge case: Claude Cowork and
+  claude.ai/code run on Claude Code's substrate but do NOT fire hooks
+  registered in settings.json, and surface a project's .claude/skills/
+  less predictably than the CLI. Under them the enforcement ladder loses
+  its top two rungs (Stop gate + protect_files guard → advisory) and CI
+  is the sole hard backstop; layers 1–2 (knowledge system, dotfiles,
+  check_markers.py, six-script contract, on-demand skills) carry
+  unchanged, and Invariant 1's gate stays a standing instruction, only
+  un-hooked. The harness is fully usable under Cowork in advisory-plus-CI
+  mode.
+- Documented, not mechanized: there is nothing to enforce here that CI
+  does not already, and per the fact-placement law a per-tool enforcement
+  difference lives in README Portability (alongside the Antigravity /
+  Gemini CLI notes), not in CLAUDE.md.
+- Rejected, with reason (don't relitigate): a per-tool caveat inside
+  CLAUDE.template.md Invariant 1 ("the Stop hook enforces this — except
+  where no hook fires"). It bloats the most-read file with portability
+  trivia the README already owns, and Invariant 1 is already a standing
+  instruction independent of the hook — Cowork changes nothing about what
+  it tells the agent to do, only whether a hook also forces it.
+
 ## 2026-07.14 — v2.4.8
 
 Visual-design guidance seam + profile-scoped skill bundle. The TS/Next

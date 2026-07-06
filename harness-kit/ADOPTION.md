@@ -229,3 +229,8 @@ collapses to four moves:
       deliberate exception, not the norm. Re-check
       `git remote -v` BEFORE the first push: it must point at the
       app's own repo, never the template's (step 1).
+
+**Cowork / claude.ai (optional).** Adopting into an app you'll also drive
+from Cowork? Its hooks don't fire there — follow `docs/COWORK.md` to wire the
+Cowork adapter (a project-instructions pointer that loads CLAUDE.md; CI stays
+the hard gate). Claude-Code-only? Delete `docs/COWORK.md`.
