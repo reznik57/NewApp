@@ -48,3 +48,7 @@ stays, the scaffolding goes. The kit is SINGLE-USE: files move out of
 it and the folder dies, so for the next app always copy a fresh
 `harness-kit/` from the seed — it also carries the latest checklist
 fixes.
+
+Driving this from **Cowork / claude.ai** rather than a CLI? Same steps — the
+checklist runs anywhere. Afterward, wire the Cowork adapter per
+`docs/COWORK.md` (hooks don't fire there; CI is the gate).

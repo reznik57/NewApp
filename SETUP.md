@@ -94,3 +94,8 @@ tests/, profiles/, and harness-kit/ from the app now.)
       live IN the script — its single home. A live CLAUDE.md containing
       unfilled placeholders actively misleads agents — do not finish with
       leftovers.
+
+**Cowork / claude.ai (optional).** Driving this app from Cowork too? Its
+hooks don't fire there — follow `docs/COWORK.md` to wire the Cowork adapter
+(a project-instructions pointer that loads CLAUDE.md; CI stays the hard
+gate). Claude-Code-only? Delete `docs/COWORK.md` — an unused adapter rots.

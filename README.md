@@ -35,6 +35,7 @@ compounds instead of evaporating in chat transcripts.
 | `base/docs/adr/`                                               | Decision records (MADR-lite, append-only).                                                                                                      |
 | `base/docs/wiki/`                                              | Index + append-only log; pages grow lazily from incidents.                                                                                      |
 | `base/docs/specs/`                                             | One-page spec template (threshold: CLAUDE.md → Deep-Analysis Protocol).                                                                         |
+| `base/docs/COWORK.md`                                          | The Cowork/claude.ai adapter: project-instructions pointer, CI-as-gate, on-demand skills. Delete if Claude-Code-only.                            |
 | `base/.github/workflows/`                                      | CI template: the same gate, warnings-as-errors, full tests, audit.                                                                              |
 | base/ dotfiles (`.gitignore`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, whitespace.                                                                          |
 | `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                                         |
@@ -94,6 +95,26 @@ Models are not a portability axis: within Claude Code, Opus, Sonnet, or
 any other model shares the same settings, hooks, and skills. Enforcement
 is model-independent — weaker instruction-following makes the hooks more
 valuable, not less.
+
+**Second surface: Cowork / claude.ai (first-class).** Cowork and
+claude.ai/code run on Claude Code's substrate but honor a different subset
+of it: they do NOT fire hooks registered in `settings.json`, and they
+surface `.claude/skills/` and `CLAUDE.md` less predictably than the CLI.
+The harness treats this as a **second adapter over one shared core, not a
+second harness** — a second full copy of the invariants or knowledge system
+would drift, against Invariant 3. The tool-agnostic core (`CLAUDE.md`,
+`docs/`, CI, `check_markers.py`, the six-script contract, the skills as
+Markdown) is unchanged; each surface gets thin, non-overlapping wiring:
+Claude Code via `.claude/settings.json` (hooks + permissions), Cowork via
+`docs/COWORK.md` (a project-instructions pointer that loads the manual,
+on-demand skills, CI as the gate). The two coexist on one repo without
+collision because they honor disjoint mechanisms — Code fires the hooks and
+ignores the Cowork doc; Cowork ignores the hooks and reads it — and the rule
+that keeps it safe is the harness's own: an adapter adds wiring, never
+restates substance. Honest residual: the two hooks are Claude-Code-only (a
+known Cowork limitation, anthropics/claude-code#63360), so under Cowork **CI is
+the shared hard gate** and carries enforcement under both; `docs/COWORK.md`
+carries the mechanics and full setup.
 
 ## Relationship to installed plugins
 

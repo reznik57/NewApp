@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.11 -->
+<!-- template-version: 2026-07.16 -->
 <!--
   CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
   the post-fill line budget live there; this comment block is deleted).
@@ -27,8 +27,10 @@ Breaking one invalidates the task.
 
 - Run `{{CHECK CMD — e.g. npm run check}}` (format + lint + typecheck + fast
   tests) **before claiming completion or committing**. It must exit clean:
-  **0 errors, 0 warnings**. The Stop hook (`.claude/hooks/verify_on_stop.py`)
-  enforces this mechanically — don't argue with it; fix the failure.
+  **0 errors, 0 warnings**. Under Claude Code the Stop hook
+  (`.claude/hooks/verify_on_stop.py`) enforces this mechanically; where no
+  hook fires (e.g. Cowork/claude.ai) it stands as an instruction, with CI as
+  the backstop. Don't argue with a red gate — fix the failure.
 - **NEVER** suppress a warning without explicit user approval.
 - A clean local check does not equal a clean CI run — CI runs the full suite
   and strict build. Verify the way CI does ({{CI-EQUIVALENT CMD}}) before
