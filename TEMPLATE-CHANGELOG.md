@@ -5,6 +5,31 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.18 — v2.5.2
+
+Test-suite hardening only — no template content changes, so no stamp
+advances. Closes the guard gap the v2.5.0 round exposed: root-singleton
+docs (README.md, TEMPLATE-CHANGELOG.md, and the KIT_ONLY
+harness-kit/ADOPTION.md + START-HERE.md) had no byte-twin in the kit
+parity manifest, so no test read their content — README.md shipped
+truncated (whole "Upgrading seeded apps" section gone) with a green
+suite.
+
+- New tests/hooks/test_root_docs.py: per-doc load-bearing anchors
+  (ASCII-only), trailing-newline check, 500-byte size floor, and a
+  15-entry changelog floor. In-memory fixture tests prove the checker
+  flags both v2.5.0 truncation signatures (dropped section, lost
+  trailing newline); live-doc tests pin the four real docs. Suite:
+  58 -> 64 tests.
+- Deliberate friction: restructuring a guarded doc now requires
+  updating REQUIRED in the same commit.
+
+Rejected, with reason (don't relitigate): end-of-file "mid-sentence"
+heuristic (v2.5.0 truncation ended on a period — it would not have
+fired); a general cross-reference-integrity engine (more code, only
+guards referenced content; the one cited section is already an anchor).
+Design: docs/superpowers/specs/2026-07-06-root-docs-guard-design.md.
+
 ## 2026-07.17 — v2.5.1
 
 Multi-tool readiness as a recipe, not shipped wiring — README Portability
