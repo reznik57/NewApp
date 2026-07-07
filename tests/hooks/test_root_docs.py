@@ -1,10 +1,9 @@
 """Guard the unguarded root-singleton docs against silent truncation.
 
 test_kit_parity.py pins base/ <-> harness-kit/ byte equality, but docs
-that exist as a single copy with no twin -- README.md and
-TEMPLATE-CHANGELOG.md at the seed root, ADOPTION.md and START-HERE.md
-in the kit (KIT_ONLY) -- have nothing to compare against, so no test
-reads their content at all. It bit once: v2.5.0 arrived with README.md
+that exist as a single copy with no twin -- the root-level singletons
+and the KIT_ONLY checklists pinned in REQUIRED below -- have nothing
+to compare against, so no test reads their content at all. It bit once: v2.5.0 arrived with README.md
 truncated (the whole "Upgrading seeded apps" section gone, trailing
 newline lost) and the suite stayed green. This test pins load-bearing
 anchors, a trailing newline, a size floor, and a changelog entry
@@ -110,7 +109,7 @@ class CheckDocDiscriminationTests(unittest.TestCase):
 
 
 class RootDocsGuardTests(unittest.TestCase):
-    """The four live singleton docs must stay healthy."""
+    """The live singleton docs pinned in REQUIRED must stay healthy."""
 
     def test_every_singleton_doc_is_healthy(self):
         for rel, anchors in REQUIRED.items():

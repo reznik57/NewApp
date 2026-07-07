@@ -5,6 +5,29 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.22 — v2.6.3
+
+Deferred-review fixes: the v2.6.2 pre-merge review had to run inline
+(subagent session limit); the full adversarial review ran after the
+limit reset and confirmed five findings — all fixed here:
+
+- **"dotfile templates carry no stamp" was a factual regression**
+  (v2.6.2 wording in ADOPTION move 1 and the seed CLAUDE.md):
+  gitignore.template, .editorconfig and .env.example all carry stamps;
+  only .gitattributes didn't. Fixed by construction: base/.gitattributes
+  now carries a stamp too (mirrored to gitattributes.template), and both
+  texts return to the correct "only JSON templates carry no stamp".
+- Seed CLAUDE.md cited an incident and a decision the changelog never
+  recorded under those names ("Hausverbrauch", "v2.4.0 decision") —
+  identity note now cites the v2.4.7 push-onto-template entry that
+  exists; the incidents-not-drawing-board rule is now homed in
+  CLAUDE.md itself instead of citing a phantom.
+- test_root_docs docstrings still said "four" singleton docs after the
+  same commit added the fifth — reworded count-free, pointing at
+  REQUIRED.
+- STOP-guard wholesale strip list claimed "ALL seed material" but
+  missed the seed's root .gitignore — added.
+
 ## 2026-07.21 — v2.6.2
 
 Finalization round: a whole-seed completeness audit (six lenses:

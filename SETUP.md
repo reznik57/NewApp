@@ -11,8 +11,9 @@ step 11 deletes that folder again.
 checklist — use the kit's ADOPTION.md instead; the step order differs
 on purpose. (If you copied the SEED folder wholesale instead of the
 kit, strip ALL seed material from the app now — README.md,
-TEMPLATE-CHANGELOG.md, the seed's own CLAUDE.md and .gitattributes,
-the root SETUP.md copy, base/, docs/superpowers/, tests/, profiles/,
+TEMPLATE-CHANGELOG.md, the seed's own CLAUDE.md, .gitattributes and
+.gitignore, the root SETUP.md copy, base/, docs/superpowers/, tests/,
+profiles/,
 any seed-local .claude/ or cache folders, and the stale harness-kit/ —
 then copy a FRESH `harness-kit/` in per its START-HERE.md. Leftover
 seed trees survive the exit gate silently; it scans only the app's

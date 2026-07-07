@@ -20,9 +20,10 @@ collapses to four moves:
    template's) and snapshot the tree (`git status --short`) BEFORE any
    move-2 edit — a mature app is usually mid-work and move 4 stages against
    this baseline. Then compare each kit file's `template-version:` against
-   its live twin; only changed stamps need porting. JSON and dotfile
-   templates (settings, gitignore.template, gitattributes.template) carry
-   no stamp — read `TEMPLATE-CHANGELOG.md` for their changes. A kit file
+   its live twin; only changed stamps need porting. JSON templates
+   (settings, package-scripts) carry no stamp — read
+   `TEMPLATE-CHANGELOG.md` for their changes; the dotfile templates
+   carry theirs on line 1. A kit file
    with NO live twin is NEW in this kit generation: introduce it via its
    first-adoption step (e.g. gitattributes.template → step 3), never
    skip it as "no stamp diff".

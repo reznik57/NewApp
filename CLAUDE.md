@@ -7,8 +7,9 @@ agents editing the seed. Building an app FROM the seed? Wrong file: copy
 ## Repo identity
 
 - `origin` must point at the TEMPLATE repo (github.com/reznik57/NewApp).
-  Verify `git remote -v` before EVERY push — an app has force-pushed onto
-  this remote before (Hausverbrauch incident, see TEMPLATE-CHANGELOG).
+  Verify `git remote -v` before EVERY push — an app has pushed onto this
+  remote before: the push-onto-template incident behind SETUP step 3's
+  repo-identity guard (changelog, v2.4.7 entry).
 - Never commit an app into this repo; never push this repo onto an app
   remote.
 
@@ -39,13 +40,13 @@ agents editing the seed. Building an app FROM the seed? Wrong file: copy
 ## Template discipline
 
 - Touched a file that carries a `template-version:` stamp? Re-stamp it
-  to the round's changelog header. JSON and dotfile templates carry no
-  stamp — TEMPLATE-CHANGELOG.md tracks them.
+  to the round's changelog header. Only JSON templates carry no stamp —
+  TEMPLATE-CHANGELOG.md's header note tracks them.
 - Every round gets a TEMPLATE-CHANGELOG entry, including what was
   REJECTED and why. Before proposing structural changes, search the
   changelog for prior rejections — do not relitigate them.
 - Improvements come from real incidents in real apps (backflow), not
-  from drawing-board speculation — the standing v2.4.0 decision.
+  from drawing-board speculation. This file is that rule's home.
 
 ## Release discipline
 
