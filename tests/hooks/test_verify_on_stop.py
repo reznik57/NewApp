@@ -17,8 +17,8 @@ PASS_CMD = '"%s" -c "raise SystemExit(0)"' % sys.executable
 FAIL_CMD = '"%s" -c "print(\'boom\'); raise SystemExit(1)"' % sys.executable
 
 
-def run_hook(stdin_obj, check_cmd, extra_args=None, cwd=None):
-    env = dict(os.environ, HARNESS_CHECK_CMD=check_cmd)
+def run_hook(stdin_obj, check_cmd, extra_args=None, cwd=None, env_overrides=None):
+    env = dict(os.environ, HARNESS_CHECK_CMD=check_cmd, **(env_overrides or {}))
     return subprocess.run(
         [sys.executable, str(HOOK)] + (extra_args or []),
         input=json.dumps(stdin_obj), capture_output=True, text=True,
@@ -36,6 +36,53 @@ class VerifyOnStopTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertIn("failed", result.stderr)
         self.assertIn("boom", result.stderr)
+
+    def test_diagnostic_tail_survives_utf8_output(self):
+        # vitest prints UTF-8 marks; with text=True and no encoding the
+        # hook decoded the pipe with the Windows locale (cp1252), the
+        # reader thread died on bytes like 0x9d (e.g. ”) and the
+        # diagnostic tail was lost — a blocked pipe could even flip the
+        # exit code. The marker after the non-cp1252 char must reach
+        # stderr.
+        # The child writes RAW UTF-8 bytes via stdout.buffer — like node/
+        # vitest, it must stay immune to the Python stdio env below. The
+        # marker is concatenated so it exists contiguously ONLY in the
+        # child's output — the hook echoes the command text in its
+        # failure message, which must not satisfy the assertion.
+        cmd = (
+            '"%s" -c "import sys;'
+            " sys.stdout.buffer.write(b'\\xe2\\x80\\x9d tail-' + b'proof');"
+            ' sys.stdout.buffer.flush(); raise SystemExit(1)"'
+            % sys.executable
+        )
+        # PYTHONUTF8=0 pins the hook to the legacy locale codec (the
+        # real-world condition; bites only where that isn't UTF-8, e.g.
+        # cp1252 Windows). ascii:replace keeps the hook's own stderr
+        # safely decodable for THIS suite under any test-runner locale.
+        result = run_hook(
+            {"stop_hook_active": False}, cmd,
+            env_overrides={"PYTHONUTF8": "0", "PYTHONIOENCODING": "ascii:replace"},
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("tail-proof", result.stderr)
+
+    @unittest.skipUnless(sys.platform == "win32",
+                         "drive-letter casing exists only on Windows")
+    def test_check_runs_from_canonical_cwd(self):
+        # The hook inherits the session cwd; opened as d:\... (lowercase)
+        # Vitest keys module identities case-sensitively and every suite
+        # dies at describe() before collecting a test. run_check chdirs
+        # to the realpath first — the check command must observe the
+        # canonical-case cwd.
+        cwd = os.getcwd()
+        lower = cwd[0].lower() + cwd[1:]
+        cmd = (
+            '"%s" -c "import os, sys;'
+            ' sys.exit(0 if os.getcwd() == os.path.realpath(os.getcwd()) else 1)"'
+            % sys.executable
+        )
+        result = run_hook({"stop_hook_active": False}, cmd, cwd=lower)
+        self.assertEqual(result.returncode, 0)
 
     def test_skips_check_when_already_looping(self):
         # stop_hook_active=True must exit 0 WITHOUT running the (failing) command

@@ -7,7 +7,7 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
-# template-version: 2026-07.5
+# template-version: 2026-07.20
 import json
 import os
 import shutil
@@ -22,9 +22,15 @@ OUTPUT_TAIL_CHARS = 3000
 
 
 def run_check():
+    # Canonicalize the cwd first: a lowercase drive letter (as
+    # inherited from e.g. a VS Code workspace opened as d:\...) makes
+    # Vitest key module identities inconsistently and the whole suite
+    # fails to collect (TypeError: reading 'config').
+    os.chdir(os.path.realpath(os.getcwd()))
     try:
         result = subprocess.run(
             CHECK_COMMAND, shell=True, capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
             timeout=TIMEOUT_SECONDS,
         )
     except subprocess.TimeoutExpired:

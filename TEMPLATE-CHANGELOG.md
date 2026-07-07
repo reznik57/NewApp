@@ -5,6 +5,29 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.20 — v2.6.1
+
+Second backflow from fisi-learning: its first session with live hooks hit
+two Windows bugs in verify_on_stop.py. Both were fixed in the app the same
+day (under explicit user delegation — the hook path is protect_files-
+guarded) and transferred here so no future app inherits them.
+
+- verify_on_stop.py (base + kit, stamp 2026-07.20) decodes the check's
+  output as UTF-8 (`encoding="utf-8", errors="replace"`): with `text=True`
+  and no encoding, the pipe was decoded with the Windows locale (cp1252) —
+  vitest's UTF-8 marks killed the subprocess reader threads, the
+  diagnostic tail was lost, and a filled pipe buffer could flip a green
+  check into a bogus exit 1.
+- verify_on_stop.py canonicalizes its cwd (`os.chdir(os.path.realpath(
+  os.getcwd()))`) before running the check: launched from a lowercase
+  drive letter (d:\..., as inherited from a VS Code workspace), Vitest
+  keys module identities case-sensitively and every suite dies at
+  describe() ("reading 'config'") before collecting a single test.
+- tests/hooks/test_verify_on_stop.py: regression guards for both — raw
+  UTF-8 tail survival under a pinned legacy codec, and the check command
+  observing a canonical-case cwd; each verified to FAIL against the
+  pre-fix hook. run_hook() gains an env_overrides parameter.
+
 ## 2026-07.19 — v2.6.0
 
 First-run backflow: the SETUP fresh-app path ran for real for the first
