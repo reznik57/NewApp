@@ -7,17 +7,26 @@ copy pushed onto the template remote); this guard makes the seed side
 of that rule mechanical. Two checks, both fail closed:
 
   1. Wrong remote: the URL being pushed to must be the template repo.
-     TEMPLATE_REPO below is the single home of the exact URL -- the
-     docs link here instead of restating it.
-  2. Wrong content: every pushed commit must contain
-     TEMPLATE-CHANGELOG.md -- a commit without it does not look like
-     the seed, so an app history may be about to land on the template
-     remote (the v2.4.7 incident class).
+     TEMPLATE_REPO below is the docs' single home of the exact URL --
+     the docs link here instead of restating it; the tests pin it as
+     deliberate friction.
+  2. Wrong content: the TIP of every pushed ref must contain
+     TEMPLATE-CHANGELOG.md -- a tip without it does not look like the
+     seed, so an app history may be about to land on the template
+     remote (the v2.4.7 incident class). Deliberately tip-only:
+     foreign history merged under a marker-carrying tip passes (a
+     range walk would false-block the seed's own three pre-changelog
+     root commits).
 
 Like protect_files.py this is an ACCIDENT GUARD, not a security
 boundary: `git push --no-verify` skips it -- do that only deliberately,
-with the user. If the template repo really moves, update TEMPLATE_REPO
-here (and nothing else -- this is the URL's only home).
+with the user. A working tree without .githooks/ (old-tag or sparse
+checkout) silently suspends the guard even with core.hooksPath set --
+git neither runs nor warns about absent hooks; the self-test reports
+the missing hook file. If the template repo really moves, update
+TEMPLATE_REPO here AND the pinned expectations in
+tests/hooks/test_pre_push_guard.py in the same commit (deliberate
+friction, the test_root_docs REQUIRED pattern).
 
 Activate once per clone (git config is not cloned):
     git config core.hooksPath .githooks
@@ -28,6 +37,7 @@ Invoked by .githooks/pre-push with the pre-push protocol: argv is
 <local ref> SP <local sha> SP <remote ref> SP <remote sha>.
 Tests: tests/hooks/test_pre_push_guard.py (run from the seed root).
 """
+import os
 import re
 import subprocess
 import sys
@@ -118,14 +128,30 @@ def self_test():
     else:
         print("ok: HEAD looks like the seed")
     code, hooks_path = git("config", "core.hooksPath")
-    if code != 0 or hooks_path != ".githooks":
+    tcode, toplevel = git("rev-parse", "--show-toplevel")
+    active = False
+    if code == 0 and tcode == 0:
+        # Equivalent spellings (absolute path, trailing slash, drive or
+        # case variants on Windows) are functionally active: resolve
+        # both sides before comparing.
+        expected = os.path.normcase(
+            os.path.realpath(os.path.join(toplevel, ".githooks")))
+        actual = os.path.normcase(
+            os.path.realpath(os.path.join(toplevel, hooks_path)))
+        active = actual == expected
+    if not active:
         failures.append(
             "core.hooksPath is %r - the guard is NOT active; run:\n"
             "  git config core.hooksPath .githooks"
             % (hooks_path if code == 0 else None)
         )
+    elif not os.path.isfile(os.path.join(toplevel, ".githooks", "pre-push")):
+        failures.append(
+            ".githooks/pre-push is missing from this working tree (old-tag\n"
+            "or sparse checkout?) - git silently skips absent hooks")
     else:
-        print("ok: core.hooksPath = .githooks (guard active)")
+        print("ok: core.hooksPath -> .githooks and the hook file exists"
+              " (guard active)")
     for f in failures:
         print("pre-push guard self-test: %s" % f, file=sys.stderr)
     return 1 if failures else 0

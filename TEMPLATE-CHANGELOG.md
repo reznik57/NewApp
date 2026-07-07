@@ -19,19 +19,45 @@ changelog already records — not by the podcast alone:
 - **`.githooks/` pre-push guard** mechanizes CLAUDE.md → Repo identity,
   prose-only since the v2.4.7 push-onto-template incident. Two checks,
   fail closed: the remote being pushed to must be the template repo
-  (the exact URL's single home moves into the guard's `TEMPLATE_REPO`;
-  CLAUDE.md now links instead of restating), and every pushed commit
-  must carry TEMPLATE-CHANGELOG.md — a history without it is the
-  v2.4.7 incident class (app content at the template remote). sh shim
-  with the harness hooks' interpreter probe; `--self-test` verifies
-  origin, seed marker and activation; tests pin behavior including a
-  real `git push` through the shim
-  (tests/hooks/test_pre_push_guard.py). Honest bound, stated in the
-  guard docstring: git config is not cloned, so only clones that ran
-  the activation (CLAUDE.md → Repo identity) are protected — the app
-  side of the identity rule stays with SETUP step 3. `.githooks/**`
-  pinned to LF (sh breaks on CRLF); the wholesale-copy strip list in
-  SETUP.md now strips `.githooks/` too; README Map gains the row.
+  (the exact URL's doc home moves into the guard's `TEMPLATE_REPO`;
+  CLAUDE.md links instead of restating, the tests pin it as deliberate
+  friction), and the tip of every pushed ref must carry
+  TEMPLATE-CHANGELOG.md — a tip without it is the v2.4.7 incident
+  class (app content at the template remote). Deliberately tip-only:
+  a range walk would false-block the seed's own three pre-changelog
+  root commits. sh shim with the harness hooks' interpreter probe;
+  `--self-test` verifies origin, seed marker, activation and the hook
+  file's presence; tests pin behavior including a real `git push`
+  through the shim (tests/hooks/test_pre_push_guard.py). Honest
+  bounds, stated in the guard docstring: git config is not cloned, so
+  only clones that ran the activation (CLAUDE.md → Repo identity) are
+  protected; a working tree without `.githooks/` (old-tag or sparse
+  checkout) silently suspends the guard — the app side of the identity
+  rule stays with SETUP step 3. `.githooks/**` pinned to LF (sh breaks
+  on CRLF); the wholesale-copy strip list in SETUP.md now strips
+  `.githooks/` too; README Map gains the row.
+
+Pre-merge adversarial review (two finder lenses, per-finding
+refutation agents): eight findings, seven confirmed (one duplicate
+across lenses), all fixed before merge — the content check was
+over-claimed as "every pushed commit" in three doc homes while the
+code checks ref tips (now stated as a deliberate bound, see above);
+the E2E assertion could not tell a guard block from the shim's
+fail-closed fallback (sharpened to a check_push-only string); nothing
+pinned the committed shim's exec bit or LF blob (suite-pinned now — a
+644 or CRLF regression is a silent fail-open on Linux clones); the
+third silent no-fire path (tree without `.githooks/` under a set
+hooksPath) was undocumented and invisible to `--self-test` (documented
+in guard + CLAUDE.md; self-test now checks the hook file exists);
+`--self-test` false-negatived on equivalent hooksPath spellings
+(absolute path, trailing slash — comparison is path-normalized now);
+the guard docstring claimed the URL lives "nowhere else" while the
+tests deliberately pin it (reworded to the test_root_docs REQUIRED
+same-commit pattern). Rejected from review, with reason: port-form URL
+handling (`ssh://…:22/`, `ssh.github.com:443`) — no workflow of this
+repo produces those forms, the failure direction is a loud false-block
+with a documented escape, and normalize() cannot see through ssh
+aliases anyway; drawing-board per the backflow rule.
 
 Deliberately open, with owner and trigger (not gaps — decisions):
 

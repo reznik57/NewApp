@@ -3,8 +3,9 @@ python -m unittest discover -s tests -v
 
 The guard mechanizes CLAUDE.md -> Repo identity (the v2.4.7
 push-onto-template incident): pushes from a working copy with the guard
-active must target the template repo, and every pushed commit must look
-like the seed (carry TEMPLATE-CHANGELOG.md).
+active must target the template repo, and the tip of every pushed ref
+must look like the seed (carry TEMPLATE-CHANGELOG.md; deliberately
+tip-only -- see the guard's docstring).
 """
 import os
 import shutil
@@ -157,6 +158,11 @@ class SelfTestTests(unittest.TestCase):
         self.addCleanup(rmtree_force, self.tmp)
         make_repo(self.tmp, with_marker=True)
 
+    def install_hook_file(self):
+        hooks = self.tmp / ".githooks"
+        hooks.mkdir(exist_ok=True)
+        shutil.copy(SHIM, hooks / "pre-push")
+
     def run_self_test(self):
         return subprocess.run(
             [sys.executable, str(GUARD), "--self-test"], cwd=str(self.tmp),
@@ -165,14 +171,36 @@ class SelfTestTests(unittest.TestCase):
 
     def test_healthy_wiring_passes(self):
         run_git(self.tmp, "remote", "add", "origin", TEMPLATE_URL)
+        self.install_hook_file()
         run_git(self.tmp, "config", "core.hooksPath", ".githooks")
         r = self.run_self_test()
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertIn("guard active", r.stdout)
 
+    def test_equivalent_hookspath_spellings_pass(self):
+        # An absolute path or a trailing slash is functionally active;
+        # the self-test must not false-negative on those spellings.
+        run_git(self.tmp, "remote", "add", "origin", TEMPLATE_URL)
+        self.install_hook_file()
+        for value in (str(self.tmp / ".githooks"), ".githooks/"):
+            run_git(self.tmp, "config", "core.hooksPath", value)
+            r = self.run_self_test()
+            self.assertEqual(r.returncode, 0, "%s: %s" % (value, r.stderr))
+
+    def test_missing_hook_file_fails(self):
+        # hooksPath set but no .githooks/pre-push in the tree (old-tag
+        # or sparse checkout): git silently skips absent hooks, so the
+        # self-test must report the third no-fire path.
+        run_git(self.tmp, "remote", "add", "origin", TEMPLATE_URL)
+        run_git(self.tmp, "config", "core.hooksPath", ".githooks")
+        r = self.run_self_test()
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("missing", r.stderr)
+
     def test_wrong_origin_fails(self):
         run_git(self.tmp, "remote", "add", "origin",
                 "https://github.com/reznik57/some-app.git")
+        self.install_hook_file()
         run_git(self.tmp, "config", "core.hooksPath", ".githooks")
         r = self.run_self_test()
         self.assertEqual(r.returncode, 1)
@@ -183,6 +211,22 @@ class SelfTestTests(unittest.TestCase):
         r = self.run_self_test()
         self.assertEqual(r.returncode, 1)
         self.assertIn("hooksPath", r.stderr)
+
+
+class CommittedGuardTests(unittest.TestCase):
+    """Pin the committed shim's index mode and line endings: a 100644
+    or CRLF regression (easy on Windows, where new files stage as 644
+    and the working tree hides both) is a silent fail-open on every
+    Linux clone -- git skips non-executable hooksPath hooks with a mere
+    hint, and sh chokes on \\r."""
+
+    def test_shim_is_executable_in_the_index(self):
+        r = run_git(ROOT, "ls-files", "-s", ".githooks/pre-push")
+        self.assertTrue(r.stdout.startswith("100755 "), r.stdout)
+
+    def test_shim_is_lf_in_the_index(self):
+        r = run_git(ROOT, "ls-files", "--eol", ".githooks/pre-push")
+        self.assertIn("i/lf", r.stdout)
 
 
 class EndToEndWiringTests(unittest.TestCase):
@@ -207,7 +251,10 @@ class EndToEndWiringTests(unittest.TestCase):
         run_git(repo, "remote", "add", "origin", str(bare))
         r = run_git(repo, "push", "origin", "HEAD:refs/heads/main")
         self.assertNotEqual(r.returncode, 0)
-        self.assertIn("pre-push guard", r.stderr)
+        # Must be check_push()'s own message: the shim's fail-closed
+        # fallback also says "pre-push guard", which would green this
+        # test without the guard ever running.
+        self.assertIn("not the template repo", r.stderr)
 
 
 if __name__ == "__main__":
