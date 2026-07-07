@@ -5,6 +5,70 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.21 — v2.6.2
+
+Finalization round: a whole-seed completeness audit (six lenses:
+self-governance, both journeys end-to-end, guard-net coverage, hook
+robustness, ledger reconciliation) run after the first real fresh-app
+cycle. Goal per the user: no known gap without an owner — closed here,
+or deliberately open with a reason. Process note: the audit ran inline
+(subagent session limit; precedent v2.4.7); findings were verified
+against the sources before fixing.
+
+Closed:
+
+- **The seed now has its own CLAUDE.md** (root; guarded by
+  test_root_docs REQUIRED). Its working conventions — base/ is source
+  and the kit is a mirrored copy, stamp discipline, changelog-with-
+  rejections, suite-green-before-commit, branch/merge/tag/remote-guard
+  release flow — previously lived only in changelog prose and test
+  docstrings, invisible to a fresh session. Two real incidents: the
+  externally-authored v2.5.0 arrived with silent truncations, and
+  today's parallel session committed v2.6.1 directly to master.
+- **STOP-guard wholesale-copy list was dangerously incomplete**: it
+  never deleted base/, the seed's root SETUP.md copy, its
+  .gitattributes/CLAUDE.md, or seed-local caches — and a leftover
+  base/ tree survives the exit gate silently (check_markers scans only
+  CLAUDE.md, .claude/, docs/, .github/). The list now strips ALL seed
+  material and says why.
+- **ADOPTION UPDATE MODE learned about NEW kit files**: move 1 only
+  diffed stamps of existing twins, so a file introduced by a newer kit
+  generation (gitattributes.template, v2.6.0) would be silently
+  skipped on upgrade; a kit file with no live twin is now explicitly
+  introduced via its first-adoption step. Stampless coverage wording
+  extended from "JSON templates" to JSON + dotfile templates.
+- **README's "Upgrading seeded apps" knew only the manual route**: it
+  now leads with the guided kit-re-drop → UPDATE MODE route (existing
+  since v2.4.6) and keeps the stamp-diff as the light path.
+- **v2.6.1 was pushed but never tagged** — annotated tag v2.6.1 set at
+  its commit (a direct-to-master commit; deviation recorded per the new
+  CLAUDE.md release rule).
+- test_root_docs: the v2.5.2 accepted minor (substring-anchor caveat)
+  is now documented at the REQUIRED dict.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+
+- Cowork/claude.ai path (docs/COWORK.md) is documented but has never
+  run for real; validated on the first real Cowork-driven app (CI is
+  the hard gate there by design).
+- The symlink parity case stays env-gated-skipped on Windows without
+  developer mode (documented in the test).
+- test_root_docs' residual tail-truncation window stays accepted
+  (v2.5.2: EOF heuristic rejected — would not have fired on the real
+  incident).
+- llm-app/eval profile waits for the first app with LLM features;
+  a second stack profile waits for a real non-TS app (graduation
+  rule); multi-tool wiring stays a recipe until a real app runs one of
+  those tools (v2.5.1).
+
+Verified clean, no action (for the record): all three hooks
+(protect_files symlink/BOM/fail-open contract incl. the ADOPTION move-3
+self-protection claim; verify_on_stop timeout/UTF-8/BOM/self-test;
+check_markers UTF-16/cp1252/dollar-brace) match their documented
+guarantees; settings parity pins deny/hooks/allow/ask deltas exactly;
+docs/COWORK.md is inside the kit parity manifest; the non-npm path
+carries through CLAUDE.template's ADAPT notes to step 12.
+
 ## 2026-07.20 — v2.6.1
 
 Second backflow from fisi-learning: its first session with live hooks hit
