@@ -6,3 +6,12 @@
 # v2.4.8. Scoped deliberately — repo-wide line-ending policy is a separate
 # call, not made here.
 profiles/typescript-next/skills/frontend-design/** text eol=lf
+
+# Parity-tested mirror pairs must materialize IDENTICALLY on every
+# platform: base/.gitattributes (v2.6.0) pins base/** to LF, so its
+# byte-for-byte twins — harness-kit/ and the root-homed SETUP.md — need
+# the same pin, or a fresh Windows checkout (autocrlf=true) writes CRLF
+# on one side only and test_kit_parity reads phantom drift. Still scoped:
+# the repo-wide line-ending call remains unmade.
+harness-kit/** text=auto eol=lf
+/SETUP.md text eol=lf

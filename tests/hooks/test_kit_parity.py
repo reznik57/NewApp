@@ -7,7 +7,7 @@ access needed (except optional profiles). Its files are COPIES
 (base/ for the harness set, the seed root for SETUP.md); this test
 pins the manifest and byte equality, so a source edit fails here
 until mirrored. Re-sync with:
-  robocopy base harness-kit /E /XD __pycache__ .github /XF .gitignore
+  robocopy base harness-kit /E /XD __pycache__ .github /XF .gitignore .gitattributes
   copy /Y SETUP.md harness-kit
 Run from the seed root: python -m unittest discover -s tests
 """
@@ -41,6 +41,7 @@ KIT_ONLY = {"START-HERE.md", "ADOPTION.md"}
 # Re-sync: copy the source over the kit file listed here.
 RENAMED = {
     "gitignore.template": BASE / ".gitignore",
+    "gitattributes.template": BASE / ".gitattributes",
     "ci.template.yml": BASE / ".github" / "workflows" / "ci.template.yml",
 }
 

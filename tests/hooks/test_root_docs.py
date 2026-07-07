@@ -47,7 +47,7 @@ REQUIRED = {
 }
 
 MIN_BYTES = 500          # below this a doc is a wipe, not an edit
-CHANGELOG_ENTRY_FLOOR = 15  # "## " entries; currently 19 -- fires on loss
+CHANGELOG_ENTRY_FLOOR = 15  # "## " entries; fires on loss, not growth
 
 
 def check_doc(text, anchors, min_bytes=MIN_BYTES):
