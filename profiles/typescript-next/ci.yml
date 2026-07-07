@@ -1,5 +1,5 @@
-# template-version: 2026-07.6
-# Filled TS/Next.js variant of base/.github/workflows/ci.template.yml
+# template-version: 2026-07.19
+# Filled TS/Next.js variant of the kit's ci.template.yml
 name: CI
 
 on:

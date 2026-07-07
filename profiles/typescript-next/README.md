@@ -1,12 +1,17 @@
-<!-- template-version: 2026-07.14 -->
+<!-- template-version: 2026-07.19 -->
 
 # Profile: TypeScript / Next.js
 
-Overlay for the stack-agnostic `base/`. Apply AFTER copying `base/*` into
-the new repo (SETUP.md step 2):
+Overlay for the stack-agnostic harness. Apply AFTER SETUP.md step 1 has
+distributed `harness-kit/` — this README IS the substance of SETUP
+step 2 (`base/` is seed-internal source material; nobody copies it into
+an app):
 
 1. Merge `package-scripts.json` → the `"scripts"` block of the app's
-   `package.json` (created by `create-next-app` or `npm init`).
+   `package.json` (created by `create-next-app` or `npm init`). On a name
+   collision the profile's entry WINS. Scaffold leftovers: delete `lint`
+   (it lives in `check`/`fix` — a second, laxer lint entry drifts);
+   keeping `start` is fine (`next start` serves deployments).
 2. Copy `settings.json` → `.claude/settings.json` (replaces renaming the
    base template; already filled for npm/next/vitest/eslint/tsc).
    Delete `.claude/settings.template.json` afterwards.
@@ -30,17 +35,25 @@ the new repo (SETUP.md step 2):
    `frontend-design` skill from claude-plugins-official so a seeded TS/Next
    app has it without the plugin installed, and step 5's design pointer
    invokes it by name.
+7. Copy `vitest.config.ts` → repo root. Vitest does not read tsconfig
+   `paths`: without this alias bridge the first test importing via the
+   project-canonical `@/*` form fails module resolution while `tsc`
+   stays green — a red check/Stop-hook/CI with a misleading error.
+8. Install the dev dependencies the scripts expect (create-next-app
+   provides only some): typescript, vitest, eslint (flat config),
+   eslint-config-next (>= 16 — flat-native; needs `next` present at
+   lint time), eslint-plugin-jsx-a11y, prettier. After a create-next-app
+   scaffold, `npm i -D vitest prettier eslint-plugin-jsx-a11y` usually
+   covers the gap.
 
 Still manual afterwards: Role & Context, the project-specific invariant,
 Invariant 1's `{{CHECK CMD}}` (fill with `npm run check`) and
 `{{CI-EQUIVALENT CMD}}` (fill with `npm run check; npm test; npm run build`),
 `{{FORMATTER}}` (Prettier), ADR-0001, and the app's first test —
 `vitest run` exits 1 when no test files exist, so `check` (and with it the
-Stop hook and CI) cannot go green until one is written. Do NOT add
-`--passWithNoTests`; that weakens the gate. Dev dependencies expected by the
-scripts: typescript, vitest, eslint (flat config), eslint-config-next
-(>= 16 — flat-native; needs `next` present at lint time),
-eslint-plugin-jsx-a11y, prettier.
+Stop hook and CI) cannot go green until one is written; SETUP step 11
+ASKs the user for it. Do NOT add `--passWithNoTests`; that weakens the
+gate.
 
 When the test suite gets slow, narrow the `check` script's test step to
 changed/affected tests (e.g. `vitest run --changed`) — the gate must stay
