@@ -150,7 +150,11 @@ enforces less.
 ## Upgrading seeded apps
 
 Every copied template carries `template-version: YYYY-MM` (`YYYY-MM.N` for
-a patch round within the same month). Diff an app's
-stamp against `TEMPLATE-CHANGELOG.md`, then port the missing pieces by hand
-(or with an agent). The seed is the canonical upstream; apps never edit
-their copies expecting it to flow back — improvements land here first.
+a patch round within the same month). The guided route: copy a FRESH
+`harness-kit/` into the app root — ADOPTION.md's UPDATE MODE detects the
+already-adopted harness and walks the version merge (stamp diff, live
+wins, delegated harness edits, curated commit). For a single known
+change, the light route still works: diff an app's stamp against
+`TEMPLATE-CHANGELOG.md`, then port the missing pieces by hand (or with
+an agent). The seed is the canonical upstream; apps never edit their
+copies expecting it to flow back — improvements land here first.

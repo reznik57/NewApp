@@ -19,8 +19,17 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # doc (relative to the seed root) -> load-bearing anchor strings.
 # ASCII-only on purpose: encoding must never affect matching, so
-# anchors stop BEFORE any em-dash in the real heading.
+# anchors stop BEFORE any em-dash in the real heading. Anchors match as
+# SUBSTRINGS anywhere in the doc: when restructuring, make sure a
+# removed section's anchor does not accidentally survive in prose (a
+# mention like "the ## Map section" would false-pass the check).
 REQUIRED = {
+    "CLAUDE.md": [
+        "# CLAUDE.md",
+        "## Source-of-truth map",
+        "## Verification gate",
+        "## Release discipline",
+    ],
     "README.md": [
         "## Philosophy",
         "## Map",
