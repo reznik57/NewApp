@@ -1,0 +1,17 @@
+# Line-ending policy: the repo is LF everywhere. Formatters that check the
+# WORKING TREE (Prettier's endOfLine default is "lf") fail repo-wide when
+# core.autocrlf=true (the Git-for-Windows default) re-materializes tracked
+# LF files as CRLF on a fresh checkout or branch switch — a red check gate
+# disguised as a formatting problem. This file pins the policy in-repo.
+* text=auto eol=lf
+
+# Binary formats Git must never rewrite:
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.pdf binary

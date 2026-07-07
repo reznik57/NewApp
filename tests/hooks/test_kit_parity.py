@@ -41,6 +41,7 @@ KIT_ONLY = {"START-HERE.md", "ADOPTION.md"}
 # Re-sync: copy the source over the kit file listed here.
 RENAMED = {
     "gitignore.template": BASE / ".gitignore",
+    "gitattributes.template": BASE / ".gitattributes",
     "ci.template.yml": BASE / ".github" / "workflows" / "ci.template.yml",
 }
 
