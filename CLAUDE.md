@@ -6,10 +6,16 @@ agents editing the seed. Building an app FROM the seed? Wrong file: copy
 
 ## Repo identity
 
-- `origin` must point at the TEMPLATE repo (github.com/reznik57/NewApp).
-  Verify `git remote -v` before EVERY push — an app has pushed onto this
-  remote before: the push-onto-template incident behind SETUP step 3's
-  repo-identity guard (changelog, v2.4.7 entry).
+- `origin` must point at the TEMPLATE repo — an app has pushed onto
+  this remote before: the push-onto-template incident behind SETUP
+  step 3's repo-identity guard (changelog, v2.4.7 entry). The seed side
+  of that rule is mechanized by the pre-push guard in `.githooks/`
+  (the docs' single home of the exact URL). Activate it once per
+  clone — git config is not cloned: `git config core.hooksPath
+  .githooks`, then `py .githooks/pre_push_guard.py --self-test`. Until
+  the self-test passes in a clone, verify `git remote -v` before EVERY
+  push by hand — and re-run it after checking out old states: a tree
+  without `.githooks/` silently suspends the guard.
 - Never commit an app into this repo; never push this repo onto an app
   remote.
 

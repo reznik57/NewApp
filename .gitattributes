@@ -15,3 +15,9 @@ profiles/typescript-next/skills/frontend-design/** text eol=lf
 # the repo-wide line-ending call remains unmade.
 harness-kit/** text=auto eol=lf
 /SETUP.md text eol=lf
+
+# The pre-push guard shim is a sh script git executes directly: a CRLF
+# checkout breaks it (sh chokes on \r, shebang included), so the guard
+# pair stays LF everywhere. Still scoped: the repo-wide line-ending
+# call remains unmade.
+.githooks/** text eol=lf

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Seed repo-identity guard shim (CLAUDE.md -> Repo identity). Probes an
+# interpreter like the harness hooks do (a bare `python3` may be the
+# Windows Store alias, so each candidate must actually run) and fails
+# closed if none works. Logic + tests: pre_push_guard.py next to this.
+dir="$(git rev-parse --show-toplevel)" || exit 1
+for i in python3 python py; do
+  "$i" -c "import sys" >/dev/null 2>&1 && exec "$i" "$dir/.githooks/pre_push_guard.py" "$@"
+done
+echo "pre-push guard: no Python interpreter found - failing closed (CLAUDE.md -> Repo identity)" >&2
+exit 1

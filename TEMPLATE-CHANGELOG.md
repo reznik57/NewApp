@@ -5,6 +5,93 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.23 — v2.6.4
+
+Seed-side repo-identity pre-push guard. Origin of the round: an external
+prompt (Richard Seidl's podcast episode on software-architecture
+decisions, 2026-07-07) was audited against the seed — verdict mostly
+confirmation: "documentation must defend itself" IS README Philosophy 1,
+the episode's ADR block is covered by the shipped ADR system, and its
+"AI complements rule-based checks" point matches the hard-gates-plus-
+agent-judgment split. One change adopted, backed by an incident this
+changelog already records — not by the podcast alone:
+
+- **`.githooks/` pre-push guard** mechanizes CLAUDE.md → Repo identity,
+  prose-only since the v2.4.7 push-onto-template incident. Two checks,
+  fail closed: the remote being pushed to must be the template repo
+  (the exact URL's doc home moves into the guard's `TEMPLATE_REPO`;
+  CLAUDE.md links instead of restating, the tests pin it as deliberate
+  friction), and the tip of every pushed ref must carry
+  TEMPLATE-CHANGELOG.md — a tip without it is the v2.4.7 incident
+  class (app content at the template remote). Deliberately tip-only:
+  a range walk would false-block the seed's own three pre-changelog
+  root commits. sh shim with the harness hooks' interpreter probe;
+  `--self-test` verifies origin, seed marker, activation and the hook
+  file's presence; tests pin behavior including a real `git push`
+  through the shim (tests/hooks/test_pre_push_guard.py). Honest
+  bounds, stated in the guard docstring: git config is not cloned, so
+  only clones that ran the activation (CLAUDE.md → Repo identity) are
+  protected; a working tree without `.githooks/` (old-tag or sparse
+  checkout) silently suspends the guard — the app side of the identity
+  rule stays with SETUP step 3. `.githooks/**` pinned to LF (sh breaks
+  on CRLF); the wholesale-copy strip list in SETUP.md now strips
+  `.githooks/` too; README Map gains the row.
+
+Pre-merge adversarial review (two finder lenses, per-finding
+refutation agents): eight findings, seven confirmed (one duplicate
+across lenses), all fixed before merge — the content check was
+over-claimed as "every pushed commit" in three doc homes while the
+code checks ref tips (now stated as a deliberate bound, see above);
+the E2E assertion could not tell a guard block from the shim's
+fail-closed fallback (sharpened to a check_push-only string); nothing
+pinned the committed shim's exec bit or LF blob (suite-pinned now — a
+644 or CRLF regression is a silent fail-open on Linux clones); the
+third silent no-fire path (tree without `.githooks/` under a set
+hooksPath) was undocumented and invisible to `--self-test` (documented
+in guard + CLAUDE.md; self-test now checks the hook file exists);
+`--self-test` false-negatived on equivalent hooksPath spellings
+(absolute path, trailing slash — comparison is path-normalized now);
+the guard docstring claimed the URL lives "nowhere else" while the
+tests deliberately pin it (reworded to the test_root_docs REQUIRED
+same-commit pattern). Rejected from review, with reason: port-form URL
+handling (`ssh://…:22/`, `ssh.github.com:443`) — no workflow of this
+repo produces those forms, the failure direction is a loud false-block
+with a documented escape, and normalize() cannot see through ssh
+aliases anyway; drawing-board per the backflow rule.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+
+- ADR→fitness-function graduation: log-gotcha's graduation rule
+  (recurring + mechanically checkable → hook/lint/CI gate) exists for
+  LESSONS only; nothing symmetric asks whether an accepted ADR can
+  defend itself technically (dependency rule, perf budget, lint).
+  Trigger: the first real app where an accepted ADR is silently
+  violated by later code.
+- Explicit reversibility classification (type-1/type-2 vocabulary) in
+  the ADR template: the escalation ladder already encodes reversibility
+  implicitly (ultrathink triggers, spec-with-rollback threshold).
+  Trigger: a real app shows miscalibration — deep analysis fired for a
+  trivially reversible choice, or an irreversible decision slipped
+  through without review.
+
+Rejected, with reason (don't relitigate):
+
+- Kit-shipped app-side pre-push blocklist of the template URL: it would
+  protect exactly the copies that don't need it — a properly seeded app
+  already passed SETUP step 3 (own origin), while the incident's origin
+  (a seed clone drifting into app use, activation never run) gets no
+  hook from a kit it never adopted. It would also hardcode seed
+  identity into every app and add one more file to the strip list.
+- arc42/C4 documentation templates: drawing-board, no incident; the
+  harness grows docs lazily (Architecture [Grows], wiki) by design.
+- KPI/product-agent observability: already finally decided — base-seed
+  rejection recorded in the 2026-07-03 whitepaper re-audit; the eval
+  cluster's home stays the future llm-app profile.
+
+No `template-version:` stamp advances (seed-root docs, tests and
+seed-only tooling; the root SETUP.md, mirrored to the kit byte-for-byte,
+carries no stamp).
+
 ## 2026-07.22 — v2.6.3
 
 Deferred-review fixes: the v2.6.2 pre-merge review had to run inline
