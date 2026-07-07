@@ -40,6 +40,7 @@ compounds instead of evaporating in chat transcripts.
 | base/ dotfiles (`.gitignore`, `.gitattributes`, `.env.example`, `.editorconfig`) | Hygiene from commit #1: secrets pattern, standard ignores, LF line endings, whitespace.                                                          |
 | `profiles/typescript-next/`                                    | Pre-filled overlay for TS/Next.js apps.                                                                                                         |
 | `tests/`                                                       | Seed-only tests: hook scripts + parity guards (settings, kit) (`python -m unittest discover -s tests`).                                         |
+| `.githooks/`                                                   | Seed-only pre-push repo-identity guard (rule + activation: CLAUDE.md -> Repo identity); not copied into apps.                                   |
 | `docs/superpowers/`                                            | Specs/plans for the seed itself (not copied).                                                                                                   |
 
 ## Instantiation

@@ -13,7 +13,7 @@ on purpose. (If you copied the SEED folder wholesale instead of the
 kit, strip ALL seed material from the app now — README.md,
 TEMPLATE-CHANGELOG.md, the seed's own CLAUDE.md, .gitattributes and
 .gitignore, the root SETUP.md copy, base/, docs/superpowers/, tests/,
-profiles/,
+profiles/, .githooks/,
 any seed-local .claude/ or cache folders, and the stale harness-kit/ —
 then copy a FRESH `harness-kit/` in per its START-HERE.md. Leftover
 seed trees survive the exit gate silently; it scans only the app's

@@ -5,6 +5,67 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.23 — v2.6.4
+
+Seed-side repo-identity pre-push guard. Origin of the round: an external
+prompt (Richard Seidl's podcast episode on software-architecture
+decisions, 2026-07-07) was audited against the seed — verdict mostly
+confirmation: "documentation must defend itself" IS README Philosophy 1,
+the episode's ADR block is covered by the shipped ADR system, and its
+"AI complements rule-based checks" point matches the hard-gates-plus-
+agent-judgment split. One change adopted, backed by an incident this
+changelog already records — not by the podcast alone:
+
+- **`.githooks/` pre-push guard** mechanizes CLAUDE.md → Repo identity,
+  prose-only since the v2.4.7 push-onto-template incident. Two checks,
+  fail closed: the remote being pushed to must be the template repo
+  (the exact URL's single home moves into the guard's `TEMPLATE_REPO`;
+  CLAUDE.md now links instead of restating), and every pushed commit
+  must carry TEMPLATE-CHANGELOG.md — a history without it is the
+  v2.4.7 incident class (app content at the template remote). sh shim
+  with the harness hooks' interpreter probe; `--self-test` verifies
+  origin, seed marker and activation; tests pin behavior including a
+  real `git push` through the shim
+  (tests/hooks/test_pre_push_guard.py). Honest bound, stated in the
+  guard docstring: git config is not cloned, so only clones that ran
+  the activation (CLAUDE.md → Repo identity) are protected — the app
+  side of the identity rule stays with SETUP step 3. `.githooks/**`
+  pinned to LF (sh breaks on CRLF); the wholesale-copy strip list in
+  SETUP.md now strips `.githooks/` too; README Map gains the row.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+
+- ADR→fitness-function graduation: log-gotcha's graduation rule
+  (recurring + mechanically checkable → hook/lint/CI gate) exists for
+  LESSONS only; nothing symmetric asks whether an accepted ADR can
+  defend itself technically (dependency rule, perf budget, lint).
+  Trigger: the first real app where an accepted ADR is silently
+  violated by later code.
+- Explicit reversibility classification (type-1/type-2 vocabulary) in
+  the ADR template: the escalation ladder already encodes reversibility
+  implicitly (ultrathink triggers, spec-with-rollback threshold).
+  Trigger: a real app shows miscalibration — deep analysis fired for a
+  trivially reversible choice, or an irreversible decision slipped
+  through without review.
+
+Rejected, with reason (don't relitigate):
+
+- Kit-shipped app-side pre-push blocklist of the template URL: it would
+  protect exactly the copies that don't need it — a properly seeded app
+  already passed SETUP step 3 (own origin), while the incident's origin
+  (a seed clone drifting into app use, activation never run) gets no
+  hook from a kit it never adopted. It would also hardcode seed
+  identity into every app and add one more file to the strip list.
+- arc42/C4 documentation templates: drawing-board, no incident; the
+  harness grows docs lazily (Architecture [Grows], wiki) by design.
+- KPI/product-agent observability: already finally decided — base-seed
+  rejection recorded in the 2026-07-03 whitepaper re-audit; the eval
+  cluster's home stays the future llm-app profile.
+
+No `template-version:` stamp advances (seed-root docs, tests and
+seed-only tooling; the root SETUP.md, mirrored to the kit byte-for-byte,
+carries no stamp).
+
 ## 2026-07.22 — v2.6.3
 
 Deferred-review fixes: the v2.6.2 pre-merge review had to run inline
