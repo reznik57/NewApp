@@ -79,13 +79,23 @@ collapses to four moves:
       definition; two live definitions of one name compete at trigger
       time. Everything else (this
       checklist, SETUP.md, START-HERE.md, `gitignore.template`,
-      `ci.template.yml`) STAYS in `harness-kit/` — step 11 deletes the
-      whole folder. Deliberately not shipped ready-to-land: a live
-      `.gitignore` (merge-only, step 3) and a live CI file (step 8).
-- [ ] 3. **Merge .gitignore** — append the patterns from
-      `harness-kit/gitignore.template` that the app's file lacks
+      `gitattributes.template`, `ci.template.yml`) STAYS in
+      `harness-kit/` — step 11 deletes the whole folder. Deliberately
+      not shipped ready-to-land: a live `.gitignore` and a live
+      `.gitattributes` (both merge-only, step 3) and a live CI file
+      (step 8).
+- [ ] 3. **Merge .gitignore + .gitattributes** — append the patterns
+      from `harness-kit/gitignore.template` that the app's file lacks
       (secrets block with `!.env.example`, build output, caches,
-      `__pycache__/`); never replace a grown .gitignore. SKIP any
+      `__pycache__/`); never replace a grown .gitignore.
+      Then `.gitattributes`: the app has none → place
+      `harness-kit/gitattributes.template` as `.gitattributes` (LF
+      policy — without it, `core.autocrlf=true` re-materializes tracked
+      LF files as CRLF on the next checkout and a working-tree formatter
+      gate goes red repo-wide, disguised as a formatting problem; a
+      grown Windows repo may need a one-off normalization commit, ASK
+      first). The app has one → merge only what's missing; never flip
+      an existing eol policy unasked. SKIP any
       template pattern that would untrack something the app ships on
       purpose (a committed build artifact, a vendored file) — and
       leave a one-line comment in .gitignore saying why, so no future

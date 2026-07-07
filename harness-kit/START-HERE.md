@@ -15,7 +15,7 @@ new-vs-existing fork comes afterwards, guided.
    `git ls-files` (ignore `harness-kit/` itself): anything real in
    the output means the repo has application code. Both checklists
    open with a STOP guard for the opposite case, so a wrong pick
-   fails at step 0, not at step 8.
+   fails at the guard, not at step 8.
 
    **Repo already contains application code** — paste this into your
    coding agent (Claude Code, Antigravity, Gemini CLI, ...) opened in

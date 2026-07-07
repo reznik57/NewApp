@@ -27,7 +27,7 @@ tests/, profiles/, and harness-kit/ from the app now.)
       Route the answers to their homes as the checklist reaches them:
       purpose/users → CLAUDE.md Role & Context (step 7); requirements,
       decision, alternatives → ADR-0001 (step 9); foreseeable variables
-      → `.env.example` (step 3); hosting → step 10.
+      → `.env.example` (step 3).
 - [ ] 1. **Scaffold, then distribute the kit** — the kit arrived as
       `harness-kit/` in the repo root (if not: copy the FOLDER in now,
       per its START-HERE.md). If the stack has a scaffolder
@@ -71,7 +71,9 @@ tests/, profiles/, and harness-kit/ from the app now.)
       repo, never the template/seed. A fresh app scaffolded inside a seed
       clone inherits the seed's `origin` — delete `.git` and `git init`
       anew, or repoint `origin`, so the app never pushes onto the template
-      remote. Create `.env` from `.env.example`. Verify:
+      remote. Create `.env` from `.env.example`, then seed BOTH with the
+      variables step 0 surfaced — names and placeholder values in
+      `.env.example` (committed), real values only in `.env`. Verify:
       `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
       `test`, `test:one`, `fix`, `dev`, `build` (the profile's
@@ -107,9 +109,9 @@ tests/, profiles/, and harness-kit/ from the app now.)
       `template-version:` stamp on line 1; it survives the fill and is
       what "Upgrading seeded apps" diffs against. **ASK** the user for
       the project-specific invariant (⛔ 5) and any Role & Context facts
-      step 0 didn't surface. Budget: the wiki-lint skill's ~190-line
-      ceiling (its single home; a stack profile's sections are included
-      in that number) — past it, MEASURE which blocks overflow and
+      step 0 didn't surface. Budget: the wiki-lint skill's CLAUDE.md
+      line ceiling (the number's single home; a stack profile's sections
+      count against it) — past it, MEASURE which blocks overflow and
       migrate those to docs/wiki/ with pointers, never a guessed
       culprit. Also replace the scaffold's README.md — stack boilerplate,
       often with paths this layout doesn't even have — with a minimal
@@ -138,9 +140,11 @@ tests/, profiles/, and harness-kit/ from the app now.)
       first test the app gets, and write it now if none exists. Then
       delete the whole `harness-kit/` from the app (all remaining
       scaffolding lives there), `npm run check` (or your check
-      equivalent) exits clean, then commit everything. A burst of CRLF
-      warnings at `git add` means step 1's `.gitattributes` never
-      landed — fix that before committing.
+      equivalent) exits clean, then commit everything. A burst of
+      `LF will be replaced by CRLF` warnings at `git add` means step 1's
+      `.gitattributes` never landed — fix that before committing. (The
+      opposite direction, `CRLF will be replaced by LF`, is the policy
+      WORKING: normalization, not a missing file.)
 - [ ] 12. **EXIT GATE** — run the marker check from the app root; it must
       print `marker check OK`: `python .claude/scripts/check_markers.py`
       (Windows: `py` if `python` resolves to the Microsoft Store alias).

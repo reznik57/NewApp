@@ -47,10 +47,12 @@ folds back here; the app itself was hardened the same day.
   Next-16 warning reaching no session).
 - Profile typescript-next: ships **vitest.config.ts** (Vitest reads no
   tsconfig paths — the first `@/*`-alias test failed resolution while
-  tsc stayed green); devDependencies install and script-collision
-  semantics become numbered steps 7/8 (they were prose the numbered path
-  never reached — SETUP said "steps 1–5" while the README had 6 coupled
-  steps; now "ALL numbered steps"); README head no longer instructs the
+  tsc stayed green); the vitest config and the devDependencies install
+  become numbered steps 7/8 and the script-collision rule (profile wins;
+  scaffold `lint` dies, `start` stays) lands in step 1 — devDeps and the
+  first test were prose the numbered path never reached (SETUP said
+  "steps 1–5" while the README had 6 coupled steps; now "ALL numbered
+  steps"); README head no longer instructs the
   retired copy-base/*-flow; ci.yml comment no longer leaks a dead base/
   path into apps. Re-stamped 2026-07.19 (README, ci.yml,
   vitest.config.ts).

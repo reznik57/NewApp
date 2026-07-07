@@ -39,6 +39,8 @@ an app):
    `paths`: without this alias bridge the first test importing via the
    project-canonical `@/*` form fails module resolution while `tsc`
    stays green — a red check/Stop-hook/CI with a misleading error.
+   Match the alias target to the app's tsconfig `paths` mapping:
+   `./src` with `--src-dir`, `.` without.
 8. Install the dev dependencies the scripts expect (create-next-app
    provides only some): typescript, vitest, eslint (flat config),
    eslint-config-next (>= 16 — flat-native; needs `next` present at
