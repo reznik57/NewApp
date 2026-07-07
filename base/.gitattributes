@@ -1,3 +1,4 @@
+# template-version: 2026-07.22
 # Line-ending policy: the repo is LF everywhere. Formatters that check the
 # WORKING TREE (Prettier's endOfLine default is "lf") fail repo-wide when
 # core.autocrlf=true (the Git-for-Windows default) re-materializes tracked
