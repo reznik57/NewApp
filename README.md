@@ -21,7 +21,7 @@ compounds instead of evaporating in chat transcripts.
 
 | Path                                                           | Job                                                                                                                                             |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `harness-kit/`                                                 | THE single user-facing entry point, new or existing app: self-contained, collision-free by name, START-HERE routes to the right checklist, inert merge sources (gitignore.template, ci.template.yml). Parity-tested mirror of base/ + the checklists. |
+| `harness-kit/`                                                 | THE single user-facing entry point, new or existing app: self-contained, collision-free by name, START-HERE routes to the right checklist, inert merge sources (gitignore.template, gitattributes.template, ci.template.yml). Parity-tested mirror of base/ + the checklists. |
 | `harness-kit/ADOPTION.md`                                      | The existing-app (brownfield) checklist: merge, don't overwrite; green `check` before the Stop hook goes live. Lives IN the kit.                |
 | `SETUP.md`                                                     | The fresh-repo checklist (root-homed; the kit carries the working copy).                                                                        |
 | `TEMPLATE-CHANGELOG.md`                                        | Seed version history; how seeded apps learn what they're missing.                                                                               |

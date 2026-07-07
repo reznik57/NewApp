@@ -5,6 +5,78 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.19 — v2.6.0
+
+First-run backflow: the SETUP fresh-app path ran for real for the first
+time (fisi-learning, Next.js 16, typescript-next profile — 12/12 steps,
+exit gate green) and an adversarially verified audit of the run produced
+15 confirmed findings (5 high / 8 medium / 2 low; plan doc
+2026-07-07-v2.6.0-first-run-backflow.md). Everything template-shaped
+folds back here; the app itself was hardened the same day.
+
+- SETUP gains **step 0 — Discovery**: interview before anything is
+  scaffolded (purpose, users, data/persistence, platform/offline, auth,
+  integrations, GitHub, Cowork), stack settled only AFTER the answers,
+  premarked recommendations forbidden, delegation recorded honestly,
+  answers routed to named homes (steps 3/7/9/10). The observed failure:
+  the stack recommendation was premarked in the same question round that
+  first asked what the app IS; ADR-0001 then rationalized it circularly
+  ("profile exists" as decisive) and invented a never-stated requirement.
+  Three skip-anchors (step 0 first; step 2: profiles never justify a
+  stack; step 9 flags an ADR invented from scratch). Existing step
+  numbers deliberately unchanged — cross-refs in ADOPTION/profile stay
+  valid.
+- SETUP header ties the paste-prompt's "ask me at every decision point"
+  to step 0 + inline **ASK** markers (steps 0/2/7/11); closing
+  **GitHub note**: setup is complete only when origin exists, the first
+  push is up and the ci.yml run went green (the fisi run ended "done"
+  with CI that had never parsed).
+- Kit ships **gitattributes.template** (source base/.gitattributes, an
+  inert RENAMED merge source like gitignore.template): with
+  core.autocrlf=true and no .gitattributes, six fisi files were CRLF on
+  disk right after setup and a branch switch re-materialized more —
+  prettier --check then fails repo-wide, disguised as a formatting
+  problem. SETUP step 1 distributes it, step 11 carries the CRLF-warning
+  tripwire. Root .gitattributes pins harness-kit/** and /SETUP.md so the
+  parity-tested mirror pairs materialize identically on Windows.
+- SETUP step 1 covers the second scaffolder failure mode (invalid
+  package name: spaces/capitals → sibling temp dir, kebab-case, move
+  dotfiles too; the fisi agent had to improvise this in D:\tmp) and the
+  scaffold-generated instruction files (scaffold CLAUDE.md yields to the
+  kit template; AGENTS.md survives only WIRED — fisi's lay unloaded, its
+  Next-16 warning reaching no session).
+- Profile typescript-next: ships **vitest.config.ts** (Vitest reads no
+  tsconfig paths — the first `@/*`-alias test failed resolution while
+  tsc stayed green); devDependencies install and script-collision
+  semantics become numbered steps 7/8 (they were prose the numbered path
+  never reached — SETUP said "steps 1–5" while the README had 6 coupled
+  steps; now "ALL numbered steps"); README head no longer instructs the
+  retired copy-base/*-flow; ci.yml comment no longer leaks a dead base/
+  path into apps. Re-stamped 2026-07.19 (README, ci.yml,
+  vitest.config.ts).
+- CLAUDE.md budget: ~160 was structurally unreachable on the profile
+  path (bare template ~167 post-deletion; fisi shipped at 188) and
+  hard-coded twice. Now ~190 with wiki-lint as its single home (SETUP
+  step 7 defers there); findings must name the concrete overflowing
+  blocks. wiki-lint re-stamped 2026-07.19.
+- START-HERE's SETUP paste prompt carries a seed-path placeholder;
+  SETUP step 2 says ASK for the seed's location, never scan drives (the
+  fisi agent enumerated all of D:\ and guessed by name similarity, with
+  "Template New App - Kopie" sitting right there).
+- SETUP step 7 also replaces the scaffold's boilerplate README (fisi
+  committed one with a dead `app/page.tsx` path and yarn/pnpm/bun advice
+  against the npm-fixed harness).
+
+Rejected, with reason (don't relitigate): renumbering SETUP steps for a
+"cleaner" discovery phase (cross-reference rot is exactly the class the
+"steps 1–5" finding documents; step 0 preserves every number); a
+numbered-cross-reference lint test (the "ALL numbered steps" wording
+removes the rot class at the source — revisit on a second incident); a
+second profile to de-bias the stack choice (graduation rule stands:
+profiles graduate from real apps); discovery enforcement in the exit
+gate (check_markers checks markers, not meaning; the three step-0
+anchors are the proportionate guard).
+
 ## 2026-07.18 — v2.5.2
 
 Test-suite hardening only — no template content changes, so no stamp

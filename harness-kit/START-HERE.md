@@ -35,8 +35,13 @@ new-vs-existing fork comes afterwards, guided.
    paste this instead:
 
    > Read `harness-kit/SETUP.md` and work through the checklist top
-   > to bottom in this repo. Do not skip the exit gate. Ask me at
-   > every decision point.
+   > to bottom in this repo. The seed (profiles) lives at
+   > `<paste the seed folder's path here>`. Do not skip the exit
+   > gate. Ask me at every decision point.
+
+   (Fill the seed path when pasting — SETUP step 2 needs it for the
+   profile overlay; an agent left guessing has been observed scanning
+   whole drives for it.)
 
 No agent? Work through the chosen checklist by hand — the two gates
 say when you are done:
