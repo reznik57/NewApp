@@ -3,7 +3,7 @@ name: ultrathink
 description: Adversarial multi-perspective design review run BEFORE complex or high-risk changes — architecture decisions, new subsystems, security-sensitive or performance-critical paths, LLM-powered features, irreversible data/schema changes. Output is saved as an ADR. Not for single-file edits, typo fixes, or trivial config changes.
 ---
 
-<!-- template-version: 2026-07.9 -->
+<!-- template-version: 2026-07.24 -->
 
 # UltraThink Protocol
 
@@ -98,8 +98,10 @@ status: proposed) BEFORE implementation starts. See `docs/adr/README.md`.
 
 ## CHECKPOINT
 
-Present Phase 3 via plan mode. **Plan approval IS the checkpoint** — it also
-flips the ADR to accepted. Tweakables first: open with the decisions the
+Present Phase 3 via plan mode. **Plan approval IS the checkpoint** — it
+gates the Phase 3 decision and flips the ADR to accepted. The Phase 4 step
+plan elaborates that approved decision; it is not a second gate. Tweakables
+first: open with the decisions the
 user is most likely to want differently (schema shape, naming, user-facing
 placement); compress the mechanical rest. Approval spends attention — aim
 it where a "no" is still cheap.
@@ -119,6 +121,9 @@ Only after approval.
   contradicts the accepted ADR follows CLAUDE.md → ADR discipline.
 
 ## Phase 5: Design-Review Gates
+
+The guarantee layer: these gates hold even if the Phase 2 debate never
+raised them — don't prune one as a Phase 2 duplicate.
 
 - [ ] Input validation covers any new entry point.
 - [ ] Cancellation / timeout propagated throughout.
