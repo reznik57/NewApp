@@ -5,6 +5,53 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.24 — v2.6.5
+
+ultrathink skill review — origin stated plainly: a user-requested analysis
+of the skill, NOT an app backflow. The one adopted mechanism is anchored to
+a real incident class; the other two are review-found prose defects in the
+mold of the v2.2.1 Invariant-3 cleanups.
+
+- **Trigger-list parity guard** (tests/hooks/test_ultrathink_triggers.py):
+  the Deep-Analysis trigger list lives in CLAUDE.md and is restated in the
+  ultrathink `description:` — the one allowed restatement (v2.2), because a
+  skill description must be self-contained for auto-invocation. The two
+  hand-synced copies had no guard, and "unguarded doc copy drifts silently
+  while the suite stays green" is exactly the v2.5.0 incident class (README
+  truncation). The test derives the clause from the sole home (CLAUDE.md)
+  and asserts the description mirrors it verbatim (whitespace-normalized),
+  keeping no third copy of the list; base/ alone suffices since kit parity
+  pins the mirror. Suite 84 → 87 passed.
+- **Phase 5 named the guarantee layer** (ultrathink SKILL.md, re-stamped
+  2026-07.24): a one-line note that the gates hold even if the Phase 2
+  debate never raised them — don't prune one as a Phase 2 duplicate. The
+  Phase 2 (Devil's Advocate) / Phase 5 overlap on input / cancellation /
+  concurrency / silent-failure is deliberate — judgment layer vs guarantee
+  layer, the hard-gates-plus-agent-judgment split (v2.6.4). Collapsing the
+  overlap (Phase 5 merely re-checking what Phase 2 surfaced) was considered
+  and REJECTED: it would weaken the gate to the debate's coverage. The note
+  blocks that future dedup instead.
+- **CHECKPOINT scope clarified** (same skill): plan approval gates the
+  Phase 3 decision and flips the ADR to accepted; the Phase 4 step plan
+  elaborates that approved decision and is not a second gate. Removes a
+  reading where the atomic steps looked like they needed their own gate.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+
+- Phase 2 runs the three-perspective debate as one model simulating three
+  hats; a genuinely separate adversarial subagent would be more independent
+  but costs tokens on every design review. Trigger: a real app's ultrathink
+  run reaches false consensus or box-ticks (the skill's own "reason, don't
+  tick boxes" observably fails).
+- Phase 2's questions across three tables may be more than a model reasons
+  through. Trigger: the same box-ticking signal — then trim with evidence,
+  not on the drawing board.
+
+Rejected, with reason (don't relitigate): mechanizing the `{{...}}`
+placeholder fill/delete for the Phase 2/5 rows — wiki-lint already hunts
+leftover placeholders and the fill is an adoption-time step (ADOPTION), so a
+second guard duplicates an existing net.
+
 ## 2026-07.23 — v2.6.4
 
 Seed-side repo-identity pre-push guard. Origin of the round: an external
