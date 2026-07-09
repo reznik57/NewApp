@@ -5,6 +5,54 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.26 — v2.7.1
+
+Three cinematic one-shot "build prompts" (a native iOS calorie tracker, a
+canvas arcade game, a React landing page) analyzed against the app
+onboarding — user-requested analysis, NOT app backflow: the prompts are
+external artifacts, not incidents in a seeded app. No seed code shipped this
+round. The prompts optimize the opposite end of the lifecycle from this seed
+(the first 60 minutes — cinematic, screenshot-ready, "do not ask intake
+questions") where the seed optimizes months 1–12 (decisions in ADRs, rot
+prevented, gates green); an idea transfers only where it does not trade that
+away. The value recorded here is the REJECTIONS (so they are not
+relitigated) plus two parked candidates (homed in owner memory).
+
+Rejected imports, with reasons:
+- **An aesthetic "preset library"** (locked palette/type/motion sets, à la
+  the prompts' Preset A/B/D). REJECTED: it is precisely the templated-default
+  look the frontend-design skill exists to fight — the skill already names
+  "near-black + one acid accent" as an AI default, and already follows a
+  locked brief verbatim when one is given ("the brief's own words always
+  win"). A reusable preset menu in the seed becomes a house style stamped on
+  unrelated apps; presets rot. Need already covered.
+- **Identity / quality-bar persona priming** ("You are a Senior X of the
+  highest caliber"). REJECTED as a structural add: the seed encodes quality
+  as mechanized gates (check, hooks, exit gate, wiki-lint), not exhortation;
+  the useful mild form already lives in frontend-design's studio-lead framing.
+- **Hardcoded per-domain execution sequences.** REJECTED: ultrathink Phase 4
+  already generates the 3–7 step `[step] → verify` plan per app from the ADR;
+  a domain-baked sequence in the seed would rot.
+- **"No stubs / no placeholders" as a new directive.** REJECTED as
+  redundant: the exit-gate `check_markers.py` enforces no leftover TEMPLATE
+  markers, and the `verify` skill drives the flow for product completeness
+  ("no dead buttons"). The prompts assert by exhortation what the seed
+  enforces by script.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+- **Brief-as-Discovery-input** — a written/pasted brief is a legitimate
+  INPUT to SETUP step 0, not a replacement for the interview: mine the brief
+  for the step-0 answers, confirm only the gaps, don't re-interview what it
+  already answers, and still route answers to their homes (ADR-0001,
+  CLAUDE.md, `.env.example`). Owner: seed. Trigger: a real user arrives with
+  a complete written brief and the interview visibly re-asks what the brief
+  already stated. No drawing-board SETUP edit until then.
+- **Mock/Demo-mode + seed-data pattern** (from the calorie-tracker prompt:
+  deterministic fallback on empty key / request failure, plus N days of seed
+  history so every chart and streak is alive immediately). Folded into the
+  existing `profiles/llm-app/` backlog — trigger unchanged: the first real
+  app with LLM/agent features.
+
 ## 2026-07.25 — v2.7.0
 
 Composable constraint profiles — a user-requested asset, not app backflow.
