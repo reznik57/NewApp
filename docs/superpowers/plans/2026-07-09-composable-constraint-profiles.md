@@ -469,12 +469,14 @@ if __name__ == "__main__":
 
 - [ ] **Step 2: Prove the guard bites (temporary red)**
 
-Temporarily rename one part, run only the new test, confirm it FAILS, then restore:
+Temporarily rename one part to a NON-`.md` extension (renaming to another
+`.md` name would still satisfy the `*.md` glob and falsely pass), run only
+the new test, confirm it FAILS, then restore:
 
 ```bash
-mv profiles/kids-app/wiki/kids-app-ux.md profiles/kids-app/wiki/_tmp.md
+mv profiles/kids-app/wiki/kids-app-ux.md profiles/kids-app/wiki/kids-app-ux.bak
 py -m pytest tests/hooks/test_constraint_profiles.py -q   # expect FAIL: "kids-app: no wiki/*.md reference"
-mv profiles/kids-app/wiki/_tmp.md profiles/kids-app/wiki/kids-app-ux.md
+mv profiles/kids-app/wiki/kids-app-ux.bak profiles/kids-app/wiki/kids-app-ux.md
 ```
 
 Expected: the middle command FAILS on the wiki assertion; after restore the file is back.
