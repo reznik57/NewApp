@@ -72,6 +72,10 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       ASK the user where the seed lives, never scan drives for it).
       No profile for the chosen stack? Skip — CLAUDE.template.md's
       ADAPT notes and step 4 carry the non-npm path.
+      Then, orthogonally, overlay any CONSTRAINT profiles — audience/domain
+      guardrails composable with the stack profile (e.g. `kids-app`,
+      `dense-ui`). Zero is fine; `profiles/README.md` explains the two
+      profile kinds, and each constraint profile's README lists its steps.
 - [ ] 3. **Git + env hygiene** — `git init` if needed, then confirm repo
       identity: `git remote -v` must be empty or point at the app's OWN
       repo, never the template/seed. A fresh app scaffolded inside a seed

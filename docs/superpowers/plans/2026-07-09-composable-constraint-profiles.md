@@ -530,10 +530,16 @@ cp SETUP.md harness-kit/SETUP.md
 
 - [ ] **Step 3: Re-stamp check for SETUP.md**
 
-SETUP.md carries no `template-version` stamp (it is a checklist, not a stamped template). Confirm and take no action:
+SETUP.md carries no `template-version` stamp of its OWN (it is a checklist,
+not a stamped template). It does mention the concept twice in prose (steps
+telling the user to KEEP other files' stamps — CLAUDE.template.md line 1,
+ci.yml), so a raw count is non-zero. Confirm those are the only matches and
+take no action:
 
-Run: `grep -c "template-version" SETUP.md`
-Expected: `0`. If it prints non-zero, re-stamp that line to `2026-07.25` and re-run Step 2.
+Run: `grep -n "template-version" SETUP.md`
+Expected: only prose mentions (no `<!-- template-version: ... -->` stamp
+line). If a real stamp line appears, re-stamp it to `2026-07.25` and re-run
+Step 2.
 
 - [ ] **Step 4: Run the full suite green (kit parity must pass)**
 
