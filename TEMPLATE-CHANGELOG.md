@@ -5,6 +5,41 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.25 — v2.7.0
+
+Composable constraint profiles — a user-requested asset, not app backflow.
+Origin: a design-reference analysis (professional vs. kids product lists)
+that separated durable CONSTRAINT references (rules, empirical UX, legal)
+from taste references (copy Stripe/Linear) that collapse into the AI-default
+look. This round turns the constraint half into a reusable seed asset.
+
+- **Second profile axis** (profiles/README.md — the concept's single home):
+  the existing model is one stack-keyed profile per app. Audience/domain
+  constraints are orthogonal — a real app is `typescript-next` AND
+  `kids-app` at once. Constraint profiles overlay on top of the stack
+  profile; zero-to-many per app. SETUP step 2 gained the overlay pointer
+  (re-mirrored into the kit, test_kit_parity).
+- **kids-app profile** — incident-anchored to the real fisi-learning app.
+  Ships lean CLAUDE Audience Rules (touch>44px, icon+word, no hover,
+  text-free onboarding, non-punishing feedback, DSGVO Art. 8 / JMStV), a
+  `designing-for-children` skill that layers on frontend-design (not a
+  restatement), and a docs/wiki reference. Guidance, not a check gate — the
+  constraints are not generically lintable; a11y rides on the stack profile.
+- **dense-ui profile** — HONESTLY anticipatory: no real data-dense app has
+  driven it (owner override of the "real incidents, not drawing-board" rule;
+  precedent v2.5.1's forward-looking recipe). Same shape; Carbon patterns,
+  the FortiGate counter-example, keyboard-first. Validation trigger: the
+  first real data-dense app seeded from the template.
+- **Structural guard** (tests/hooks/test_constraint_profiles.py): pins each
+  constraint profile's four parts (stamped README, CLAUDE section, a skill,
+  a wiki reference) and the axis README. Suite 87 -> 89 passed.
+
+Deliberately open, with owner and trigger (not gaps — decisions):
+- A third constraint profile beyond kids-app/dense-ui — trigger: a real app
+  in a new audience/domain. No drawing-board additions.
+- Mechanized enforcement of any constraint — trigger: a constraint that is
+  genuinely lintable in a real app's stack. Today all are guidance.
+
 ## 2026-07.24 — v2.6.5
 
 ultrathink skill review — origin stated plainly: a user-requested analysis
