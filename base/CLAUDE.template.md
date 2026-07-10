@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.16 -->
+<!-- template-version: 2026-07.27 -->
 <!--
   CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
   the post-fill line budget live there; this comment block is deleted).
@@ -153,7 +153,10 @@ avoids it, with the symbol name involved>
 ## Standing Rules
 
 - **Git**: atomic commits, only at a green `check`. Conventional-commit
-  subject; the _why_ in the body.
+  subject; the _why_ in the body. Stage explicit paths — never
+  `git add -A` / `git add .` — and never discard state you didn't create
+  (`git reset --hard`, `git clean`): a parallel session's work may share
+  the worktree.
 - **Dependencies**: stdlib first → existing deps → a NEW dependency needs
   explicit approval plus a stated alternative you considered and a
   maintenance check (recent releases, active upstream). Lockfile always

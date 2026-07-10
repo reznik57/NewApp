@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.19 -->
+<!-- template-version: 2026-07.27 -->
 
 # Profile: TypeScript / Next.js
 
@@ -41,7 +41,10 @@ an app):
    stays green — a red check/Stop-hook/CI with a misleading error.
    Match the alias target to the app's tsconfig `paths` mapping:
    `./src` with `--src-dir`, `.` without.
-8. Install the dev dependencies the scripts expect (create-next-app
+8. Copy `.npmrc` → repo root, before step 9's installs so they already
+   resolve under it. The file's header comments are the sole home for
+   what the two keys do and the npm-version caveat.
+9. Install the dev dependencies the scripts expect (create-next-app
    provides only some): typescript, vitest, eslint (flat config),
    eslint-config-next (>= 16 — flat-native; needs `next` present at
    lint time), eslint-plugin-jsx-a11y, prettier. After a create-next-app

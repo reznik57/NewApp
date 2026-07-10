@@ -5,6 +5,112 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.27 — v2.7.2
+
+Two external agent-harness repos deep-analyzed on user request —
+omnigent-ai/omnigent (a meta-harness orchestrating Claude Code, Codex,
+Cursor, Pi, …) and earendil-works/pi (a minimal self-extensible agent
+runtime). They live on different LAYERS than this seed (orchestration /
+runtime vs. in-repo discipline), so "combine" means importing patterns,
+not code. Two imports shipped, one finding recorded, three candidates
+parked with triggers, the rest rejected or logged as independent
+convergence with decisions this changelog already carries.
+
+Shipped:
+
+- **Parallel-session git discipline** (pattern: pi's AGENTS.md; incident
+  anchor: the v2.6.1 parallel-session direct-commit deviation). The
+  CLAUDE template's Git standing rule now requires staging explicit
+  paths (never `git add -A` / `git add .`) and forbids discarding state
+  the agent didn't create (`git reset --hard`, `git clean`) — one
+  behavioral line, not git teaching (v2.4.8's "micro-lessons grow
+  without end" holds). Mechanized: `Bash(git reset --hard:*)` and
+  `Bash(git clean -f:*)` join the deny list in both settings files.
+  Calibrated against v2.4.8's variant-chase rejection: these are new
+  VERBS with their own damage class (destroying other sessions' work),
+  not variants of an already-denied one; prefix matching covers
+  `-fd`/`-fdx`, and flag-permutation gaps stay accepted — the posture
+  is an accident guard, not a security boundary.
+- **npm supply-chain posture in the typescript-next profile** (pattern:
+  pi's `.npmrc`; owner-approved this round under the dense-ui
+  "honestly forward-looking" precedent — no seeded-app incident, but
+  the 2025 npm compromise waves are real). New profile `.npmrc`
+  (`save-exact=true`, `min-release-age=2`) copied by new profile README
+  step 8 (installs became step 9; only "step 2" is referenced
+  externally, nothing renumbered breaks). Verified live before
+  shipping: npm 12 enforces `min-release-age` (CLI probe accepts the
+  key), npm 11.6 prints a VISIBLE "Unknown project config" warning and
+  ignores it — honest degradation, documented in the file header (its
+  sole home). Pi's full posture (`--ignore-scripts` everywhere,
+  lifecycle-script allowlists, lockfile-commit gate) deliberately NOT
+  imported: it breaks legitimate postinstall deps (sharp, esbuild) and
+  trades app velocity for a threat model no seeded app carries yet.
+
+Finding, recorded so it is not re-proposed: omnigent's harness test
+bench (declared capabilities earned by live probes; declared-✓-but-
+behaves-✗ becomes a DRIFT test failure) is CONFIRMATION of this seed's
+existing pattern, not an import — `verify_on_stop.py --self-test`,
+`protect_files.py --probe`, and SETUP step 6 already ship the
+declared-vs-observed idea; the remaining observed-side gap (does the
+REGISTERED hook actually fire in a session) is by design the per-app
+live probe (protect_files docstring; open fisi item), not a seed test.
+
+Parked, with trigger:
+
+- **Cross-vendor review** (omnigent's Polly: an implementer's diff is
+  judged by a DIFFERENT vendor's model, decorrelating shared blind
+  spots). Trigger: a real app activates the v2.5.1 multi-tool recipe —
+  then it becomes a workflow recipe in that app's docs, never seed
+  wiring.
+- **Regression-test-per-issue naming** (pi:
+  `test/…/regressions/<issue>-<slug>`). Trigger: the first seeded app
+  with real issue traffic; an app-level convention, seed carries only
+  this pointer.
+- **Structured handover/summary schema** (pi's compaction format: Goal /
+  Constraints / Progress / Key Decisions / Next Steps / Critical
+  Context + cumulative file lists). Trigger: a real context-loss
+  incident in a seeded app; would land as a wiki/log convention —
+  Claude Code's compaction is not hookable, so a second summary system
+  would drift against the harness.
+
+Rejected, with reason (don't relitigate):
+
+- Omnigent as infrastructure in or under the seed. Wrong layer (the
+  seed is discipline, not servers), alpha, POSIX-leaning with explicit
+  Windows-degraded mode — and unnecessary: it wraps Claude Code, so
+  seeded apps are omnigent-compatible for free; a user can adopt it
+  personally without the seed knowing.
+- Pi as a wired second harness (docs/PI.md). Already rejected as
+  approach C in v2.5.1; pi reading `.claude/skills` directly via its
+  settings STRENGTHENS the recipe-not-adapters stance and changes no
+  trigger.
+- A "user override" confirmation clause (pi AGENTS.md's closing rule).
+  Harness semantics already rank user > CLAUDE.md; a line for a
+  never-observed conflict is budget spent on speculation.
+- Denying `git stash` / `git checkout .` / `git restore .` alongside
+  the two new verbs. Over-blocking: all three have common legitimate
+  solo-session forms; the standing rule carries the intent (accident-
+  guard posture, v2.4.8).
+
+Independent convergence, logged once (each confirms a decision already
+recorded here): pi's "ask the agent to build one" doc headers ≈ the
+v2.7.1 preset-library/persona rejections (self-extension over shipped
+libraries); omnigent's three-level policy stack (session > agent >
+server, ASK verdict) ≈ Claude Code's settings hierarchy the seed
+already ships; omnigent's explicit Windows-degraded-mode docs ≈ the
+README portability ladder (v2.4.9); pi's lockstep versioning +
+immutable released changelog sections ≈ this file's release discipline.
+
+Re-stamped 2026-07.27: base/CLAUDE.template.md (+ kit mirror),
+profiles/typescript-next/README.md. New: profiles/typescript-next/.npmrc
+(carries a comment stamp — first non-JSON profile artifact without a
+twin). Updated, stamp tracked only here (JSON):
+base/.claude/settings.template.json (+ kit mirror),
+profiles/typescript-next/settings.json.
+
+(Suite: 89, 1 skipped — unchanged; both shipped items are covered by the
+existing parity nets, no new surface to pin.)
+
 ## 2026-07.26 — v2.7.1
 
 Three cinematic one-shot "build prompts" (a native iOS calorie tracker, a
