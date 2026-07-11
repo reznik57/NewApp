@@ -3,17 +3,20 @@ python -m unittest discover -s tests -v
 """
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
-HOOK = Path(__file__).resolve().parents[2] / "base" / ".claude" / "hooks" / "protect_files.py"
+ROOT = Path(__file__).resolve().parents[2]
+HOOK = ROOT / "base" / ".claude" / "hooks" / "protect_files.py"
+SETTINGS = ROOT / "base" / ".claude" / "settings.template.json"
 
 
-def run_hook(tool_input):
-    payload = json.dumps({"tool_name": "Edit", "tool_input": tool_input})
+def run_hook(tool_input, tool_name="Edit"):
+    payload = json.dumps({"tool_name": tool_name, "tool_input": tool_input})
     return subprocess.run(
         [sys.executable, str(HOOK)],
         input=payload, capture_output=True, text=True, timeout=30,
@@ -176,6 +179,76 @@ class ProtectFilesTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 2)
         self.assertIn("usage", result.stderr)
+
+
+class McpWriteToolTests(unittest.TestCase):
+    """The bypass this hook was blind to (real incident, 2026-07-11).
+
+    An MCP write tool escaped the guard TWICE over: its name missed the
+    matcher, and its target sits under "path", not "file_path" — so even
+    a matched call would have fallen through the empty-path fail-open.
+    Both halves are pinned here; either one regressing re-opens the hole.
+    """
+
+    MCP_EDIT = "mcp__omnigent__sys_os_edit"
+
+    def test_blocks_protected_file_named_under_path_key(self):
+        result = run_hook({"path": "C:/proj/.env"}, tool_name=self.MCP_EDIT)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("secrets", result.stderr)
+
+    def test_blocks_harness_edit_named_under_path_key(self):
+        result = run_hook(
+            {"path": ".claude/settings.json"}, tool_name=self.MCP_EDIT
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("harness", result.stderr)
+
+    def test_allows_ordinary_file_named_under_path_key(self):
+        result = run_hook({"path": "src/app.py"}, tool_name=self.MCP_EDIT)
+        self.assertEqual(result.returncode, 0)
+
+    def test_unreadable_schema_fails_open_deliberately(self):
+        # Documented choice, not an oversight: a matched tool whose target
+        # we cannot read is more likely a non-file write than a disguised
+        # file edit. Locks the decision so a future change is deliberate.
+        result = run_hook({"destination": ".env"}, tool_name=self.MCP_EDIT)
+        self.assertEqual(result.returncode, 0)
+
+
+class MatcherCoverageTests(unittest.TestCase):
+    """Registration must cover what the hook defends against.
+
+    The incident lived in the GAP between the hook and its settings.json
+    registration — a hook that blocks correctly is worthless if the tool
+    never reaches it. Nothing guarded that seam before; this does.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
+        entries = settings["hooks"]["PreToolUse"]
+        cls.matcher = re.compile(entries[0]["matcher"])
+
+    def test_matches_native_write_tools(self):
+        for tool in ("Edit", "Write", "NotebookEdit"):
+            self.assertTrue(self.matcher.search(tool), tool)
+
+    def test_matches_mcp_write_tools(self):
+        for tool in (
+            "mcp__omnigent__sys_os_edit",
+            "mcp__omnigent__sys_os_write",
+            "mcp__filesystem__write_file",
+            "mcp__whatever__create_file",
+        ):
+            self.assertTrue(self.matcher.search(tool), tool)
+
+    def test_does_not_match_read_only_tools(self):
+        # Over-matching is cheap (the hook allows any unprotected path),
+        # under-matching loses the guard — but a matcher that fires on
+        # every read would spawn a process per Read call.
+        for tool in ("Read", "Grep", "Glob", "mcp__omnigent__sys_os_read"):
+            self.assertIsNone(self.matcher.search(tool), tool)
 
 
 if __name__ == "__main__":
