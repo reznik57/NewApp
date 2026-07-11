@@ -3,7 +3,9 @@
 
 Reads the tool-call JSON from stdin. Exit 2 blocks the call and feeds the
 stderr message back to the agent; exit 0 allows it. Stdlib only; Windows-safe.
-Registered in .claude/settings.json under PreToolUse, matcher "Edit|Write|NotebookEdit".
+Registered in .claude/settings.json under PreToolUse (that file owns the
+matcher — it must cover every write tool, native AND MCP; the seam is
+pinned by tests/hooks/test_protect_files.py).
 
 Bash is deliberately NOT matched: this guard is friction plus forced user
 involvement, not a security boundary. When it rightly blocks a needed
@@ -16,12 +18,21 @@ avoids hand-built stdin JSON (where a typo makes the fail-open path
 look like "allowed"). It does NOT verify the settings.json
 registration; the live .env-edit probe in a fresh session does.
 """
-# template-version: 2026-07.11
+# template-version: 2026-07.28
 import json
 import os
 import posixpath
 import sys
 from pathlib import PurePath
+
+# Where a tool names its target, in priority order. "file_path" /
+# "notebook_path" are Claude Code's native Edit/Write/NotebookEdit;
+# "path" is what MCP write tools use (observed live: omnigent's
+# mcp__omnigent__sys_os_edit wrote a protected file straight through
+# this hook, because it matched no key here AND no matcher entry — the
+# registration in settings.json must stay in step, which
+# test_protect_files pins).
+PATH_KEYS = ("file_path", "notebook_path", "path")
 
 # ADAPT: extend these per project.
 PROTECTED_BASENAMES = {
@@ -108,8 +119,17 @@ def main():
     except (json.JSONDecodeError, ValueError, UnicodeDecodeError):
         return 0  # malformed input: never block on our own bug
     tool_input = payload.get("tool_input") or {}
-    file_path = tool_input.get("file_path") or tool_input.get("notebook_path") or ""
+    file_path = next(
+        (tool_input[k] for k in PATH_KEYS if tool_input.get(k)), ""
+    )
     if not file_path:
+        # Unknown schema: fail OPEN, deliberately. A matched tool whose
+        # target we cannot read is more likely a non-file write (an MCP
+        # server creating a page/issue) than a disguised file edit, and
+        # blocking every unreadable payload would break those. The cost
+        # of this choice is bounded by PATH_KEYS staying current — add a
+        # key the moment a real MCP write tool names its target
+        # differently.
         return 0
     reason = is_protected(file_path)
     if reason:

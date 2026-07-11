@@ -5,6 +5,73 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.28 — v2.7.3
+
+First backflow from the three-layer stack experiment (omnigent over
+Claude Code over a seeded repo, built 2026-07-10/11): a REAL incident,
+observed live, not drawing-board. An agent session running under the
+omnigent claude-sdk harness wrote `.claude/settings.json` — a file
+protect_files exists to defend — while the hook was correctly
+registered and firing for native tools.
+
+The bypass had TWO independent halves, and closing one alone leaves the
+hole open:
+
+1. **The matcher never saw the tool.** Omnigent's write tool is named
+   `mcp__omnigent__sys_os_edit`; the registration matched
+   `Edit|Write|NotebookEdit`. The guard was never invoked.
+2. **The hook could not have read the target anyway.** MCP write tools
+   name it `path`, not `file_path` / `notebook_path` — so even a matched
+   call would have hit the empty-path branch and failed OPEN.
+
+Generic, not omnigent-specific: any `mcp__<server>__<tool>` with write
+capability escapes a name-based matcher. As MCP spreads, an app's
+PreToolUse rung quietly stops covering the tools it most needs to cover.
+
+Shipped:
+
+- `base/.claude/hooks/protect_files.py`: target extraction moved to an
+  ordered `PATH_KEYS` tuple (`file_path`, `notebook_path`, `path`). The
+  docstring no longer restates the matcher — settings.json owns it
+  (Invariant 3; the old copy had already gone stale in this very round).
+- Both settings files (base template + typescript-next profile, kept in
+  lockstep by test_settings_parity): matcher is now
+  `Edit|Write|NotebookEdit|mcp__.*(write|edit|create|update|append|patch)`.
+  Deliberate asymmetry: over-matching costs one process spawn per call
+  (the hook allows every unprotected path), under-matching costs the
+  guard — so the pattern is broad by design. Read-only tools stay
+  unmatched, pinned by a test.
+- `tests/hooks/test_protect_files.py`: MCP payload cases (blocks `.env`
+  and harness edits under the `path` key, allows ordinary files) plus a
+  new **MatcherCoverageTests** class that compiles the matcher out of
+  settings.template.json and asserts it covers the tools the hook
+  defends against. The incident lived in the GAP between hook and
+  registration, and nothing guarded that seam — now something does.
+  Suite: 89 → 96.
+
+Deliberately open, with reasons (don't relitigate):
+
+- **Unknown MCP schemas still fail OPEN.** A matched tool whose target
+  key we cannot read (neither `file_path` nor `notebook_path` nor
+  `path`) is allowed. Blocking every unreadable payload would break
+  legitimate non-file MCP writes (creating a page, an issue); the cost
+  of the choice is bounded by keeping `PATH_KEYS` current, and a test
+  locks the decision so a future change is deliberate.
+- **Destructive-verb MCP tools (delete/move/rename) are not matched.**
+  Same posture as v2.4.8's rejected rm-variant chase: this is an
+  accident guard, not a security boundary, and the verb list is
+  unbounded. Add one when a real incident produces one.
+- The seed cannot know an app's MCP servers; the pattern is a default,
+  not a proof of coverage. An app wiring an exotic write tool extends
+  the matcher — the new test class is where that stays honest.
+
+Re-stamped 2026-07.28: base/.claude/hooks/protect_files.py (+ kit
+mirror). Updated, stamp tracked only here (JSON):
+base/.claude/settings.template.json (+ kit mirror),
+profiles/typescript-next/settings.json.
+
+(Suite: 96, 1 skipped.)
+
 ## 2026-07.27 — v2.7.2
 
 Two external agent-harness repos deep-analyzed on user request —
