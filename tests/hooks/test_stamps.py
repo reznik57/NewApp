@@ -28,8 +28,10 @@ STAMP = re.compile(r"template-version:\s*([0-9][0-9.\-]*)")
 # their single home (root CLAUDE.md -> Template discipline).
 # The vendored frontend-design bundle is upstream's file, not a seed
 # template: stamping it would fake authorship of a copy we do not own
-# (the exemption is recorded in TEMPLATE-CHANGELOG v2.4.8).
-VENDORED = Path("profiles") / "typescript-next" / "skills" / "frontend-design"
+# (the exemption is recorded in TEMPLATE-CHANGELOG v2.4.8). It moved out of
+# the TS/Next profile into base/ in v2.7.6 -- it is the floor every
+# constraint profile layers on, so it cannot ride on a stack choice.
+VENDORED = Path("base") / ".claude" / "skills" / "frontend-design"
 
 
 def is_exempt(rel):
