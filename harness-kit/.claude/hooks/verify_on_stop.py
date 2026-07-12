@@ -7,18 +7,32 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
-# template-version: 2026-07.20
+# template-version: 2026-07.30
 import json
 import os
 import shutil
 import subprocess
 import sys
+import tempfile
 
 # ADAPT: the single configuration point. Must match CLAUDE.md's Verification
 # Gate and CI. HARNESS_CHECK_CMD env override exists as a test seam.
 CHECK_COMMAND = os.environ.get("HARNESS_CHECK_CMD", "npm run check")
-TIMEOUT_SECONDS = 300
 OUTPUT_TAIL_CHARS = 3000
+
+
+def _timeout_seconds():
+    # The cap must stay well under the hook runner's own (Claude Code
+    # cancels a `command` hook at 600s by default, and a cancelled hook
+    # does NOT block the stop). HARNESS_CHECK_TIMEOUT is a test seam;
+    # a garbage value must not crash the gate into failing open.
+    try:
+        return int(os.environ.get("HARNESS_CHECK_TIMEOUT", "300"))
+    except ValueError:
+        return 300
+
+
+TIMEOUT_SECONDS = _timeout_seconds()
 
 
 def run_check():
@@ -27,28 +41,42 @@ def run_check():
     # Vitest key module identities inconsistently and the whole suite
     # fails to collect (TypeError: reading 'config').
     os.chdir(os.path.realpath(os.getcwd()))
-    try:
-        result = subprocess.run(
-            CHECK_COMMAND, shell=True, capture_output=True, text=True,
-            encoding="utf-8", errors="replace",
-            timeout=TIMEOUT_SECONDS,
-        )
-    except subprocess.TimeoutExpired:
+    # Capture to a FILE, not a pipe. `check` is a process TREE (cmd.exe ->
+    # npm -> node): on timeout, subprocess kills the SHELL and then waits
+    # for the capture pipes to close — which a surviving grandchild holds
+    # open. The cap then bounds nothing (measured: a 3s cap took 20.2s), a
+    # hung check outlives the hook runner's own timeout, the hook is
+    # cancelled, and the stop goes through — the gate opens silently. A
+    # file has no reader to wait on, so the kill is the end of it.
+    with tempfile.TemporaryFile() as out:
+        try:
+            result = subprocess.run(
+                CHECK_COMMAND, shell=True, stdout=out,
+                stderr=subprocess.STDOUT, timeout=TIMEOUT_SECONDS,
+            )
+        except subprocess.TimeoutExpired:
+            # Decode as UTF-8, never the Windows locale: vitest/node print
+            # UTF-8 marks that cp1252 cannot represent.
+            print(
+                "verify_on_stop: '%s' timed out after %ss. Fix before"
+                " stopping.\n%s"
+                % (CHECK_COMMAND, TIMEOUT_SECONDS, _tail(out)),
+                file=sys.stderr,
+            )
+            return 2
+        if result.returncode == 0:
+            return 0
         print(
-            "verify_on_stop: '%s' timed out after %ss."
-            % (CHECK_COMMAND, TIMEOUT_SECONDS),
+            "verify_on_stop: '%s' failed (exit %s). Fix before stopping.\n%s"
+            % (CHECK_COMMAND, result.returncode, _tail(out)),
             file=sys.stderr,
         )
         return 2
-    if result.returncode == 0:
-        return 0
-    output = (result.stdout or "") + (result.stderr or "")
-    print(
-        "verify_on_stop: '%s' failed (exit %s). Fix before stopping.\n%s"
-        % (CHECK_COMMAND, result.returncode, output[-OUTPUT_TAIL_CHARS:]),
-        file=sys.stderr,
-    )
-    return 2
+
+
+def _tail(handle):
+    handle.seek(0)
+    return handle.read().decode("utf-8", errors="replace")[-OUTPUT_TAIL_CHARS:]
 
 
 SHELL_BUILTINS = {"cd", "echo", "set", "exit", "true", "false"}

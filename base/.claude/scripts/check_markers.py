@@ -4,15 +4,22 @@
 Single home for the leftover-marker check — SETUP.md step 12 and the
 wiki-lint skill both run this script instead of maintaining their own
 grep incantations. Exit 0: clean; exit 1: leftovers listed on stdout, or
-CLAUDE.md missing (wrong cwd / step-7 rename skipped — fail loud, never
-false-green). Run from the app root. Stdlib only; Windows-safe.
+CLAUDE.md missing (wrong cwd — fail loud, never false-green). Run from
+the app root. Stdlib only; Windows-safe.
 """
-# template-version: 2026-07.11
+# template-version: 2026-07.30
 import re
 import sys
 from pathlib import Path
 
-SCAN_TOPS = ["CLAUDE.md", ".claude", "docs", ".github"]
+# CLAUDE.template.md is scanned even though a correct run has RENAMED it
+# away (SETUP step 7): the absence of CLAUDE.md used to be the only signal
+# that the rename was skipped, and a scaffolder that generated its own
+# CLAUDE.md — which SETUP step 1 explicitly anticipates — satisfies that
+# check while the kit's manual sits beside it, unrenamed. Measured: 21 live
+# placeholders and a green gate. A path that does not exist is skipped, so
+# this costs a correct run nothing.
+SCAN_TOPS = ["CLAUDE.md", "CLAUDE.template.md", ".claude", "docs", ".github"]
 MARKERS = ("{{", "ADAPT:")
 # A "{{" directly preceded by "$" is NOT a marker: GitHub Actions
 # expressions (${{ matrix.os }}) live in the scanned .github/, and kit
