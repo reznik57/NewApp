@@ -33,6 +33,17 @@ class SettingsParityTests(unittest.TestCase):
         cls.base = json.loads(BASE.read_text(encoding="utf-8"))
         cls.profile = json.loads(PROFILE.read_text(encoding="utf-8"))
 
+    def test_top_level_and_permission_key_sets_identical(self):
+        # The list-shaped tests below only compare keys that BOTH files
+        # already have. A block added to one side only (an "env" key, a
+        # "statusLine", a permissions "defaultMode") drifts past them --
+        # and since a TS/Next app copies the PROFILE file and deletes the
+        # base template, the drift would land on the path most apps take.
+        self.assertEqual(set(self.base), set(self.profile))
+        self.assertEqual(
+            set(self.base["permissions"]), set(self.profile["permissions"])
+        )
+
     def test_deny_lists_identical(self):
         # Order-sensitive on purpose: a same-set reorder is still a diff
         # a human has to reconcile when porting future entries.

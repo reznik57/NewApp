@@ -81,15 +81,26 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       repo, never the template/seed. A fresh app scaffolded inside a seed
       clone inherits the seed's `origin` — delete `.git` and `git init`
       anew, or repoint `origin`, so the app never pushes onto the template
-      remote. Create `.env` from `.env.example`, then seed BOTH with the
-      variables step 0 surfaced — names and placeholder values in
-      `.env.example` (committed), real values only in `.env`. Verify:
+      remote. Then env hygiene, and mind who owns which half: the AGENT
+      fills `.env.example` with the names and placeholder values step 0
+      surfaced (committed); the USER creates `.env` from it and pastes the
+      real values in. `.env` is protected — `protect_files` blocks agent
+      Edit/Write on it (already live from step 2 if a stack profile copied
+      `settings.json`), and a shell copy to route around that block is the
+      silent bypass the hook exists to prevent. Verify:
       `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
       `test`, `test:one`, `fix`, `dev`, `build` (the profile's
       `package-scripts.json` provides them). Non-npm stack: act on the
       ADAPT note in CLAUDE.md → Commands now — including its
       `CHECK_COMMAND` update, which step 6's self-test verifies.
+      **Every harness edit belongs in this step**, before activation
+      (step 5 — or step 2, if a stack profile already copied
+      `settings.json`): afterwards the harness blocks agent edits to
+      itself. Same window for the app's binary crown jewels — an `.xlsm`
+      master, a `.duckdb` file: extend `PROTECTED_BASENAMES` /
+      `BINARY_SUFFIXES` in `.claude/hooks/protect_files.py` NOW
+      (ADOPTION step 5 carries the same rule).
 - [ ] 5. **Activate settings** — rename `.claude/settings.template.json` →
       `.claude/settings.json` (skip if the profile's `settings.json` was
       copied — profile README step 2 includes deleting the leftover
@@ -97,9 +108,21 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       posture; it encodes moderate autonomy — an accident guard, not a
       security boundary. Tighten toward ask-heavy if this app handles
       untrusted input or you run walk-away sessions.
-      Claude Code ignores project settings until the workspace trust dialog
-      is accepted — open the app interactively once before relying on the
-      harness.
+      **Activation is the point of no return**: treat both hooks as LIVE
+      from the moment `settings.json` exists — the running session picks it
+      up, there is no grace window until the next one — and on the profile
+      path that moment already passed in step 2. Every harness edit belongs
+      before it (step 4). (One exception, in the other direction: a
+      workspace never opened interactively ignores project settings
+      entirely, trust dialog unaccepted — open the app once before RELYING
+      on the harness.)
+      From here until step 11 the app has no test, so `check` is red BY
+      DESIGN and the Stop hook will block the first stop of each turn and
+      hand you the failure. **That is the gate working, not a broken
+      harness** — do not weaken `check` to silence it (no
+      `--passWithNoTests`); carry on to step 11, which is where the red
+      goes green. (ADOPTION inverts this — an existing app CAN be green
+      before the hook goes live, so there it must be.)
 - [ ] 6. **Self-test the hooks** —
       `python .claude/hooks/verify_on_stop.py --self-test` prints
       `self-test OK` (Windows: use `py` if `python` resolves to the
@@ -150,7 +173,10 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       first test the app gets, and write it now if none exists. Then
       delete the whole `harness-kit/` from the app (all remaining
       scaffolding lives there), `npm run check` (or your check
-      equivalent) exits clean, then commit everything. A burst of
+      equivalent) exits clean, run step 12's marker check and get
+      `marker check OK` — the first commit is the one the app's history is
+      anchored on; it must not carry unfilled placeholders (ADOPTION orders
+      it the same way) — then commit everything. A burst of
       `LF will be replaced by CRLF` warnings at `git add` means step 1's
       `.gitattributes` never landed — fix that before committing. (The
       opposite direction, `CRLF will be replaced by LF`, is the policy

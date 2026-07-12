@@ -45,6 +45,11 @@ RENAMED = {
     "ci.template.yml": BASE / ".github" / "workflows" / "ci.template.yml",
 }
 
+# The base/ tops that reach an app under an INERT name (see RENAMED),
+# not through MANIFEST. Everything else in base/ must be a MANIFEST top --
+# the assertion below closes the manifest in the base->kit direction.
+BASE_MERGE_SOURCES = {".gitignore", ".gitattributes", ".github"}
+
 
 def files_under(root, tops):
     for top in tops:
@@ -88,6 +93,32 @@ class KitParityTests(unittest.TestCase):
                 self.assertTrue(
                     (COPY / rel).is_file(),
                     "missing in harness-kit (re-sync): %s" % rel,
+                )
+
+    def test_every_base_top_level_entry_reaches_the_kit(self):
+        # The manifest was only closed kit->base: the tests above catch a
+        # kit file with no source, and a source file UNDER a manifest top
+        # that never got mirrored -- but a NEW top-level entry in base/
+        # (base/Makefile, a second workflow) matches no assertion at all.
+        # It would ship in the changelog and reach no app.
+        mirrored = {top for top, root in MANIFEST.items() if root == BASE}
+        for entry in BASE.iterdir():
+            if entry.name == "__pycache__":
+                continue
+            self.assertTrue(
+                entry.name in mirrored or entry.name in BASE_MERGE_SOURCES,
+                "base/%s reaches no app: add it to MANIFEST (mirrored into"
+                " the kit) or to RENAMED + BASE_MERGE_SOURCES (shipped"
+                " under an inert name)" % entry.name,
+            )
+
+    def test_every_base_workflow_ships_as_a_renamed_merge_source(self):
+        sources = set(RENAMED.values())
+        for f in (BASE / ".github" / "workflows").iterdir():
+            if f.is_file():
+                self.assertIn(
+                    f, sources,
+                    "base workflow not shipped by the kit: %s" % f.name,
                 )
 
     def test_renamed_merge_sources_match_byte_for_byte(self):

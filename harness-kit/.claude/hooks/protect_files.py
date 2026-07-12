@@ -18,7 +18,7 @@ avoids hand-built stdin JSON (where a typo makes the fail-open path
 look like "allowed"). It does NOT verify the settings.json
 registration; the live .env-edit probe in a fresh session does.
 """
-# template-version: 2026-07.28
+# template-version: 2026-07.29
 import json
 import os
 import posixpath
@@ -65,9 +65,11 @@ def check_path(file_path):
     if name == ".git":
         return ".git is a git internal (worktree/submodule pointer); must not be edited directly"
     # The harness protects itself: hooks, scripts, and settings are edited
-    # by the USER, never by the agent they bind. (SETUP step 4's
-    # CHECK_COMMAND edit happens before settings activation in step 5, so
-    # setup is unaffected; skills stay agent-editable by design.)
+    # by the USER, never by the agent they bind. Harness edits therefore
+    # belong BEFORE activation — SETUP step 4, i.e. ahead of step 5, or
+    # ahead of step 2 when a stack profile copies settings.json in; after
+    # activation they are the ask-the-user case. (Skills stay
+    # agent-editable by design.)
     parts_lower = [s.lower() for s in path.parts]
     for i in range(len(parts_lower) - 2):
         if parts_lower[i] == ".claude" and parts_lower[i + 1] in ("hooks", "scripts"):

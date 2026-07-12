@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.25 -->
+<!-- template-version: 2026-07.29 -->
 
 # Profiles
 
@@ -23,7 +23,7 @@ Each ships:
 - `README.md` — the overlay how-to (which file goes where).
 - `CLAUDE.constraints-section.md` — the hard, non-negotiable invariants,
   inserted as a section into the app's CLAUDE.md. Kept lean: it counts
-  against the CLAUDE.md line budget (SETUP step 8), so the full material
+  against the CLAUDE.md line budget (SETUP step 7), so the full material
   lives in the wiki page and this section points at it.
 - `skills/<name>/SKILL.md` — a skill invoked BEFORE building UI for that
   audience. It layers on top of `frontend-design` (which sets the aesthetic
