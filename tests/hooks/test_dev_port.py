@@ -22,6 +22,8 @@ PROFILE = ROOT / "profiles" / "typescript-next"
 SCRIPTS = PROFILE / "package-scripts.json"
 PROFILE_README = PROFILE / "README.md"
 GATE = ROOT / "base" / ".claude" / "scripts" / "check_markers.py"
+SETUP = ROOT / "SETUP.md"
+CLAUDE_TEMPLATE = ROOT / "base" / "CLAUDE.template.md"
 SLOT = "{{DEV_PORT}}"
 BOUNDS = ("9000", "9999")
 
@@ -54,6 +56,16 @@ class PortRangeTests(unittest.TestCase):
 
     def test_profile_readme_names_the_range(self):
         self.assert_names_the_range(PROFILE_README)
+
+    def test_setup_names_the_range(self):
+        # The stack-less path: an app with no profile (python -m http.server,
+        # npx serve) reaches the rule only here.
+        self.assert_names_the_range(SETUP)
+
+    def test_claude_template_names_the_range(self):
+        # The rule has to outlive setup: an agent adding a SECOND server to
+        # the app months later reads CLAUDE.md, not SETUP.md.
+        self.assert_names_the_range(CLAUDE_TEMPLATE)
 
 
 if __name__ == "__main__":

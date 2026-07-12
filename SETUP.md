@@ -97,9 +97,20 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       `git check-ignore .env` prints `.env`.
 - [ ] 4. **Fill the six-script contract** in `package.json`: `check`,
       `test`, `test:one`, `fix`, `dev`, `build` (the profile's
-      `package-scripts.json` provides them). Non-npm stack: act on the
-      ADAPT note in CLAUDE.md → Commands now — including its
-      `CHECK_COMMAND` update, which step 6's self-test verifies.
+      `package-scripts.json` provides them). **Every server this app runs
+      locally binds a port ROLLED ONCE from 9000–9999** —
+      `py -c "import random;print(random.randint(9000,9999))"` — wired hard
+      into the command that starts it (`next dev -p 9427`,
+      `uvicorn app:api --port 9427`, `npx serve -l 9427`), never the framework
+      default: 3000/5173/8000 collide the moment a second app runs, and the
+      expensive failure is the silent one — you reach a server, just
+      yesterday's. Rolled ONCE, not per start: a moving port breaks Playwright
+      `baseUrl`s, CORS origins and OAuth callbacks. Two servers (frontend +
+      backend) take two ports from the range. On the profile path the roll
+      fills `{{DEV_PORT}}` in `dev` and `start`, and step 12's gate catches a
+      forgotten one; a non-npm server has no such slot — there the rule is on
+      you. Non-npm stack: act on the ADAPT note in CLAUDE.md → Commands now —
+      including its `CHECK_COMMAND` update, which step 6's self-test verifies.
       **Every harness edit belongs in this step**, before activation
       (step 5 — or step 2, if a stack profile already copied
       `settings.json`): afterwards the harness blocks agent edits to

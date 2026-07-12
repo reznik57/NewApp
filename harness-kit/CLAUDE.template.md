@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.31 -->
+<!-- template-version: 2026-07.32 -->
 <!--
   CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
   the post-fill line budget live there; this comment block is deleted).
@@ -119,6 +119,9 @@ is pinned — that reasoning stops a future agent from "helpfully" upgrading. --
 
 The six-script contract lives in `package.json` (single source of truth):
 `check` (THE gate), `test`, `test:one`, `fix`, `dev`, `build`.
+Local servers bind a port from 9000–9999 (this app's live in the `dev`/`start`
+commands) — never a framework default; that is what keeps apps running in
+parallel off each other's ports. A NEW server gets its own port from the range.
 <!-- ADAPT (non-JS stacks): replace with a table mapping the six contract
 names to your real commands, e.g. check = `cargo clippy -- -D warnings;
 cargo test --lib`. The six semantics stay; the tool changes. Update
