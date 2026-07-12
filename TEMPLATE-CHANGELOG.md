@@ -5,6 +5,167 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.29 — v2.7.4
+
+The activation seam. A deep audit OF THE SEED, on user request ("is
+everything triggered correctly, is the workflow in the right order"):
+eight analysis axes, adversarial verification per finding, live hook
+probes (real PreToolUse payloads on stdin) and a full SETUP dry-run in a
+sandbox app.
+
+Not backflow from a real app — and the rule ("improvements come from
+real incidents") still holds, because nothing here is a new feature.
+Every shipped item is a CONTRADICTION ALREADY IN THIS REPO: two homes
+disagreeing about the same mechanism, a docstring asserting an order the
+profile path broke, a cross-reference pointing at the wrong step. The
+audit did not invent them; it read them out loud.
+
+The one pattern behind almost every finding: **SETUP never got the
+activation doctrine ADOPTION was given.** ADOPTION step 5 is literally
+titled "Green gate BEFORE live hook" and calls itself load-bearing (v2.4);
+SETUP step 5 said only "Claude Code ignores project settings until the
+workspace trust dialog is accepted", which reads as a grace window. There
+is none: a settings file is picked up in the RUNNING session. And on the
+profile path activation happens even earlier — the TS/Next profile copies
+`settings.json` at SETUP step 2, three steps before SETUP thinks it does.
+
+Shipped:
+
+- `SETUP.md` (+ kit mirror), step 5: activation is the point of no return,
+  both hooks LIVE from the moment `settings.json` exists, step 2 on the
+  profile path. And the red window is NAMED: from activation until step 11
+  the app has no test, so `check` is red BY DESIGN and the Stop hook blocks
+  the first stop of each turn — that is the gate working. Without this,
+  Invariant 1 ("don't argue with a red gate — fix the failure") pushes a
+  setup agent toward the one thing the profile forbids (`--passWithNoTests`).
+- `SETUP.md` step 4: every harness edit belongs BEFORE activation —
+  including `protect_files.py`'s PROTECTED lists for the app's binary
+  crown jewels. ADOPTION step 5 had this; the fresh path never prompted it
+  and, after activation, blocks the agent from doing it.
+- `SETUP.md` step 3: `.env` ownership is now explicit — the agent fills
+  `.env.example`, the USER creates and seeds `.env`. The checklist used to
+  tell the agent to seed both, which `protect_files` blocks (and on the
+  profile path the guard is already live). The block was right; the
+  checklist was wrong. A shell copy around it is named as the silent bypass
+  it is.
+- `SETUP.md` step 11: run the step-12 marker check BEFORE the first commit.
+  ADOPTION already ordered it that way; SETUP committed first and gated
+  after, so an imperfect fill rode into the commit an app's history is
+  anchored on.
+- `base/.claude/hooks/protect_files.py` (+ kit mirror): the docstring
+  claimed "SETUP step 4's CHECK_COMMAND edit happens before settings
+  activation in step 5, so setup is unaffected". False since profiles
+  copy settings at step 2. Now states the condition that is actually true.
+- `harness-kit/ADOPTION.md`, UPDATE MODE move 1: the stampless-file route
+  pointed at `TEMPLATE-CHANGELOG.md` — a seed root doc that is NOT in the
+  kit, and the existing-app paste-prompt (unlike the fresh one) carries no
+  seed path. Now: diff the kit's own `settings.template.json` against the
+  live `settings.json`, both in the repo. Second blind spot closed in the
+  same move: a twin this app ADOPTED rather than moved (merged `.gitignore`,
+  `ci.yml`, `settings.json`) never carried a stamp either, so the stamp diff
+  skips it silently — diff those directly too.
+- `harness-kit/ADOPTION.md`, moves 3 and 4: move 3 sanctioned "a scripted
+  `cp` from the kit" for a blocked harness update — on the exact two files
+  ADOPTION tells every app to ADAPT (`CHECK_COMMAND`, PROTECTED lists),
+  which move 2's "live wins" rule forbids. A `cp` reverting `CHECK_COMMAND`
+  makes the Stop hook block EVERY session stop from that moment. Now: apply
+  as a PATCH, never a wholesale `cp` — and move 4 re-runs `--self-test` and
+  `--probe .env` before closing, which it never did.
+- `profiles/README.md`, `profiles/kids-app/README.md`,
+  `profiles/dense-ui/README.md`: the CLAUDE.md line budget is SETUP step 7,
+  not step 8 (step 8 is the ultrathink fill). Drift introduced with the
+  v2.7.0 constraint axis; the stack profile had it right.
+- Test belt — four drift surfaces that nothing watched. Suite: 96 → 103.
+  - `test_root_docs.py`: SETUP.md joins REQUIRED. The 13-step spine's only
+    protection was byte-equality with its own mirror — and the sanctioned
+    re-sync copies root→kit, so a truncated source would be faithfully
+    mirrored and stay green. Exactly how v2.5.0's README truncation got in.
+  - `test_kit_parity.py`: the manifest was closed kit→base only. A NEW
+    top-level entry in `base/` (a `base/Makefile`, a second workflow)
+    matched no assertion, would ship in the changelog, and reach no app.
+  - `test_settings_parity.py`: the list tests only compared keys BOTH files
+    have. A new top-level block added to base alone (`env`, `statusLine`,
+    a permissions `defaultMode`) drifted past them — onto the path most
+    apps take, since a TS/Next app copies the PROFILE file and deletes the
+    base template.
+  - `test_stamps.py` (new): the stamp rule — the seed's whole versioning
+    contract, which UPDATE MODE navigates by — was entirely manual. Now
+    every template file must carry a stamp, and every stamp must name a
+    real changelog round. (It cannot see "was a touched file re-stamped
+    THIS round"; that stays a review call — mechanizing it would mean
+    diffing git history from a unit test. It caught its first defect
+    within a minute of existing: this round's re-stamps, before this entry
+    existed.)
+
+Verified clean, no action (for the record — the audit's live probes):
+the PreToolUse matcher under REAL Claude Code semantics (it contains regex
+metacharacters, so it is an unanchored, case-sensitive JS regex — read-only
+tools correctly do not match); `verify_on_stop`'s TIMEOUT_SECONDS=300
+nested inside the documented 600s default for `command` hooks, so the
+hook's own timeout fires first and blocks (fail-closed); the `sh -c`
+wrapper surviving a CLAUDE_PROJECT_DIR containing a space; `protect_files`
+on 13/13 path cases including `..`-traversal in both directions, a BOM
+payload, and v2.7.3's MCP `path` key; the `stop_hook_active` loop guard;
+base↔kit byte parity; all stamps current; and the exit gate end-to-end
+(26 leftovers on an unfilled tree, `marker check OK` on a faithful run).
+
+Deliberately open, with reasons and triggers (don't relitigate):
+
+- **"Atomic commits, only at a green `check`" is instructed, not
+  mechanized.** The Stop hook gates the END OF A TURN, not the commit;
+  `Bash(git commit:*)` is allow-listed and Bash is deliberately unmatched
+  by protect_files. A red commit is unblocked. This is the one UNADMITTED
+  overclaim the audit found (Invariant 1 says the Stop hook "enforces this
+  mechanically"), and it is left standing on purpose this round: the honest
+  fix is a wording change to a load-bearing invariant that lands in every
+  seeded app, and it was outside the scope the owner approved. TRIGGER: the
+  next round that touches CLAUDE.template.md, or the first app where a red
+  commit costs something.
+- **ADOPTION has no profile-overlay step.** A brownfield app gets no stack
+  profile assets (`.npmrc` supply-chain posture, the vendored
+  frontend-design skill) and no constraint profile at all — the whole
+  audience axis (kids-app, dense-ui) is reachable only through SETUP.
+  There is a live instance: fisi-learning was seeded two days before
+  kids-app existed and has no route to it. TRIGGER: the first brownfield
+  app that wants a constraint profile — build the step from that app's
+  real merge, not from this paragraph.
+- **Three findings the audit could not verify** (the verifying agents died
+  at a session limit; recorded as hypotheses, NOT as accepted defects):
+  the `sh -c` wrapper may fail OPEN on a Windows box without Git Bash (the
+  wrapper never runs, so its own fail-closed branch never runs either, and
+  step 6's self-test calls Python directly, bypassing it — only the
+  instructed live `.env` probe would catch it); `check_markers` may
+  false-green if step 7's rename is skipped AND the scaffolder generated
+  its own CLAUDE.md (SCAN_TOPS covers no other root file, so a leftover
+  `CLAUDE.template.md` is invisible); `verify_on_stop`'s TIMEOUT_SECONDS
+  may not bound wall time (killing the shell leaves a grandchild holding
+  the capture pipes). TRIGGER for all three: verify before acting — none is
+  a defect until it is.
+
+Rejected, with reasons (don't relitigate):
+
+- **Renumbering SETUP to give activation its own step.** Already rejected
+  in v2.6.0, and unnecessary: the doctrine fits inside steps 4, 5 and 11.
+- **Copying ADOPTION's inversion literally into SETUP** (activate settings
+  only after step 11's green check). Rejected: a fresh app CANNOT be green
+  before its first test exists, so the inversion is unreachable there — and
+  delaying activation would leave the entire setup run UNGUARDED, with the
+  `.env`, lockfile and binary protections off exactly while an agent is
+  moving files around. The red window is real and must be NAMED, not moved.
+- **Gating the Stop hook on "files changed this turn".** Not proposed by
+  any incident, and it would trade a hard gate for a heuristic.
+- **A numbered-cross-reference lint test.** Deferred in v2.6.0 ("revisit on
+  a second incident"). The three profile READMEs arguably ARE that second
+  incident — recorded here so the NEXT occurrence trips the trigger instead
+  of re-arguing it. The fix this round was three words; a lint test is not.
+
+Re-stamped 2026-07.29: base/.claude/hooks/protect_files.py (+ kit mirror),
+profiles/README.md, profiles/kids-app/README.md, profiles/dense-ui/README.md.
+Touched but stampless by nature (the checklists die at the end of a run):
+SETUP.md (+ kit mirror), harness-kit/ADOPTION.md.
+
+(Suite: 103, 1 skipped.)
+
 ## 2026-07.28 — v2.7.3
 
 First backflow from the three-layer stack experiment (omnigent over

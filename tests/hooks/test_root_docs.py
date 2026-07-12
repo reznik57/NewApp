@@ -42,6 +42,19 @@ REQUIRED = {
         "# Template Changelog",
         "Seed version history",
     ],
+    # The fresh-app spine. Its only other protection is byte-equality with
+    # its own kit mirror -- and the sanctioned re-sync copies root->kit, so
+    # a truncated source would be faithfully mirrored and the suite would
+    # stay green. Anchor the load-bearing steps, not every one.
+    "SETUP.md": [
+        "# New App Setup",
+        "**STOP GUARD**",
+        "0. **Discovery",
+        "4. **Fill the six-script contract**",
+        "5. **Activate settings**",
+        "11. **First commit at green**",
+        "12. **EXIT GATE**",
+    ],
     "harness-kit/ADOPTION.md": [
         "# Existing App Adoption",
         "**STOP GUARD**",

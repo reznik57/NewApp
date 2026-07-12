@@ -20,10 +20,15 @@ collapses to four moves:
    template's) and snapshot the tree (`git status --short`) BEFORE any
    move-2 edit — a mature app is usually mid-work and move 4 stages against
    this baseline. Then compare each kit file's `template-version:` against
-   its live twin; only changed stamps need porting. JSON templates
-   (settings, package-scripts) carry no stamp — read
-   `TEMPLATE-CHANGELOG.md` for their changes; the dotfile templates
-   carry theirs on line 1. A kit file
+   its live twin; only changed stamps need porting. The dotfile templates
+   carry theirs on line 1. Two cases the stamp diff CANNOT see, and both
+   are ordinary here — diff the file contents directly instead:
+   JSON templates (settings, package-scripts) carry no stamp at all, and
+   a live twin that this app ADOPTED rather than moved (a merged
+   `.gitignore`, `ci.yml`, `.claude/settings.json`) never carried one
+   either. Both twins are in this repo — `harness-kit/.claude/settings.template.json`
+   against the live `.claude/settings.json`, and so on; do not go looking
+   for `TEMPLATE-CHANGELOG.md`, it lives in the seed, not in the kit. A kit file
    with NO live twin is NEW in this kit generation: introduce it via its
    first-adoption step (e.g. gitattributes.template → step 3), never
    skip it as "no stamp diff".
@@ -37,10 +42,19 @@ collapses to four moves:
    moment of this session, not the next (step 5's closing note: no grace
    window). A harness-file update is therefore the ask-the-user /
    explicit-delegation case (step 11's doctrine, `protect_files.py`
-   docstring): batch those edits and have the user apply or delegate them
-   (e.g. a scripted `cp` from the kit) — never a silent bypass. Files
+   docstring): batch those edits and have the user apply or delegate them —
+   never a silent bypass. Apply them as a PATCH, never a wholesale `cp`
+   from the kit: the two hook files are exactly the ones this app was told
+   to ADAPT — `verify_on_stop.py` carries its `CHECK_COMMAND` (step 4) and
+   `protect_files.py` its extended PROTECTED lists (step 5) — and a `cp`
+   silently reverts both, which move 2's "live wins" rule forbids. Files
    outside the harness you edit normally.
-4. **Exit** — as step 11: marker check green, delete `harness-kit/`, commit
+4. **Exit** — re-verify what you just changed, then close as step 11.
+   Re-verify: any hook that was patched in move 3 must pass its own seam
+   again — `verify_on_stop.py --self-test` prints `self-test OK` (a
+   reverted `CHECK_COMMAND` would otherwise block every session stop from
+   here on) and `protect_files.py --probe .env` exits 2. Then: marker
+   check green, delete `harness-kit/`, commit
    ONLY the harness paths against a step-1 `git status --short` baseline (a
    mature app is usually mid-work — never `git add -A`; see step 11's
    shared-file rule for a file that mixes WIP and harness content).

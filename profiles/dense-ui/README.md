@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.25 -->
+<!-- template-version: 2026-07.29 -->
 
 # Constraint profile: dense-ui
 
@@ -8,7 +8,7 @@ Orthogonal to the stack; compose it freely.
 
 1. Insert `CLAUDE.constraints-section.md` as a new section in the app's
    CLAUDE.md, after the stack profile's Stack Rules. Keep it lean — it
-   counts against the CLAUDE.md line budget (SETUP step 8). Its last bullet
+   counts against the CLAUDE.md line budget (SETUP step 7). Its last bullet
    points at the `designing-dense-data-uis` skill, so step 2 is REQUIRED
    alongside it.
 2. Copy `skills/designing-dense-data-uis/` -> `.claude/skills/`.
