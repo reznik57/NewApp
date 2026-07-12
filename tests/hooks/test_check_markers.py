@@ -137,6 +137,31 @@ class CheckMarkersTests(unittest.TestCase):
         self.assertIn("notes.md", stdout)
         self.assertNotIn(b"Traceback", result.stderr)
 
+    def test_unfilled_dev_port_in_package_json_fails(self):
+        # The app's server port is a template slot like any other: left
+        # unfilled, the app falls back to the framework default (3000) and
+        # collides — silently — with every other app on the box. package.json
+        # is in SCAN_TOPS so that cannot reach a green gate.
+        self.write("CLAUDE.md", "clean\n")
+        self.write(
+            "package.json",
+            '{"scripts": {"dev": "next dev -p {{DEV_PORT}}"}}\n',
+        )
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("package.json", result.stdout)
+
+    def test_filled_package_json_passes(self):
+        # The rolled port is an ordinary number — nothing left to fill.
+        self.write("CLAUDE.md", "clean\n")
+        self.write(
+            "package.json",
+            '{"scripts": {"dev": "next dev -p 9427"}}\n',
+        )
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("marker check OK", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

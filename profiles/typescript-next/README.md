@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.31 -->
+<!-- template-version: 2026-07.32 -->
 
 # Profile: TypeScript / Next.js
 
@@ -9,9 +9,19 @@ an app):
 
 1. Merge `package-scripts.json` → the `"scripts"` block of the app's
    `package.json` (created by `create-next-app` or `npm init`). On a name
-   collision the profile's entry WINS. Scaffold leftovers: delete `lint`
-   (it lives in `check`/`fix` — a second, laxer lint entry drifts);
-   keeping `start` is fine (`next start` serves deployments).
+   collision the profile's entry WINS — including `start`, which the profile
+   now ships itself so the preview server binds the app's port too. Scaffold
+   leftovers: delete `lint` (it lives in `check`/`fix` — a second, laxer lint
+   entry drifts).
+   Then ROLL THE APP'S PORT and fill BOTH `{{DEV_PORT}}` slots with it:
+   `py -c "import random;print(random.randint(9000,9999))"` → e.g. 9427, so
+   `"dev": "next dev -p 9427"` and `"start": "next start -p 9427"`. Rolling
+   from 9000–9999 keeps parallel apps off each other's ports and off the
+   framework default 3000, where the failure is silent — you reach a server,
+   just yesterday's. Rolled ONCE and wired hard, never per start: a moving port
+   breaks Playwright `baseUrl`s, CORS origins and OAuth callbacks. Leave a slot
+   unfilled and the exit gate (SETUP step 12) turns red — `check_markers.py`
+   scans `package.json`.
 2. Copy `settings.json` → `.claude/settings.json` (replaces renaming the
    base template; already filled for npm/next/vitest/eslint/tsc).
    Delete `.claude/settings.template.json` afterwards.

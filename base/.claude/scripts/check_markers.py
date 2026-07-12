@@ -7,7 +7,7 @@ grep incantations. Exit 0: clean; exit 1: leftovers listed on stdout, or
 CLAUDE.md missing (wrong cwd — fail loud, never false-green). Run from
 the app root. Stdlib only; Windows-safe.
 """
-# template-version: 2026-07.30
+# template-version: 2026-07.32
 import re
 import sys
 from pathlib import Path
@@ -19,7 +19,18 @@ from pathlib import Path
 # check while the kit's manual sits beside it, unrenamed. Measured: 21 live
 # placeholders and a green gate. A path that does not exist is skipped, so
 # this costs a correct run nothing.
-SCAN_TOPS = ["CLAUDE.md", "CLAUDE.template.md", ".claude", "docs", ".github"]
+# package.json is scanned for the app's SERVER PORT: the TS/Next profile
+# ships "next dev -p {{DEV_PORT}}", rolled once from 9000-9999 at setup
+# (SETUP step 4). An unfilled slot there would leave the app on the
+# framework default 3000 — where a second app quietly answers for it.
+SCAN_TOPS = [
+    "CLAUDE.md",
+    "CLAUDE.template.md",
+    ".claude",
+    "docs",
+    ".github",
+    "package.json",
+]
 MARKERS = ("{{", "ADAPT:")
 # A "{{" directly preceded by "$" is NOT a marker: GitHub Actions
 # expressions (${{ matrix.os }}) live in the scanned .github/, and kit
