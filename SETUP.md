@@ -123,17 +123,27 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       `--passWithNoTests`); carry on to step 11, which is where the red
       goes green. (ADOPTION inverts this — an existing app CAN be green
       before the hook goes live, so there it must be.)
-- [ ] 6. **Self-test the hooks** —
+- [ ] 6. **Self-test the hooks — the scripts, then the REGISTRATION.**
       `python .claude/hooks/verify_on_stop.py --self-test` prints
       `self-test OK` (Windows: use `py` if `python` resolves to the
       Microsoft Store alias — the registered hook commands probe
       python3/python/py by execution and fail closed if none works).
       Then `python .claude/hooks/protect_files.py --probe .env` exits 2
-      (BLOCKED) and `--probe .env.example` exits 0 — the probe
-      exercises the block/allow logic only, not the settings
-      registration. On the
-      app's first live session, confirm enforcement end-to-end: ask the
-      agent to edit `.env` — the hook must block it.
+      (BLOCKED) and `--probe .env.example` exits 0.
+      Both probes exercise the SCRIPTS only — they cannot see whether the
+      registration works, and a broken registration fails OPEN: Claude Code
+      treats any hook exit other than 2 as a non-blocking error and lets the
+      write through. So prove the registration too: run the `command` string
+      from `.claude/settings.json`'s PreToolUse entry verbatim (with
+      `CLAUDE_PROJECT_DIR` set to the app root), piping in
+      `{"tool_input":{"file_path":".env"}}` — it must exit 2. On a Windows
+      box WITHOUT Git Bash it will not: Claude Code passes a command hook to
+      Git Bash there, or to PowerShell when Git Bash is absent, and
+      PowerShell has no `sh` to run the wrapper — both hooks are then
+      silently dead. Install Git Bash, or re-register for the shell you have.
+      Finally, in the app's first live session, confirm enforcement
+      end-to-end: ask the agent to edit `.env` — the hook must block it.
+      **The harness is not live until you have watched it block once.**
 - [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
       Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
       note, delete sections that don't apply. `[Day-0]` sections are

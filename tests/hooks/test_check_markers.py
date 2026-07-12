@@ -42,6 +42,19 @@ class CheckMarkersTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("CLAUDE.md:1", result.stdout)
 
+    def test_unrenamed_template_at_the_app_root_fails(self):
+        # SETUP step 7 renames CLAUDE.template.md -> CLAUDE.md. The script
+        # claims to fail loud when that rename was skipped -- but it detects
+        # it only by CLAUDE.md's ABSENCE, and a scaffolder that generated its
+        # own CLAUDE.md (SETUP step 1 anticipates exactly this) satisfies the
+        # check while the kit's manual sits beside it, unrenamed and full of
+        # slots. Measured: 21 live placeholders, "marker check OK", exit 0.
+        self.write("CLAUDE.md", "# My App\nScaffold-generated, no markers.\n")
+        self.write("CLAUDE.template.md", "Domain: {{DOMAIN}}\n")
+        result = run_check(self.root)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("CLAUDE.template.md", result.stdout)
+
     def test_leftover_adapt_note_fails(self):
         self.write("CLAUDE.md", "clean\n")
         self.write("docs/notes.md", "ADAPT: fill this in\n")

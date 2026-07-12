@@ -5,6 +5,92 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.30 — v2.7.5
+
+v2.7.4 shipped with three findings its verifying agents never reached (they
+died at a session limit), parked as HYPOTHESES with one trigger: verify
+before acting. This round is that verification. **All three reproduce.** Two
+are real defects — both fixed and pinned. The third cannot be fixed blind,
+so it is made LOUD instead of left silent.
+
+Shipped:
+
+- **The Stop gate could open silently on a hung check.**
+  `verify_on_stop.py` captured the check's output through PIPES. `check` is a
+  process TREE (cmd.exe → npm → node), and on timeout `subprocess` kills the
+  SHELL and then waits for the pipes to close — which a surviving grandchild
+  holds open. So `TIMEOUT_SECONDS` bounded nothing: measured, a 3s cap took
+  20.2s. Past the hook runner's own timeout (Claude Code cancels a `command`
+  hook at 600s, and a cancelled hook does NOT block) the stop would go
+  through with a red check and no message. Fixed by capturing to a temp FILE:
+  a file has no reader to wait on, so killing the shell ends it. Two
+  regression tests, mutation-checked against the old hook (both red, 30.4s;
+  green in 2.3s after). `HARNESS_CHECK_TIMEOUT` added as a test seam
+  (precedent: `HARNESS_CHECK_CMD`), guarded against a garbage value crashing
+  the gate open.
+- **The exit gate false-greened on a skipped step-7 rename.**
+  `check_markers.py`'s docstring promised "fail loud, never false-green" for
+  exactly that case — but it detected the skip only by CLAUDE.md's ABSENCE,
+  and a scaffolder that generated its own CLAUDE.md (SETUP step 1 explicitly
+  anticipates this) satisfies that check while the kit's manual sits beside
+  it, unrenamed. Measured: 21 live `{{...}}` placeholders, `marker check OK`,
+  exit 0. `CLAUDE.template.md` now joins SCAN_TOPS — a path that does not
+  exist is skipped, so a correct run pays nothing. Regression test.
+- **The hook registration assumes Git Bash, and fails OPEN without it.**
+  Verified against the hooks reference: Claude Code passes a `command` hook
+  to a shell — "Git Bash on Windows, or PowerShell when Git Bash isn't
+  installed". PowerShell has no `sh`, so the registered `sh -c '…'` wrapper
+  never launches — and with it, neither does its own fail-closed branch.
+  Claude Code sees a non-2 exit, which is a NON-BLOCKING error: the write
+  goes through. Measured: exit 1, edit allowed, both hooks silently dead.
+  NOT fixed by rewriting the registration (see rejections) — fixed by making
+  it detectable: SETUP step 6 now proves the REGISTRATION, not just the
+  scripts (run the `command` string verbatim with a payload; it must exit 2),
+  names the Git Bash condition, and makes the end-to-end live probe
+  non-optional: *the harness is not live until you have watched it block
+  once*. ADOPTION step 5 defers to SETUP step 6, so it inherits the fix.
+- **Invariant 1's overclaim, admitted.** `CLAUDE.template.md` said the Stop
+  hook "enforces this mechanically" for a rule that reads "before claiming
+  completion **or committing**". It cannot: the hook gates the END OF A TURN,
+  `Bash(git commit:*)` is allow-listed, and Bash is deliberately unmatched by
+  protect_files — a red commit is unblocked. The v2.7.4 audit named this the
+  seed's one UNADMITTED limit. Now it says what it does: enforced at the turn
+  boundary, CI as the backstop, "before committing" your discipline. (The
+  Standing Rule stays the instruction it always was — no new machinery.)
+
+Suite: 103 → 106.
+
+Deliberately open, with reasons and triggers (don't relitigate):
+
+- **No PowerShell registration variant ships.** Rewriting the registration
+  for a box that cannot be tested here would trade a fragile guard for a
+  possibly broken one — and a broken registration is strictly worse, because
+  it also fails open. The failure is now LOUD at setup instead. TRIGGER: a
+  real app on a Windows box without Git Bash — ship the `shell` field or the
+  exec-form variant from THAT run's evidence, not from this paragraph.
+- **The gate bounds ITSELF, not the tree.** A `check` that leaks a node
+  process still leaks it; the hook simply no longer waits for it. Killing the
+  whole tree is npm's problem, not the gate's.
+- Carried forward unchanged from v2.7.4: ADOPTION has no profile-overlay step
+  (fisi-learning is the live instance).
+
+Rejected, with reasons (don't relitigate):
+
+- **An explicit `"timeout"` on the hook registrations.** The 300s cap is now
+  REAL (it bounds wall time), and the documented 600s runner default is the
+  outer bound. Repeating the number in settings.json would give one fact two
+  homes — and JSON cannot even carry the comment that explains it. The
+  coupling is documented where `TIMEOUT_SECONDS` lives.
+- **Killing the check's process tree on timeout** (`taskkill /T`, process
+  groups). Platform-specific machinery for a job that is not the gate's: the
+  gate must bound its own wall time, which it now does.
+
+Re-stamped 2026-07.30: base/.claude/hooks/verify_on_stop.py,
+base/.claude/scripts/check_markers.py, base/CLAUDE.template.md (+ kit
+mirrors). Touched but stampless by nature: SETUP.md (+ kit mirror).
+
+(Suite: 106, 1 skipped.)
+
 ## 2026-07.29 — v2.7.4
 
 The activation seam. A deep audit OF THE SEED, on user request ("is

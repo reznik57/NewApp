@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -83,6 +84,52 @@ class VerifyOnStopTests(unittest.TestCase):
         )
         result = run_hook({"stop_hook_active": False}, cmd, cwd=lower)
         self.assertEqual(result.returncode, 0)
+
+    # `check` is a process TREE (cmd.exe -> npm -> node), and killing the
+    # shell does not kill the tree. With CAPTURED PIPES, subprocess then
+    # waited for the pipes to close -- which a surviving grandchild holds
+    # open -- so the hook's own cap bounded nothing (measured: a 3s cap took
+    # 20.2s). Past the hook runner's timeout (Claude Code cancels a command
+    # hook at 600s) the hook is cancelled, and a cancelled hook does not
+    # block: the gate would open SILENTLY. Both shapes are pinned below.
+    LINGER = 15
+
+    def _lingering_grandchild(self, then):
+        return (
+            '"%s" -c "import subprocess, sys;'
+            " subprocess.Popen([sys.executable, '-c', 'import time;"
+            " time.sleep(%d)']); %s\"" % (sys.executable, self.LINGER, then)
+        )
+
+    def test_a_lingering_grandchild_does_not_extend_the_hook(self):
+        # The check itself finishes (red), but leaves a child holding the
+        # output handle. The hook must report and return AT ONCE.
+        cmd = self._lingering_grandchild("raise SystemExit(1)")
+        start = time.monotonic()
+        result = run_hook({"stop_hook_active": False}, cmd)
+        elapsed = time.monotonic() - start
+        self.assertEqual(result.returncode, 2)
+        self.assertLess(
+            elapsed, self.LINGER - 5,
+            "a lingering grandchild held the hook for %.1fs" % elapsed,
+        )
+
+    def test_timeout_caps_a_hanging_check_whose_tree_survives(self):
+        # The worst case: the check HANGS and its tree holds the output.
+        # Only our own cap can end this -- and it must, well inside the
+        # hook runner's.
+        cmd = self._lingering_grandchild("time.sleep(%d)" % self.LINGER)
+        cmd = cmd.replace("import subprocess, sys;", "import subprocess, sys, time;")
+        start = time.monotonic()
+        result = run_hook({"stop_hook_active": False}, cmd,
+                          env_overrides={"HARNESS_CHECK_TIMEOUT": "2"})
+        elapsed = time.monotonic() - start
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("timed out", result.stderr)
+        self.assertLess(
+            elapsed, self.LINGER - 5,
+            "the 2s cap did not bound wall time: %.1fs" % elapsed,
+        )
 
     def test_skips_check_when_already_looping(self):
         # stop_hook_active=True must exit 0 WITHOUT running the (failing) command
