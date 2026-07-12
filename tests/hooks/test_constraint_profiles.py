@@ -13,12 +13,50 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROFILES = ROOT / "profiles"
-CONSTRAINT_PROFILES = ("kids-app", "dense-ui")
+CONSTRAINT_PROFILES = ("kids-app", "dense-ui", "facilitated-session")
 STAMP = re.compile(r"template-version:\s*\d{4}-\d{2}\.\d+")
 
 
 def is_stamped(path):
     return bool(STAMP.search(path.read_text(encoding="utf-8")))
+
+
+class LayeringFoundationTests(unittest.TestCase):
+    """The floor every constraint profile stands on must not move again.
+
+    Each constraint skill says "invoke frontend-design FIRST, this layers on
+    top". Until v2.7.6 that floor was vendored by the typescript-next STACK
+    profile, so a stack-less app (static HTML, no npm) with a constraint
+    profile pointed at a skill its repo did not contain. The floor now ships
+    with base/ -> the kit -> every app. These two assertions pin both halves:
+    the floor is in base, and every profile that claims to layer on it says so.
+    """
+
+    def test_frontend_design_ships_with_the_harness_not_with_a_profile(self):
+        self.assertTrue(
+            (ROOT / "base" / ".claude" / "skills" / "frontend-design"
+             / "SKILL.md").is_file(),
+            "frontend-design must live in base/.claude/skills/ — a constraint"
+            " profile cannot depend on a STACK profile having vendored it",
+        )
+        strays = list(PROFILES.rglob("frontend-design"))
+        self.assertEqual(
+            [], strays,
+            "frontend-design is back inside a profile (%s): a stack-less app"
+            " taking a constraint profile would lose its aesthetic floor"
+            % strays,
+        )
+
+    def test_each_constraint_skill_names_the_skill_it_layers_on(self):
+        for name in CONSTRAINT_PROFILES:
+            for skill in (PROFILES / name / "skills").glob("*/SKILL.md"):
+                self.assertIn(
+                    "frontend-design",
+                    skill.read_text(encoding="utf-8"),
+                    "%s does not name frontend-design: a constraint profile"
+                    " ADDS to the aesthetic direction, it never replaces it"
+                    % skill.relative_to(ROOT),
+                )
 
 
 class ConstraintProfileShapeTests(unittest.TestCase):

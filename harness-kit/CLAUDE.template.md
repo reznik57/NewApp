@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.30 -->
+<!-- template-version: 2026-07.31 -->
 <!--
   CLAUDE.md TEMPLATE — fill per SETUP.md step 7 (the fill checklist and
   the post-fill line budget live there; this comment block is deleted).
@@ -95,6 +95,13 @@ Protocol below.
 - **User first**: never trade user-facing quality for implementation
   convenience; between technically equivalent options, pick the better
   user experience.
+- **Design before UI**: building or reshaping a user-facing surface? Invoke
+  the `frontend-design` skill (in `.claude/skills/`) BEFORE writing markup
+  or styles — it steers palette, type and layout away from templated
+  defaults. A constraint profile's skill layers ON TOP of it, never instead.
+  <!-- ADAPT (no UI at all — a library, a service, a CLI): delete this bullet
+  AND `.claude/skills/frontend-design/`. A skill nothing invokes is dead
+  weight that misleads by existing. -->
 - **Calibration**: bias toward caution; for trivial tasks, use judgment.
 
 ## Tech Stack [Day-0]

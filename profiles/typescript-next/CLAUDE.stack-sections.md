@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.14 -->
+<!-- template-version: 2026-07.31 -->
 <!-- Replaces the Tech Stack and Commands sections of CLAUDE.md and adds a
      Stack Rules section — insert it after Commands.
      Fill {{FORMATTER}} elsewhere in CLAUDE.md with: Prettier. -->
@@ -29,7 +29,7 @@ The six-script contract lives in `package.json` (single source of truth):
   — jsx-a11y violations fail `check` (see `eslint.config.mjs`) — but
   layout, typography, spacing, and color carry no rule here and can't be
   linted. When building or reshaping UI, invoke the `frontend-design`
-  skill (bundled by this profile at `.claude/skills/`) BEFORE writing
+  skill (ships with the harness at `.claude/skills/`) BEFORE writing
   component code — it steers palette, type, and layout away from templated
   defaults. A workflow pointer (like the ultrathink Deep-Analysis
   Protocol), not a style rule; Standing Rules keeps those out of CLAUDE.md.

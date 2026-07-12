@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.27 -->
+<!-- template-version: 2026-07.31 -->
 
 # Profile: TypeScript / Next.js
 
@@ -27,24 +27,22 @@ an app):
    named `CLAUDE.template.md` at overlay time; SETUP step 7 renames it and
    fills the rest — with the contents of `CLAUDE.stack-sections.md`
    (includes the `Stack Rules` section — keep it). Its third Stack Rule
-   points at the `frontend-design` skill, so it REQUIRES step 6 — do both
-   or neither; step 5 alone leaves a dead pointer in the app's CLAUDE.md.
-6. Copy `skills/frontend-design/` → `.claude/skills/frontend-design/`
-   (both `SKILL.md` and its `LICENSE.txt` — Apache-2.0, keep them
-   together). The other half of step 5: this profile vendors the
-   `frontend-design` skill from claude-plugins-official so a seeded TS/Next
-   app has it without the plugin installed, and step 5's design pointer
-   invokes it by name.
-7. Copy `vitest.config.ts` → repo root. Vitest does not read tsconfig
+   points at the `frontend-design` skill, which SETUP step 1 already
+   distributed with the harness (`base/.claude/skills/` → the app's
+   `.claude/skills/`); this profile no longer vendors it. If the app's
+   `.claude/skills/frontend-design/` is missing, the kit was distributed
+   incompletely — restore it before continuing, or step 5 leaves a dead
+   pointer in the app's CLAUDE.md.
+6. Copy `vitest.config.ts` → repo root. Vitest does not read tsconfig
    `paths`: without this alias bridge the first test importing via the
    project-canonical `@/*` form fails module resolution while `tsc`
    stays green — a red check/Stop-hook/CI with a misleading error.
    Match the alias target to the app's tsconfig `paths` mapping:
    `./src` with `--src-dir`, `.` without.
-8. Copy `.npmrc` → repo root, before step 9's installs so they already
+7. Copy `.npmrc` → repo root, before step 8's installs so they already
    resolve under it. The file's header comments are the sole home for
    what the two keys do and the npm-version caveat.
-9. Install the dev dependencies the scripts expect (create-next-app
+8. Install the dev dependencies the scripts expect (create-next-app
    provides only some): typescript, vitest, eslint (flat config),
    eslint-config-next (>= 16 — flat-native; needs `next` present at
    lint time), eslint-plugin-jsx-a11y, prettier. After a create-next-app

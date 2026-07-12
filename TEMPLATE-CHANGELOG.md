@@ -5,6 +5,76 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.31 — v2.7.6
+
+Backflow from two real apps: a crisis-drill presentation built in a parallel
+session (projector + paper + role-split views), and the Tidus arcade, whose
+CLAUDE.md a rule-precision incident sent us into. Both are STACK-LESS static
+apps — and that is what exposed the structural hole.
+
+Shipped:
+
+- **`frontend-design` moved out of the TS/Next profile into `base/`.**
+  Both constraint profiles (`kids-app`, `dense-ui`) tell the agent to invoke
+  `frontend-design` FIRST and layer on top of it — but the skill was vendored
+  by the `typescript-next` STACK profile only. A static app with no npm
+  (Tidus: skills are log-gotcha, ultrathink, wiki-lint — no frontend-design)
+  that takes a constraint profile therefore pointed at a skill it did not
+  have. The aesthetic floor cannot ride on a stack choice: it now lives in
+  `base/.claude/skills/` and reaches every app through the kit. The TS profile
+  loses its copy step (9 steps → 8); `CLAUDE.template.md` gains a lean
+  "Design before UI" bullet so the skill is actually invoked, with an ADAPT
+  note telling a CLI/library/service app to delete both bullet and skill — a
+  skill nothing invokes is dead weight that misleads by existing.
+  `test_stamps.py`'s VENDORED exemption follows the move (its
+  points-at-something assertion is what would have caught a silent miss).
+- **New constraint profile `facilitated-session`.** Domain: a surface driven
+  in a ROOM in front of people — interactive presentation, exercise playbook,
+  tabletop drill, training deck. It carries the three things `frontend-design`
+  does not: the MEDIUM as an invariant (a projected view never scrolls; a
+  1036px browser window and a 1920x1080 projection are two different layouts,
+  so verification happens at the target resolution), VISIBILITY as a layout
+  constraint (what a view must NOT show, and to whom — when the room's views
+  diverge the shared screen goes quiet; a filter bolted onto a full-disclosure
+  layout leaks by accident), and a five-point GATE answered before the first
+  line of CSS: thesis → signature → type → medium → content logic. The wiki
+  page carries the worked example and four traps with fixes (target-resolution
+  verification, locale-dependent `%B`, a CSS class colliding silently between
+  two output media, tests asserting HTML formatting instead of behavior).
+  SETUP step 0's discovery now asks WHERE a UI is read and whether every
+  viewer may see the same thing — a profile nobody is routed to is inert.
+  `test_constraint_profiles.py` covers the new profile's shape.
+
+Rejected, with reasons (don't relitigate):
+
+- **Importing the "forbidden looks" list into the new skill.** The three AI
+  defaults (cream+serif+terracotta, near-black+acid accent, broadsheet) are
+  already named verbatim in `frontend-design`. A second copy is guaranteed
+  drift; the new skill points at the first.
+- **"Constraints are gifts" / "the thesis before the color" as exhortation.**
+  Same posture as v2.7.1's rejected persona-priming: the seed encodes quality
+  as gates, not encouragement. The thesis survives as a QUESTION that must be
+  answered and approved before CSS — the gift framing stays in the wiki, where
+  a narrative belongs.
+- **A projector/print CSS scaffold in the profile.** Rejected as a preset
+  (v2.7.1): the medium's numbers are the app's, not the seed's. The profile
+  makes the app WRITE them down ({{VIEW → resolution}}, {{VIEW → what stays
+  hidden}}); it does not ship a layout.
+- **Making the five-point gate a `check` gate.** Constraint profiles carry no
+  check gate by design (`profiles/README.md`): a thesis is not lintable.
+  Guidance enforced by skill and review, as with the other two.
+
+Deliberately open, with a trigger:
+
+- ADOPTION.md still has no profile step (an EXISTING app cannot pick one up
+  through the checklists). Unchanged from v2.7.4 — trigger stays: the first
+  real app that adopts the harness AND needs a profile.
+- The `facilitated-session` profile is written from a build that happened
+  OUTSIDE the seed's harness (a parallel session, no seeded app). Its rules
+  are incident-backed, but they have never run through SETUP. Trigger: the
+  first seeded app that takes the profile — verify the two blanks (resolutions,
+  visibility matrix) actually get filled rather than shipped as `{{...}}`.
+
 ## 2026-07.30 — v2.7.5
 
 v2.7.4 shipped with three findings its verifying agents never reached (they
