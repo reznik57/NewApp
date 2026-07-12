@@ -5,6 +5,54 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.32 — v2.7.7
+
+Servers built from this seed inherited the framework's default port — Next
+3000, Vite 5173, `http.server` 8000. Two apps in parallel is the normal case on
+a dev box, and the cheap failure there is the loud one (port in use). The
+expensive one is silent: you open `localhost:3000` and talk to yesterday's
+server without noticing.
+
+Shipped:
+
+- **Every server binds a port ROLLED ONCE from 9000–9999.** The TS/Next profile
+  now ships `"dev": "next dev -p {{DEV_PORT}}"` and — new — its own
+  `"start": "next start -p {{DEV_PORT}}"` (the scaffold's portless `start` used
+  to survive); SETUP rolls the port and fills both slots. Rolled once and wired
+  hard, so `baseUrl`, CORS origins and OAuth callbacks stay stable. An app with
+  two servers takes two ports from the range.
+- **The exit gate guards it.** `check_markers.py` scans `package.json` — an
+  unfilled `{{DEV_PORT}}` now fails SETUP step 12 instead of quietly falling
+  back to 3000. Non-existent paths are skipped, so a stack-less app pays
+  nothing for it.
+- **The stack-less path is covered in prose.** SETUP step 4 states the rule for
+  ANY locally running server (`uvicorn --port`, `npx serve -l`), not just npm
+  ones.
+- **The rule outlives setup.** `CLAUDE.template.md` → Commands names the range,
+  so an agent adding a second server to the app months later does not reach for
+  8000.
+
+Rejected, with reasons — do not relitigate:
+
+- **Re-rolling the port on every start.** Collision-free, but a moving URL
+  breaks Playwright `baseUrl`, CORS origins, OAuth redirect URIs and bookmarks.
+  The 1-in-1000 collision it buys is not worth a permanently unstable address.
+- **`PORT` via `.env` instead of a hard `-p` flag.** npm scripts do not expand
+  `$PORT` on Windows, and whether a framework reads `.env` for the SERVER port
+  is version-dependent — both fall back to the default SILENTLY, which is
+  exactly the failure this round closes. A `-p` flag is visible, diffable and
+  cross-platform.
+- **Collision-checking the roll** (probe bound ports, re-roll on a hit): with
+  1000 ports and a handful of apps the probability is negligible; the check
+  would put platform-dependent socket code into the SETUP path.
+
+Deliberately open, with trigger:
+
+- The gate covers the npm path only. A Python or static server has no
+  `package.json`; its port lives in the dev command in CLAUDE.md, where the rule
+  is prose, not mechanism. **Trigger:** the first real app with a non-npm
+  server — then decide whether the gate learns to read the dev command.
+
 ## 2026-07.31 — v2.7.6
 
 Backflow from two real apps: a crisis-drill presentation built in a parallel
