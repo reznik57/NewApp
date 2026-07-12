@@ -4,7 +4,8 @@
     "test": "vitest run",
     "test:one": "vitest run -t",
     "fix": "prettier --write . && eslint . --fix",
-    "dev": "next dev",
-    "build": "next build"
+    "dev": "next dev -p {{DEV_PORT}}",
+    "build": "next build",
+    "start": "next start -p {{DEV_PORT}}"
   }
 }
