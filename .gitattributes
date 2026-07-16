@@ -1,11 +1,13 @@
-# Vendored third-party content: pin to LF so the working copy stays
-# byte-identical to its upstream source on every platform, regardless of
-# core.autocrlf (which is `true` on Windows checkouts). Without this a
-# fresh Windows checkout rewrites these to CRLF, breaking the "byte-for-byte
-# from upstream" property the vendoring relies on. See TEMPLATE-CHANGELOG
-# v2.4.8. Scoped deliberately — repo-wide line-ending policy is a separate
-# call, not made here.
-profiles/typescript-next/skills/frontend-design/** text eol=lf
+# The vendored frontend-design bundle needs LF pinned so the working copy
+# stays byte-identical to its upstream source regardless of core.autocrlf
+# (`true` on Windows checkouts) — TEMPLATE-CHANGELOG v2.4.8. It no longer
+# needs a rule of its OWN: the bundle left the TS/Next profile for base/ in
+# v2.7.6 and moved on to base/.agents/skills/frontend-design/ in v2.8.0, and
+# both the base/.gitattributes `* text=auto eol=lf` pin (v2.6.0) and the
+# harness-kit/** pin below already cover every copy of it. The rule that used
+# to sit here named profiles/typescript-next/skills/frontend-design/**, a path
+# that stopped existing in v2.7.6 — it protected nothing for two rounds.
+# Verify a move with: git check-attr text eol -- <the vendored file>.
 
 # Parity-tested mirror pairs must materialize IDENTICALLY on every
 # platform: base/.gitattributes (v2.6.0) pins base/** to LF, so its

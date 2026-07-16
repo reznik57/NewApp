@@ -55,6 +55,13 @@ Shipped:
 - **The stamp exemption narrowed.** It followed the vendored BYTES to
   `base/.agents/skills/frontend-design/`; the Claude bridge left behind is a
   file we authored, so it is stamped like every other template.
+- **A dead `.gitattributes` rule went.** The seed pinned the vendored
+  frontend-design bundle to LF at
+  `profiles/typescript-next/skills/frontend-design/**` — a path that stopped
+  existing in v2.7.6, so the rule protected nothing for two rounds. Every copy
+  of the bundle is covered by `base/.gitattributes` (`* text=auto eol=lf`,
+  v2.6.0) and the `harness-kit/**` pin; verified with `git check-attr` after
+  removal, on both trees.
 - **The instruction pair joined the root-doc guard.** Moving the canon moved
   its two content tests (the port range, the ultrathink sole home) off
   `CLAUDE.template.md` — correctly, and that left the bridge with no test
