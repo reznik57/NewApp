@@ -30,8 +30,13 @@ STAMP = re.compile(r"template-version:\s*([0-9][0-9.\-]*)")
 # template: stamping it would fake authorship of a copy we do not own
 # (the exemption is recorded in TEMPLATE-CHANGELOG v2.4.8). It moved out of
 # the TS/Next profile into base/ in v2.7.6 -- it is the floor every
-# constraint profile layers on, so it cannot ride on a stack choice.
-VENDORED = Path("base") / ".claude" / "skills" / "frontend-design"
+# constraint profile layers on, so it cannot ride on a stack choice -- and
+# into .agents/skills/ in v2.8.0, when AGENTS.md became the canon. The
+# exemption follows the vendored BYTES, so it points at the canonical home
+# only: the Claude bridge left behind at base/.claude/skills/frontend-design/
+# is a file WE authored, carries none of upstream's text, and is therefore
+# stamped like every other seed template.
+VENDORED = Path("base") / ".agents" / "skills" / "frontend-design"
 
 
 def is_exempt(rel):

@@ -17,7 +17,13 @@ profiles/, .githooks/,
 any seed-local .claude/ or cache folders, and the stale harness-kit/ —
 then copy a FRESH `harness-kit/` in per its START-HERE.md. Leftover
 seed trees survive the exit gate silently; it scans only the app's
-CLAUDE.md, .claude/, docs/ and .github/.)
+AGENTS.md, CLAUDE.md, .agents/, .claude/, docs/ and .github/.)
+
+**The canon in one line**: `AGENTS.md` is the app's single instruction
+manual and `.agents/skills/` the single home of its skills — every agent
+tool reads them. `CLAUDE.md` and `.claude/skills/` are thin Claude Code
+bridges that point at those two; they never carry substance of their own.
+Fill the canon, keep the bridges thin.
 
 - [ ] 0. **Discovery — ASK before anything is scaffolded.** Interview the
       user in small, focused rounds (never premark a recommendation the
@@ -35,7 +41,7 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       decisions. The user may delegate ("you pick") — then the ADR
       records that delegation honestly instead of invented requirements.
       Route the answers to their homes as the checklist reaches them:
-      purpose/users → CLAUDE.md Role & Context (step 7); requirements,
+      purpose/users → AGENTS.md Role & Context (step 7); requirements,
       decision, alternatives → ADR-0001 (step 9); foreseeable variables
       → `.env.example` (step 3).
 - [ ] 1. **Scaffold, then distribute the kit** — the kit arrived as
@@ -47,13 +53,14 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       also refuse the folder NAME (npm forbids spaces and capitals — both
       common in Windows folder names): then scaffold in a sibling temp
       directory under a valid kebab-case name, delete what must not
-      survive (build output, a scaffold-generated CLAUDE.md — see below),
-      move everything INCLUDING dotfiles into the repo, delete the temp
-      dir; the valid name stays as the package name. Then move the
+      survive (build output, a scaffold-generated instruction file — see
+      below), move everything INCLUDING dotfiles into the repo, delete the
+      temp dir; the valid name stays as the package name. Then move the
       app material to its final places:
-      `harness-kit/.claude/*` → `.claude/`,
-      `harness-kit/docs/*` → `docs/`, `CLAUDE.template.md`,
-      `.env.example` and `.editorconfig` → app root,
+      `harness-kit/.agents/*` → `.agents/` (the canonical skills),
+      `harness-kit/.claude/*` → `.claude/` (hooks, settings, and the skill
+      bridges), `harness-kit/docs/*` → `docs/`, `AGENTS.template.md` and
+      `CLAUDE.template.md`, `.env.example` and `.editorconfig` → app root,
       `gitignore.template` → `.gitignore` (replacing the scaffold's —
       it covers the scaffold's ignore patterns),
       `gitattributes.template` → `.gitattributes` (line-ending policy:
@@ -62,19 +69,22 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       repo-wide formatter gate red), and
       `ci.template.yml` → `.github/workflows/ci.template.yml` (filled
       in step 10). A scaffolder may also generate its own instruction
-      files: a scaffold CLAUDE.md yields to the kit's CLAUDE.template.md
-      (step 7) — merge any load-bearing content into the kept file; an
-      AGENTS.md survives only WIRED (an `@AGENTS.md` reference from
-      CLAUDE.md, or merged and shrunk to a pointer) — an instruction
-      file no session loads misleads by existing. The checklists and
-      START-HERE.md STAY in `harness-kit/` — step 11 deletes the folder.
+      files, and BOTH yield to the kit's (step 7): a scaffold AGENTS.md
+      yields to `AGENTS.template.md`, a scaffold CLAUDE.md to
+      `CLAUDE.template.md` — merge any load-bearing content from either
+      into the kit's AGENTS.md, never into the bridge. Whatever the
+      scaffolder wrote into CLAUDE.md that is a real project rule belongs
+      in the canon; what survives in CLAUDE.md is the `@AGENTS.md` import
+      and Claude-only wiring. Two instruction files that both carry
+      substance is the state this layout exists to prevent. The checklists
+      and START-HERE.md STAY in `harness-kit/` — step 11 deletes the folder.
 - [ ] 2. **Overlay a profile** (if one exists for the stack chosen in
       step 0 — a profile accelerates a decision, it never justifies
       one) — TS/Next.js: follow ALL numbered steps of
       `profiles/typescript-next/README.md` (profiles live in the SEED,
       not the kit — the paste-prompt names the seed's path; missing?
       ASK the user where the seed lives, never scan drives for it).
-      No profile for the chosen stack? Skip — CLAUDE.template.md's
+      No profile for the chosen stack? Skip — AGENTS.template.md's
       ADAPT notes and step 4 carry the non-npm path.
       Then, orthogonally, overlay any CONSTRAINT profiles — audience/domain
       guardrails composable with the stack profile (`kids-app`, `dense-ui`,
@@ -109,7 +119,7 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       backend) take two ports from the range. On the profile path the roll
       fills `{{DEV_PORT}}` in `dev` and `start`, and step 12's gate catches a
       forgotten one; a non-npm server has no such slot — there the rule is on
-      you. Non-npm stack: act on the ADAPT note in CLAUDE.md → Commands now —
+      you. Non-npm stack: act on the ADAPT note in AGENTS.md → Commands now —
       including its `CHECK_COMMAND` update, which step 6's self-test verifies.
       **Every harness edit belongs in this step**, before activation
       (step 5 — or step 2, if a stack profile already copied
@@ -161,28 +171,37 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       Finally, in the app's first live session, confirm enforcement
       end-to-end: ask the agent to edit `.env` — the hook must block it.
       **The harness is not live until you have watched it block once.**
-- [ ] 7. **Fill CLAUDE.md** — rename `CLAUDE.template.md` → `CLAUDE.md`.
-      Replace every `{{PLACEHOLDER}}`, act on and delete every `ADAPT:`
-      note, delete sections that don't apply. `[Day-0]` sections are
-      filled now; `[Grows]` sections stay empty (they fill from real
-      incidents). Delete the header comment block — but KEEP the
-      `template-version:` stamp on line 1; it survives the fill and is
-      what "Upgrading seeded apps" diffs against. **ASK** the user for
-      the project-specific invariant (⛔ 5) and any Role & Context facts
-      step 0 didn't surface. Budget: the wiki-lint skill's CLAUDE.md
+- [ ] 7. **Fill AGENTS.md, then land the bridge** — rename
+      `AGENTS.template.md` → `AGENTS.md`. This is the canonical manual and
+      the ONLY one that gets filled. Replace every `{{PLACEHOLDER}}`, act
+      on and delete every `ADAPT:` note, delete sections that don't apply.
+      `[Day-0]` sections are filled now; `[Grows]` sections stay empty
+      (they fill from real incidents). Delete the header comment block —
+      but KEEP the `template-version:` stamp on line 1; it survives the
+      fill and is what "Upgrading seeded apps" diffs against. **ASK** the
+      user for the project-specific invariant (⛔ 5) and any Role & Context
+      facts step 0 didn't surface. Budget: the wiki-lint skill's AGENTS.md
       line ceiling (the number's single home; a stack profile's sections
       count against it) — past it, MEASURE which blocks overflow and
       migrate those to docs/wiki/ with pointers, never a guessed
-      culprit. Also replace the scaffold's README.md — stack boilerplate,
-      often with paths this layout doesn't even have — with a minimal
-      app README: name, purpose, the six-script contract. The fill
-      worked if: sessions start
-      without re-explaining the project; agents cite ADRs when
+      culprit.
+      Then rename `CLAUDE.template.md` → `CLAUDE.md` and leave it ALONE:
+      it is the Claude Code bridge, it already carries no slots, and it
+      needs none — Claude Code does not read AGENTS.md natively, so the
+      `@AGENTS.md` import is its whole job. Copying filled sections down
+      into it is the one mistake this step exists to prevent: two homes for
+      one fact, and the bridge is the copy that rots (Invariant 3).
+      Claude-only wiring may be added there; project rules never.
+      Also replace the scaffold's README.md — stack boilerplate, often with
+      paths this layout doesn't even have — with a minimal app README:
+      name, purpose, the six-script contract. The fill worked if: sessions
+      start without re-explaining the project; agents cite ADRs when
       questioning decisions; the verification gate never needs
       mentioning in chat.
 - [ ] 8. **Adapt the ultrathink skill** — fill or delete the `{{}}` rows in
-      `.claude/skills/ultrathink/SKILL.md` (Phase 2 stack/domain rows,
-      Phase 5 project gate).
+      `.agents/skills/ultrathink/SKILL.md` (Phase 2 stack/domain rows,
+      Phase 5 project gate). The canonical skill is the one with slots;
+      `.claude/skills/ultrathink/SKILL.md` is a bridge and stays untouched.
 - [ ] 9. **Write ADR-0001** — copy `docs/adr/0000-template.md` to
       `docs/adr/0001-stack-choice.md`; record the stack decision MADE in
       step 0 and the alternatives rejected there. If this ADR has to be
@@ -213,9 +232,10 @@ CLAUDE.md, .claude/, docs/ and .github/.)
       (Windows: `py` if `python` resolves to the Microsoft Store alias).
       It lists every leftover placeholder/`ADAPT:` marker; the scanned
       paths and the exemptions (reusable templates, marker-quoting hooks)
-      live IN the script — its single home. A live CLAUDE.md containing
-      unfilled placeholders actively misleads agents — do not finish with
-      leftovers.
+      live IN the script — its single home. It also fails outright if
+      `AGENTS.md` is absent: the canon, not the bridge, is what an app
+      must have. A live AGENTS.md containing unfilled placeholders actively
+      misleads agents — do not finish with leftovers.
 
 **GitHub (if step 0 said yes).** The setup is complete only when the repo
 exists on GitHub, `origin` points at it, the first push is up, and the
@@ -225,5 +245,5 @@ open item; never let a passed exit gate imply the CI decision is done.
 
 **Cowork / claude.ai (optional).** Driving this app from Cowork too? Its
 hooks don't fire there — follow `docs/COWORK.md` to wire the Cowork adapter
-(a project-instructions pointer that loads CLAUDE.md; CI stays the hard
+(a project-instructions pointer that loads AGENTS.md; CI stays the hard
 gate). Claude-Code-only? Delete `docs/COWORK.md` — an unused adapter rots.

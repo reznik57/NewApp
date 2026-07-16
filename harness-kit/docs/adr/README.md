@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07 -->
+<!-- template-version: 2026-07.33 -->
 
 # Architecture Decision Records
 
@@ -12,4 +12,4 @@ Rules:
 - Copy `0000-template.md` to `NNNN-<slug>.md` (next free number).
 - Append-only: never edit an accepted ADR. Write a superseding one and link
   both directions ("superseded by NNNN" / "supersedes NNNN").
-- Keep it ~25 lines. Cite symbols, not counts (CLAUDE.md Invariant 4).
+- Keep it ~25 lines. Cite symbols, not counts (AGENTS.md Invariant 4).

@@ -1,5 +1,6 @@
-<!-- template-version: 2026-07.25 -->
-<!-- Insert as a section in the app's CLAUDE.md, after the stack profile's
+<!-- template-version: 2026-07.33 -->
+<!-- Insert as a section in the app's AGENTS.md (the canon, never the
+     CLAUDE.md bridge), after the stack profile's
      Stack Rules. Lean by design; full reference: docs/wiki/kids-app-ux.md. -->
 
 ## Audience Rules: children (7-10) [Day-0]

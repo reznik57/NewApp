@@ -1,7 +1,8 @@
-<!-- template-version: 2026-07.31 -->
-<!-- Replaces the Tech Stack and Commands sections of CLAUDE.md and adds a
-     Stack Rules section — insert it after Commands.
-     Fill {{FORMATTER}} elsewhere in CLAUDE.md with: Prettier. -->
+<!-- template-version: 2026-07.33 -->
+<!-- Replaces the Tech Stack and Commands sections of AGENTS.md and adds a
+     Stack Rules section — insert it after Commands. AGENTS.md is the canon;
+     never insert these into the CLAUDE.md bridge.
+     Fill {{FORMATTER}} elsewhere in AGENTS.md with: Prettier. -->
 
 ## Tech Stack [Day-0]
 
@@ -29,7 +30,7 @@ The six-script contract lives in `package.json` (single source of truth):
   — jsx-a11y violations fail `check` (see `eslint.config.mjs`) — but
   layout, typography, spacing, and color carry no rule here and can't be
   linted. When building or reshaping UI, invoke the `frontend-design`
-  skill (ships with the harness at `.claude/skills/`) BEFORE writing
+  skill (ships with the harness at `.agents/skills/`) BEFORE writing
   component code — it steers palette, type, and layout away from templated
   defaults. A workflow pointer (like the ultrathink Deep-Analysis
-  Protocol), not a style rule; Standing Rules keeps those out of CLAUDE.md.
+  Protocol), not a style rule; Standing Rules keeps those out of AGENTS.md.

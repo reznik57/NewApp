@@ -1,14 +1,22 @@
-"""Guard the unguarded root-singleton docs against silent truncation.
+"""Guard docs whose content no other test reads, against silent gutting.
 
-test_kit_parity.py pins base/ <-> harness-kit/ byte equality, but docs
-that exist as a single copy with no twin -- the root-level singletons
-and the KIT_ONLY checklists pinned in REQUIRED below -- have nothing
-to compare against, so no test reads their content at all. It bit once: v2.5.0 arrived with README.md
-truncated (the whole "Upgrading seeded apps" section gone, trailing
-newline lost) and the suite stayed green. This test pins load-bearing
-anchors, a trailing newline, a size floor, and a changelog entry
-floor. A red run after a deliberate doc restructure means: update
-REQUIRED here, consciously, in the same commit.
+test_kit_parity.py pins base/ <-> harness-kit/ byte equality, but that
+catches nothing on its own for two classes of doc: those with no twin at
+all (the root-level singletons, the KIT_ONLY checklists), and those whose
+twin is a COPY of them -- SETUP.md and the base/ instruction pair, where
+the sanctioned re-sync writes source->mirror, so a gutted source is
+mirrored faithfully and the suite stays green.
+
+It bit twice. v2.5.0 arrived with README.md truncated (the whole
+"Upgrading seeded apps" section gone, trailing newline lost) and the suite
+stayed green. v2.8.0 moved the canon to AGENTS.md, and the two tests that
+had read base/CLAUDE.template.md's content followed it there -- correctly,
+leaving the bridge with no reader; deleting its @AGENTS.md import left
+every test green.
+
+This test pins load-bearing anchors, a trailing newline, a size floor, and
+a changelog entry floor. A red run after a deliberate doc restructure
+means: update REQUIRED here, consciously, in the same commit.
 Run from the seed root: python -m unittest discover -s tests
 """
 import unittest
@@ -54,6 +62,32 @@ REQUIRED = {
         "5. **Activate settings**",
         "11. **First commit at green**",
         "12. **EXIT GATE**",
+    ],
+    # The instruction pair, here for SETUP.md's exact reason: base->kit is a
+    # copy, so byte-equality mirrors a gutted source faithfully and stays
+    # green. v2.8.0 made that bite. The canon's content was pinned by two
+    # tests through base/CLAUDE.template.md (test_dev_port's port range,
+    # test_ultrathink_triggers' sole home); both correctly followed the
+    # content to AGENTS.template.md, and the bridge was left with NO test
+    # reading it at all. Measured: deleting its @AGENTS.md line left all
+    # tests green -- a seeded app that loads zero instructions under Claude
+    # Code, silently. Anchor the canon's load-bearing frame and the bridge's
+    # one load-bearing line.
+    "base/AGENTS.template.md": [
+        "# AGENTS.md",
+        "### 3. Source of Truth (anti-rot)",
+        "### 4. Cite Symbols, Not Counts or Line Numbers",
+        "## Everyday Task Discipline",
+        "## Standing Rules",
+        "## Docs & Knowledge Schema",
+        "## Deep-Analysis Protocol",
+    ],
+    # Newlines on purpose: the import must survive as its own LINE. A bare
+    # "@AGENTS.md" anchor would also match the file's own prose about the
+    # import (backticked), false-passing the exact gutting this catches.
+    "base/CLAUDE.template.md": [
+        "# CLAUDE.md",
+        "\n@AGENTS.md\n",
     ],
     "harness-kit/ADOPTION.md": [
         "# Existing App Adoption",

@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.32 -->
+<!-- template-version: 2026-07.33 -->
 
 # Profile: TypeScript / Next.js
 
@@ -33,16 +33,18 @@ an app):
    generated. It layers the profile's enforced rules on the Next.js
    defaults — the file's header is the sole home for what they are and
    how they gate.
-5. Replace the `Tech Stack` and `Commands` sections of CLAUDE.md — still
-   named `CLAUDE.template.md` at overlay time; SETUP step 7 renames it and
-   fills the rest — with the contents of `CLAUDE.stack-sections.md`
-   (includes the `Stack Rules` section — keep it). Its third Stack Rule
-   points at the `frontend-design` skill, which SETUP step 1 already
-   distributed with the harness (`base/.claude/skills/` → the app's
-   `.claude/skills/`); this profile no longer vendors it. If the app's
-   `.claude/skills/frontend-design/` is missing, the kit was distributed
+5. Replace the `Tech Stack` and `Commands` sections of AGENTS.md — still
+   named `AGENTS.template.md` at overlay time; SETUP step 7 renames it and
+   fills the rest — with the contents of `AGENTS.stack-sections.md`
+   (includes the `Stack Rules` section — keep it). The canon is the target:
+   `CLAUDE.template.md` is the bridge and takes none of these sections. Its
+   third Stack Rule points at the `frontend-design` skill, which SETUP step 1
+   already distributed with the harness (`base/.agents/skills/` → the app's
+   `.agents/skills/`, plus the Claude bridge in `.claude/skills/`); this
+   profile no longer vendors it. If the app's
+   `.agents/skills/frontend-design/` is missing, the kit was distributed
    incompletely — restore it before continuing, or step 5 leaves a dead
-   pointer in the app's CLAUDE.md.
+   pointer in the app's AGENTS.md.
 6. Copy `vitest.config.ts` → repo root. Vitest does not read tsconfig
    `paths`: without this alias bridge the first test importing via the
    project-canonical `@/*` form fails module resolution while `tsc`

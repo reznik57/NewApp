@@ -7,7 +7,7 @@ Registered in .claude/settings.json under Stop.
 
 --self-test verifies the wiring (run it during app setup).
 """
-# template-version: 2026-07.30
+# template-version: 2026-07.33
 import json
 import os
 import shutil
@@ -15,7 +15,7 @@ import subprocess
 import sys
 import tempfile
 
-# ADAPT: the single configuration point. Must match CLAUDE.md's Verification
+# ADAPT: the single configuration point. Must match AGENTS.md's Verification
 # Gate and CI. HARNESS_CHECK_CMD env override exists as a test seam.
 CHECK_COMMAND = os.environ.get("HARNESS_CHECK_CMD", "npm run check")
 OUTPUT_TAIL_CHARS = 3000

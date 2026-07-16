@@ -27,6 +27,16 @@ agents editing the seed. Building an app FROM the seed? Wrong file: copy
   NEVER edit only the kit side — edit the source, then mirror; the
   re-sync recipe's single home is the `tests/hooks/test_kit_parity.py`
   docstring.
+- **Inside the template, `AGENTS.template.md` and `.agents/skills/` are
+  the canon** (v2.8.0): they carry all substance and become the app's
+  `AGENTS.md` and `.agents/skills/`. `CLAUDE.template.md` and
+  `.claude/skills/` are BRIDGES — frontmatter plus a pointer, nothing
+  else. Adding a rule to a bridge is the mistake this split exists to
+  prevent; put it in the canon. `.claude/settings.template.json` and
+  `.claude/hooks/` are the exception: genuinely Claude-Code-specific,
+  no canonical twin, not bridges.
+- This seed's OWN instructions stay in this CLAUDE.md — it is a template
+  repo, not an app built from the template, and it ships no AGENTS.md.
 - Profiles live in `profiles/` only (seed-side, never inside the kit).
 - One fact lives in one place; the docs link to it instead of restating
   it. Volatile counts and line numbers don't belong in prose.

@@ -1,4 +1,4 @@
-// template-version: 2026-07.4
+// template-version: 2026-07.33
 // Profile ESLint config — replaces the one create-next-app generates.
 // Layers enforced rule sets on the Next.js defaults (this header is the
 // sole home for how they gate):
@@ -8,11 +8,11 @@
 //     stale-marker comments don't ship — record deferred work with
 //     /log-gotcha as a `deferred` entry in docs/wiki/log.md instead.
 //   - no-restricted-syntax: focused/skipped tests (.only/.skip) are
-//     errors — CLAUDE.md Invariant 2 (Test Integrity), mechanized. An
+//     errors — AGENTS.md Invariant 2 (Test Integrity), mechanized. An
 //     approved exception carries an eslint-disable comment whose diff is
 //     the approval trail.
 //   - ban-ts-comment: type-check suppressions are errors; @ts-expect-error
-//     needs a description — CLAUDE.md Invariant 1's no-silent-suppression
+//     needs a description — AGENTS.md Invariant 1's no-silent-suppression
 //     rule, mechanized.
 // eslint-config-next already registers the jsx-a11y and @typescript-eslint
 // plugins, so only rule severities are layered here — re-registering a

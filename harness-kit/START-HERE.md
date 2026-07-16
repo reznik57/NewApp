@@ -5,6 +5,18 @@ This folder is the self-contained kit that brings the coding harness
 new OR already grown. It is the ONLY folder you ever copy; the
 new-vs-existing fork comes afterwards, guided.
 
+**What it installs, and which file is the canon.** `AGENTS.template.md`
+becomes the app's `AGENTS.md`: the single, always-loaded instruction
+manual, in the open format the whole agent ecosystem reads (Codex,
+Antigravity, Gemini CLI, and more). `.agents/skills/` is the single home
+of the skills themselves. Claude Code reads neither natively, so the kit
+also ships two thin bridges — `CLAUDE.template.md` → `CLAUDE.md`, whose
+job is the `@AGENTS.md` import, and `.claude/skills/`, one pointer file
+per skill. The bridges carry no substance: one fact, one home. Whichever
+checklist you pick below fills the canon and leaves the bridges thin.
+(`.claude/settings.json` and `.claude/hooks/` are a different matter —
+they are genuinely Claude-Code-specific and have no canonical twin.)
+
 1. **Copy this FOLDER into the app's repo root** (so it sits at
    `<app>/harness-kit/`). One move — a folder of this name exists in
    no app, so nothing can collide or be overwritten. Direction

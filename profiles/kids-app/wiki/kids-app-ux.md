@@ -1,9 +1,9 @@
-<!-- template-version: 2026-07.25 -->
+<!-- template-version: 2026-07.33 -->
 
 # Kids-app UX reference
 
 Full reference behind the `kids-app` constraint profile. The hard, always-on
-rules live in CLAUDE.md (Audience Rules: children); this page carries the
+rules live in AGENTS.md (Audience Rules: children); this page carries the
 worked examples, sources, and reasoning.
 
 ## The two age bands
