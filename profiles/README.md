@@ -1,4 +1,4 @@
-<!-- template-version: 2026-07.31 -->
+<!-- template-version: 2026-07.33 -->
 
 # Profiles
 
@@ -8,15 +8,15 @@ take one stack profile and any number of constraint profiles.
 ## Stack profiles
 
 Keyed to the tech stack chosen at SETUP step 0. Ship build tooling, the
-CLAUDE.md Tech Stack / Commands / Stack Rules sections, settings and CI.
+AGENTS.md Tech Stack / Commands / Stack Rules sections, settings and CI.
 Exactly one per app — SETUP step 2 applies it. Current: `typescript-next/`.
 
 The `frontend-design` skill is NOT a profile's to ship: it is the aesthetic
-floor every constraint profile layers on, so it lives in `base/.claude/skills/`
+floor every constraint profile layers on, so it lives in `base/.agents/skills/`
 and reaches every app through the kit (v2.7.6 — before that it rode on the
 TS/Next profile, and a stack-less app that took a constraint profile pointed
 at a skill it did not have). An app with no UI deletes it, per the ADAPT note
-on CLAUDE.template's "Design before UI" bullet.
+on AGENTS.template's "Design before UI" bullet.
 
 ## Constraint profiles
 
@@ -28,13 +28,16 @@ stack profile (SETUP step 2). Current: `kids-app/`, `dense-ui/`,
 
 Each ships:
 - `README.md` — the overlay how-to (which file goes where).
-- `CLAUDE.constraints-section.md` — the hard, non-negotiable invariants,
-  inserted as a section into the app's CLAUDE.md. Kept lean: it counts
-  against the CLAUDE.md line budget (SETUP step 7), so the full material
-  lives in the wiki page and this section points at it.
+- `AGENTS.constraints-section.md` — the hard, non-negotiable invariants,
+  inserted as a section into the app's AGENTS.md (the canon — never into the
+  CLAUDE.md bridge). Kept lean: it counts against the AGENTS.md line budget
+  (SETUP step 7), so the full material lives in the wiki page and this
+  section points at it.
 - `skills/<name>/SKILL.md` — a skill invoked BEFORE building UI for that
-  audience. It layers on top of `frontend-design` (which sets the aesthetic
-  direction); it does not restate it.
+  audience, installed canonically into `.agents/skills/` with a Claude
+  discovery bridge beside it in `.claude/skills/` (each profile README spells
+  the two moves out). It layers on top of `frontend-design` (which sets the
+  aesthetic direction); it does not restate it.
 - `wiki/<name>-ux.md` — the full reference (worked examples, empirical
   sources, legal pointers), copied into the app's `docs/wiki/`.
 

@@ -30,14 +30,28 @@ class LayeringFoundationTests(unittest.TestCase):
     profile pointed at a skill its repo did not contain. The floor now ships
     with base/ -> the kit -> every app. These two assertions pin both halves:
     the floor is in base, and every profile that claims to layer on it says so.
+
+    Since v2.8.0 the floor's canonical home is base/.agents/skills/ and
+    base/.claude/skills/ keeps only a Claude discovery bridge. BOTH are
+    pinned: without the canon there is no skill, and without the bridge
+    Claude Code never surfaces it -- either half missing loses the floor
+    for a different half of the toolchain.
     """
 
     def test_frontend_design_ships_with_the_harness_not_with_a_profile(self):
         self.assertTrue(
+            (ROOT / "base" / ".agents" / "skills" / "frontend-design"
+             / "SKILL.md").is_file(),
+            "the canonical frontend-design must live in base/.agents/skills/"
+            " — a constraint profile cannot depend on a STACK profile having"
+            " vendored it",
+        )
+        self.assertTrue(
             (ROOT / "base" / ".claude" / "skills" / "frontend-design"
              / "SKILL.md").is_file(),
-            "frontend-design must live in base/.claude/skills/ — a constraint"
-            " profile cannot depend on a STACK profile having vendored it",
+            "frontend-design lost its Claude bridge in base/.claude/skills/:"
+            " Claude Code discovers skills there, so the floor would never"
+            " surface under the harness's primary tool",
         )
         strays = list(PROFILES.rglob("frontend-design"))
         self.assertEqual(
@@ -69,12 +83,14 @@ class ConstraintProfileShapeTests(unittest.TestCase):
         for name in CONSTRAINT_PROFILES:
             base = PROFILES / name
             readme = base / "README.md"
-            claude = base / "CLAUDE.constraints-section.md"
+            # Named for its DESTINATION: since v2.8.0 the section is inserted
+            # into AGENTS.md, the canon -- never into the CLAUDE.md bridge.
+            section = base / "AGENTS.constraints-section.md"
             self.assertTrue(readme.is_file(), "%s: README.md missing" % name)
             self.assertTrue(is_stamped(readme), "%s: README unstamped" % name)
             self.assertTrue(
-                claude.is_file(),
-                "%s: CLAUDE.constraints-section.md missing" % name,
+                section.is_file(),
+                "%s: AGENTS.constraints-section.md missing" % name,
             )
             skills = list((base / "skills").glob("*/SKILL.md"))
             self.assertTrue(skills, "%s: no skills/*/SKILL.md" % name)

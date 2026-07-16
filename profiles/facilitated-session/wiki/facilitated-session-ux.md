@@ -1,11 +1,11 @@
-<!-- template-version: 2026-07.31 -->
+<!-- template-version: 2026-07.33 -->
 
 # Facilitated sessions — UX reference
 
 Full reference for the `facilitated-session` constraint profile. The hard
-rules live in CLAUDE.md's `Domain Rules` section and in the
+rules live in AGENTS.md's `Domain Rules` section and in the
 `designing-facilitated-sessions` skill; this page carries the reasoning, the
-worked example and the traps — the material that would rot a lean CLAUDE.md.
+worked example and the traps — the material that would rot a lean AGENTS.md.
 
 ## Why this is its own domain
 

@@ -1,8 +1,8 @@
-<!-- template-version: 2026-07.3 -->
+<!-- template-version: 2026-07.33 -->
 
 # Spec: {{Feature name}} ({{YYYY-MM-DD}})
 
-Use when CLAUDE.md → Deep-Analysis Protocol requires a spec. One page,
+Use when AGENTS.md → Deep-Analysis Protocol requires a spec. One page,
 then stop.
 
 ## Problem

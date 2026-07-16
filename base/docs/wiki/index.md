@@ -1,10 +1,10 @@
-<!-- template-version: 2026-07.3 -->
+<!-- template-version: 2026-07.33 -->
 
 # Project Wiki — Index
 
 Entry point for on-demand knowledge. Every page in `docs/wiki/` MUST be
 listed here, one line each, with a one-line summary. Conventions live in
-CLAUDE.md → Docs & Knowledge Schema.
+AGENTS.md → Docs & Knowledge Schema.
 
 ## Architecture
 

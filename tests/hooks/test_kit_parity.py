@@ -21,10 +21,16 @@ COPY = ROOT / "harness-kit"
 # harness-kit top-level entry -> the source root it mirrors.
 # Deliberately absent: .gitignore (merge-only, ADOPTION step 3) and
 # .github/ (CI is a merge step, ADOPTION step 8).
+# AGENTS.template.md and .agents/ carry the CANON (the instruction manual and
+# the full skills); CLAUDE.template.md and .claude/ stay listed because the
+# Claude bridges ship too -- a kit that dropped them would leave Claude Code
+# with no way to load AGENTS.md and no way to discover a skill.
 MANIFEST = {
+    "AGENTS.template.md": BASE,
     "CLAUDE.template.md": BASE,
     ".env.example": BASE,
     ".editorconfig": BASE,
+    ".agents": BASE,
     ".claude": BASE,
     "docs": BASE,
     "SETUP.md": ROOT,  # root-homed; travels as the kit's fresh-repo

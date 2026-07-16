@@ -12,7 +12,7 @@ unfilled slot cannot reach a green gate. Drop any one of them and the rule
 degrades to prose without anyone noticing -- this test is what notices.
 Run from the seed root: python -m unittest discover -s tests
 """
-# template-version: 2026-07.32
+# template-version: 2026-07.33
 import json
 import unittest
 from pathlib import Path
@@ -23,7 +23,7 @@ SCRIPTS = PROFILE / "package-scripts.json"
 PROFILE_README = PROFILE / "README.md"
 GATE = ROOT / "base" / ".claude" / "scripts" / "check_markers.py"
 SETUP = ROOT / "SETUP.md"
-CLAUDE_TEMPLATE = ROOT / "base" / "CLAUDE.template.md"
+AGENTS_TEMPLATE = ROOT / "base" / "AGENTS.template.md"
 SLOT = "{{DEV_PORT}}"
 BOUNDS = ("9000", "9999")
 
@@ -62,10 +62,13 @@ class PortRangeTests(unittest.TestCase):
         # npx serve) reaches the rule only here.
         self.assert_names_the_range(SETUP)
 
-    def test_claude_template_names_the_range(self):
+    def test_agents_template_names_the_range(self):
         # The rule has to outlive setup: an agent adding a SECOND server to
-        # the app months later reads CLAUDE.md, not SETUP.md.
-        self.assert_names_the_range(CLAUDE_TEMPLATE)
+        # the app months later reads the always-loaded manual, not SETUP.md.
+        # Since v2.8.0 that manual is AGENTS.md -- CLAUDE.md only imports it,
+        # so pinning the bridge here would pin a file with no Commands
+        # section and pass vacuously.
+        self.assert_names_the_range(AGENTS_TEMPLATE)
 
 
 if __name__ == "__main__":

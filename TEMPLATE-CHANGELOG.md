@@ -5,6 +5,100 @@ JSON templates (settings.template.json, profile settings.json,
 package-scripts.json) cannot carry comment stamps — their version is
 tracked only here.
 
+## 2026-07.33 — v2.8.0
+
+The seed put its whole substance in `CLAUDE.md` and treated `AGENTS.md` as the
+secondary file — something an app "may keep, if wired". That was true when
+Claude Code was the only reader. It is not true now: Codex, Gemini CLI and
+Antigravity read `AGENTS.md` natively, Antigravity auto-surfaces
+`.agents/skills/`, and Claude Code reads neither — it is the one tool that
+needs a bridge. The seed had the dependency backwards, and v2.7.x documented
+the fix as a manual recipe it deliberately did not ship (README → Portability,
+"still YAGNI, now with a recipe"). A recipe every app eventually runs by hand
+is a default with extra steps; run in twenty-five apps it drifts twenty-five
+ways. This round makes it the default.
+
+Shipped:
+
+- **`AGENTS.md` is the canon.** New `base/AGENTS.template.md` carries the full
+  manual — invariants, task discipline, commands, knowledge schema — and SETUP
+  step 7 fills IT. `base/CLAUDE.template.md` shrank to a bridge: an
+  `@AGENTS.md` import plus Claude-only wiring notes, no slots, no substance.
+- **`.agents/skills/` is the canon for skills.** The four skills
+  (ultrathink, log-gotcha, wiki-lint, and the vendored frontend-design with its
+  LICENSE.txt) moved there. Each `.claude/skills/*/SKILL.md` stays as a
+  discovery bridge: the skill's frontmatter — which is what Claude Code
+  auto-invokes off, so it cannot be dropped — plus a `Canonical skill:`
+  pointer. `test_ultrathink_triggers` now pins BOTH mirrors against the sole
+  home and against each other.
+- **The exit gate moved with the canon.** `check_markers.py` requires
+  `AGENTS.md` and fails loud without it — a CLAUDE.md alone no longer reaches
+  green, because an app carrying only the bridge has no instructions at all and
+  shows nothing whatsoever to a non-Claude tool. It also scans `.agents/`: the
+  ultrathink `{{}}` rows live in the canon now, and an unscanned canon would
+  pass while the bridge-only `.claude/` looked clean.
+- **The checklists reversed, not string-replaced.** SETUP step 1 now yields a
+  scaffold's AGENTS.md to the kit's template (it used to yield CLAUDE.md and
+  keep AGENTS.md only "if wired"); ADOPTION step 6 merges every instruction
+  file INTO AGENTS.md and lands the bridge over the old CLAUDE.md — the exact
+  opposite of its previous "shrink AGENTS.md to a pointer at CLAUDE.md".
+- **UPDATE MODE covers the relocation.** No stamp diff can express a moved
+  canon, so ADOPTION's UPDATE MODE names the one-per-app move explicitly
+  (`git mv CLAUDE.md AGENTS.md`, skills to `.agents/`, bridges in place),
+  with "live wins" applying to the app's filled slots as they travel.
+- **Profiles follow the canon.** `CLAUDE.stack-sections.md` and each
+  `CLAUDE.constraints-section.md` are renamed for their destination
+  (`AGENTS.*`), and constraint profiles now install their skill to
+  `.agents/skills/` with a Claude bridge beside it — shipping only the
+  `.claude/` copy would have left the profile's skill invisible to exactly the
+  tools this round exists to serve.
+- **The stamp exemption narrowed.** It followed the vendored BYTES to
+  `base/.agents/skills/frontend-design/`; the Claude bridge left behind is a
+  file we authored, so it is stamped like every other template.
+- **A dead `.gitattributes` rule went.** The seed pinned the vendored
+  frontend-design bundle to LF at
+  `profiles/typescript-next/skills/frontend-design/**` — a path that stopped
+  existing in v2.7.6, so the rule protected nothing for two rounds. Every copy
+  of the bundle is covered by `base/.gitattributes` (`* text=auto eol=lf`,
+  v2.6.0) and the `harness-kit/**` pin; verified with `git check-attr` after
+  removal, on both trees.
+- **The instruction pair joined the root-doc guard.** Moving the canon moved
+  its two content tests (the port range, the ultrathink sole home) off
+  `CLAUDE.template.md` — correctly, and that left the bridge with no test
+  reading it at all. Measured: deleting its `@AGENTS.md` line left all tests
+  green, i.e. a seeded app loading zero instructions under Claude Code,
+  silently. `test_root_docs` now anchors both files — the same reason SETUP.md
+  was already there: base→kit is a copy, so byte-equality mirrors a gutted
+  source faithfully.
+
+Found by review before shipping, and worth recording because both were the
+same mistake — writing the new direction while leaving the old order in
+place: ADOPTION step 6 renamed `AGENTS.template.md` over an app's existing
+`AGENTS.md` BEFORE merging it (the file the step then wanted to read — and
+an AGENTS.md-native app is the population this round serves), and UPDATE
+MODE's skill relocation named only `SKILL.md`, stranding
+`frontend-design/LICENSE.txt` and the terms it carries. Both now say
+merge-first and move-the-whole-directory.
+
+Rejected, with reasons — do not relitigate:
+
+- **Keeping the substance in CLAUDE.md and making AGENTS.md the bridge.**
+  Symmetrical on paper, wrong in fact: the `@AGENTS.md` import is a Claude Code
+  mechanism, so an AGENTS.md bridge would be a file whose pointer only one tool
+  can follow — the other readers would find a stub and stop. The canon must sit
+  in the format the most tools read natively.
+- **Dropping the `.claude/skills/` bridges and pointing Claude Code at
+  `.agents/`.** It does not read that path; the skills would silently stop
+  auto-invoking under the harness's primary tool.
+- **A blanket CLAUDE→AGENTS rename across the tree.** `.claude/settings.json`,
+  `.claude/hooks/` and `CLAUDE_PROJECT_DIR` are genuinely Claude-Code-specific
+  and have no canonical twin. The seed's OWN root CLAUDE.md also stays: this
+  repo is the template, not an app built from it.
+- **Symlinking the bridges at the canon.** Windows needs elevation or developer
+  mode for symlinks, git ships them as text files by default, and the harness
+  already refuses to follow one (`readSafeFile`). A four-line pointer costs
+  nothing and works everywhere.
+
 ## 2026-07.32 — v2.7.7
 
 Servers built from this seed inherited the framework's default port — Next

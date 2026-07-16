@@ -33,10 +33,27 @@ collapses to four moves:
    first-adoption step (e.g. gitattributes.template → step 3), never
    skip it as "no stamp diff".
 2. **Live wins** — merge kit→live per file, but the app's adaptations win:
-   filled ultrathink slots, a filled `ci.yml`, a richer CLAUDE.md, PROTECTED
+   filled ultrathink slots, a filled `ci.yml`, a richer AGENTS.md, PROTECTED
    lists extended for the app's crown jewels. Port only genuine template
    improvements into those files — never overwrite an adaptation with a bare
    slot.
+   **Adopted before v2.8.0** (the app has a substantive CLAUDE.md and no
+   AGENTS.md)? Then this generation moves the CANON, and no stamp diff can
+   express that — it is a relocation, not a version bump. Once per app:
+   `git mv CLAUDE.md AGENTS.md`, retitle its heading, repoint its
+   self-references, then put the kit's `CLAUDE.template.md` in place as the
+   new `CLAUDE.md` bridge. Same move for the skills, and move the WHOLE
+   skill directory, not just its SKILL.md: `.claude/skills/<name>/*` →
+   `.agents/skills/<name>/`, carrying the app's filled ultrathink slots with
+   it ("live wins" applies to the content, not to its old path). The
+   companion files are load-bearing — `frontend-design` ships a `LICENSE.txt`
+   its SKILL.md frontmatter resolves beside itself, so a SKILL-only move
+   strands the vendored work's terms and leaves the harness reading the app
+   as incomplete forever. Then `.claude/skills/<name>/SKILL.md` becomes the
+   kit's bridge, and nothing else stays in `.claude/skills/<name>/`. The
+   app's own additions ride along; nothing is re-templated. Verify the move
+   landed before touching anything else: `check_markers.py` now FAILS on a
+   missing AGENTS.md, so a half-done relocation cannot pass move 4 quietly.
 3. **Hooks are already LIVE** — the harness blocks agent edits to itself
    (`.claude/hooks`, `.claude/scripts`, `settings.json`) from the first
    moment of this session, not the next (step 5's closing note: no grace
@@ -69,11 +86,13 @@ collapses to four moves:
       template remote. (Deliberately keeping the repo dual-role
       instead? Expect gate exemptions — the template's own docs will
       trip check_markers and wiki-lint.)
-      Then note what already exists: a CLAUDE.md or
-      AGENTS.md, `.claude/settings.json` and `.claude/commands/`, CI
+      Then note what already exists: any instruction file (AGENTS.md,
+      CLAUDE.md, GEMINI.md, `.cursorrules`), `.agents/skills/`,
+      `.claude/settings.json` and `.claude/commands/`, CI
       workflows, lint/format configs, the test runner, anything
       `check`-like in package.json. Everything on that list is
-      MERGED below, never overwritten. One exception: a vendored copy
+      MERGED below, never overwritten — and step 6 merges them all into
+      ONE canon, `AGENTS.md`, whichever of them the app started with. One exception: a vendored copy
       of an older template line (docs/templates/, *.template.md
       relics) gets RETIRED, not merged — the seed is the only
       upstream; git history keeps it. Snapshot the tree state now
@@ -85,16 +104,23 @@ collapses to four moves:
       the app root (if not: copy the FOLDER in now — one move, a
       folder of this name exists in no app, nothing can collide).
       Move the app material to its final places:
-      `harness-kit/.claude/*` → `.claude/` (create it, or add into the
+      `harness-kit/.agents/*` → `.agents/` (the canonical skills; create
+      it, or add into the existing one — Antigravity and other AGENTS.md
+      tools may already have one), `harness-kit/.claude/*` → `.claude/`
+      (hooks, settings, and the skill bridges — create it, or add into the
       existing one), `harness-kit/docs/*` → `docs/`,
-      `CLAUDE.template.md` → app root, and `.env.example` +
-      `.editorconfig` → app root only where the app has none. The two
-      moved templates are INERT — `CLAUDE.template.md` and
-      `.claude/settings.template.json` collide with nothing and stay
-      inactive until steps 5–6 activate them. Same-NAME conflict
+      `AGENTS.template.md` + `CLAUDE.template.md` → app root, and
+      `.env.example` + `.editorconfig` → app root only where the app has
+      none. The three moved templates are INERT — `AGENTS.template.md`,
+      `CLAUDE.template.md` and `.claude/settings.template.json` collide
+      with nothing and stay inactive until steps 5–6 activate them; an
+      existing AGENTS.md or CLAUDE.md is NOT overwritten here, step 6
+      merges both.
+      Same-NAME conflict
       (e.g. an existing `.claude/commands/ultrathink.md` vs the kit's
       ultrathink skill): keep ONE — merge the app-specific parts into
-      the kit skill's `{{}}` slots (step 10), then retire the old
+      the canonical skill's `{{}}` slots under `.agents/skills/`
+      (step 10), then retire the old
       definition; two live definitions of one name compete at trigger
       time. Everything else (this
       checklist, SETUP.md, START-HERE.md, `gitignore.template`,
@@ -124,7 +150,7 @@ collapses to four moves:
       prints `.env`.
 - [ ] 4. **Define the six-script contract on the CURRENT state** — map
       or add `check`, `test`, `test:one`, `fix`, `dev`, `build`
-      (semantics: CLAUDE.md → Commands; optional reference if the
+      (semantics: AGENTS.md → Commands; optional reference if the
       seed is at hand: `profiles/typescript-next/package-scripts.json`).
       No manifest, but its runner is already in use (node without a
       package.json, ...)? A minimal scripts-only register
@@ -169,29 +195,49 @@ collapses to four moves:
       immediately or at the next session start, so never plan a
       harness edit on the assumption of a grace window. The live
       `.env`-edit probe still needs a fresh session.
-- [ ] 6. **Merge CLAUDE.md** — rename the copied `CLAUDE.template.md`
-      → `CLAUDE.md`, then move the old instructions INTO its sections;
-      the template's Invariants and Task Discipline win over softer
-      duplicates of the same rule. (Direction flips when the EXISTING
-      CLAUDE.md is substantially richer than the template: keep it as
-      the base and graft IN the template's load-bearing pieces — the
-      source-of-truth and no-volatile-counts Invariants, the Commands
-      table, the docs & knowledge schema, the deep-analysis pointer.
+- [ ] 6. **Merge into AGENTS.md, then land the bridge** — `AGENTS.md` is
+      the canon and the merge target, whatever the app's instructions were
+      called before. **Read every existing instruction file BEFORE any
+      rename**: an app may already ship its own `AGENTS.md` (a Codex,
+      Gemini CLI or Antigravity app — this is the normal case now, not the
+      exotic one), and renaming the kit's template over it would destroy
+      the very content this step exists to merge. Order, always: merge
+      first, overwrite second, never the other way round.
+      - App has NO AGENTS.md → rename the copied `AGENTS.template.md` →
+        `AGENTS.md`, then move the old instructions INTO its sections.
+      - App HAS an AGENTS.md → leave it in place and merge the kit's
+        template INTO it, section by section. The copied
+        `AGENTS.template.md` is then deleted, not renamed.
+      Either way the template's Invariants and Task Discipline win over
+      softer duplicates of the same rule. (Direction flips when the EXISTING
+      instruction file is substantially richer than the template: keep
+      its content as the base and graft IN the template's load-bearing
+      pieces — the source-of-truth and no-volatile-counts Invariants,
+      the Commands table, the docs & knowledge schema, the
+      deep-analysis pointer — but the result still lands in AGENTS.md.
       The goal is fixed — ONE file with every frame piece present;
       only the direction is the judgment call.) Narrative overflow (feature docs,
       changelog prose) becomes `docs/wiki/` pages with pointers —
       registered in the wiki index — and volatile statistics are
-      dropped, not migrated (Invariant 4). A SECOND instruction file
-      (AGENTS.md, .cursorrules, GEMINI.md): merge its rules the same
-      way — domain rules often make a strong Invariant 5 — then
-      shrink that file to a pointer at CLAUDE.md. Other tools
-      actively read it (the AGENTS.md convention, GEMINI.md)? Then
-      its surviving shape is: tool-specific delta (persona, loading
-      mechanics, tool-own protocols) + a compact invariant summary +
-      the pointer — a small, deliberate duplication. What must NOT
-      survive is duplicated detail substance (architecture, versions,
-      counts): unmaintained mirrors rot into actively wrong guidance
-      while CLAUDE.md moves on. Loose narratives already under `docs/`
+      dropped, not migrated (Invariant 4).
+      **An existing CLAUDE.md is a source, not a destination**: its rules
+      merge into AGENTS.md like any other, and what remains at
+      `CLAUDE.md` afterwards is the kit's bridge — rename the copied
+      `CLAUDE.template.md` over it once the substance has moved. This is
+      the step's one irreversible-feeling move, so do it in that order:
+      merge first, overwrite second, and never the other way round. Truly
+      Claude-Code-specific content (hook wiring, permission notes) may
+      stay in the bridge; project rules may not.
+      A THIRD instruction file (`.cursorrules`, `GEMINI.md`): merge its
+      rules the same way — domain rules often make a strong Invariant 5 —
+      then shrink that file to a pointer at AGENTS.md. Its tool actively
+      reads it and cannot follow a pointer? Then its surviving shape is:
+      tool-specific delta (persona, loading mechanics, tool-own
+      protocols) + a compact invariant summary + the pointer — a small,
+      deliberate duplication. What must NOT survive anywhere is
+      duplicated detail substance (architecture, versions, counts):
+      unmaintained mirrors rot into actively wrong guidance while
+      AGENTS.md moves on. Loose narratives already under `docs/`
       move into `docs/wiki/` (git mv + index entry); process history
       (old plans/specs folders) stays put — knowledge gets indexed,
       history doesn't. Unlike a fresh app, fill
@@ -261,5 +307,5 @@ collapses to four moves:
 
 **Cowork / claude.ai (optional).** Adopting into an app you'll also drive
 from Cowork? Its hooks don't fire there — follow `docs/COWORK.md` to wire the
-Cowork adapter (a project-instructions pointer that loads CLAUDE.md; CI stays
+Cowork adapter (a project-instructions pointer that loads AGENTS.md; CI stays
 the hard gate). Claude-Code-only? Delete `docs/COWORK.md`.

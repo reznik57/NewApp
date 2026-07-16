@@ -1,9 +1,9 @@
-<!-- template-version: 2026-07.25 -->
+<!-- template-version: 2026-07.33 -->
 
 # Dense-UI UX reference
 
 Full reference behind the `dense-ui` constraint profile. The hard rules live
-in CLAUDE.md (Domain Rules: data-dense UI); this page carries the patterns,
+in AGENTS.md (Domain Rules: data-dense UI); this page carries the patterns,
 exemplars, and sources.
 
 ## Status: anticipatory

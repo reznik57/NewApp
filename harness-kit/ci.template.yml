@@ -1,4 +1,4 @@
-# template-version: 2026-07.12
+# template-version: 2026-07.33
 #
 # ADAPT: fill every {{}} slot for your stack, or overlay profiles/<stack>/ci.yml
 # from the seed. Rename to ci.yml. Keep the template-version line above when
@@ -22,7 +22,7 @@ jobs:
       - name: Install
         run: {{INSTALL CMD — e.g. npm ci}}
       - name: Check (format + lint w/ zero warnings + typecheck + fast tests)
-        run: {{CHECK CMD — same gate as CLAUDE.md Invariant 1}}
+        run: {{CHECK CMD — same gate as AGENTS.md Invariant 1}}
       - name: Test (full suite)
         run: {{TEST CMD}}
       - name: Build
